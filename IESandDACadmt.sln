@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IESandDACadmt", "IESandDACadmt\IESandDACadmt.csproj", "{06602D13-571C-40E8-B390-77D11EA1D258}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlDbInteract", "SqlDbInteract\SqlDbInteract.csproj", "{86666F96-93D0-411D-9245-2A8663A9166E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{06602D13-571C-40E8-B390-77D11EA1D258}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06602D13-571C-40E8-B390-77D11EA1D258}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06602D13-571C-40E8-B390-77D11EA1D258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86666F96-93D0-411D-9245-2A8663A9166E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86666F96-93D0-411D-9245-2A8663A9166E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86666F96-93D0-411D-9245-2A8663A9166E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86666F96-93D0-411D-9245-2A8663A9166E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

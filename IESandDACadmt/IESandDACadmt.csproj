@@ -54,6 +54,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Logging\ActionOutcome.cs" />
+    <Compile Include="Model\Logging\CreateExcelFile.cs" />
+    <Compile Include="Model\Logging\ExportToFile.cs" />
+    <Compile Include="Model\Logging\LoggingClass.cs" />
+    <Compile Include="Model\DbSqlSpController.cs" />
+    <Compile Include="ViewModel\RecordsProfilingData.cs" />
+    <Compile Include="ViewModel\ServerDetectionData.cs" />
+    <Compile Include="Model\SqlDeletionEventargs.cs" />
+    <Compile Include="ViewModel\SqlHealthReviewData.cs" />
+    <Compile Include="Model\SqlQueryEventArgs.cs" />
+    <Compile Include="View\FormAbout.cs" />
+    <Compile Include="View\FormAbout.Designer.cs" />
+    <Compile Include="View\FormAlternateCredentials.cs" />
+    <Compile Include="View\FormAlternateCredentials.Designer.cs" />
+    <Compile Include="View\FormEventtypeSelection.cs" />
+    <Compile Include="View\FormEventtypeSelection.Designer.cs" />
+    <Compile Include="View\FormHealthReview.cs" />
+    <Compile Include="View\FormHealthReview.Designer.cs" />
+    <Compile Include="View\FormHelpRequirements.cs" />
+    <Compile Include="View\FormHelpRequirements.Designer.cs" />
+    <Compile Include="View\FormLauncher.cs" />
+    <Compile Include="View\FormLauncher.Designer.cs" />
+    <Compile Include="View\FormRecordDeletion.cs" />
+    <Compile Include="View\FormRecordDeletion.designer.cs" />
+    <Compile Include="View\FormRecordsProfiler.cs" />
+    <Compile Include="View\FormRecordsProfiler.Designer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,6 +94,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\RecordsDeletionQueryLogic.cs" />
+    <Compile Include="Model\RecordsProfilingQueryLogic.cs" />
+    <Compile Include="Model\RegistryReader.cs" />
+    <Compile Include="Model\ServerDetectionLogic.cs" />
+    <Compile Include="Model\singleSqlHealthQuery.cs" />
+    <Compile Include="Model\SqlHealthQueries.cs" />
+    <Compile Include="Model\SqlHealthReviewLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -85,6 +118,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\FormAbout.resx" />
+    <EmbeddedResource Include="View\FormAlternateCredentials.resx" />
+    <EmbeddedResource Include="View\FormEventtypeSelection.resx" />
+    <EmbeddedResource Include="View\FormHealthReview.resx" />
+    <EmbeddedResource Include="View\FormHelpRequirements.resx" />
+    <EmbeddedResource Include="View\FormLauncher.resx" />
+    <EmbeddedResource Include="View\FormRecordDeletion.resx" />
+    <EmbeddedResource Include="View\FormRecordsProfiler.resx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -93,5 +134,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
