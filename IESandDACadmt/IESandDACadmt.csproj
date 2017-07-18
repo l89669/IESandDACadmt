@@ -59,6 +59,14 @@
     <Compile Include="Model\Logging\ExportToFile.cs" />
     <Compile Include="Model\Logging\LoggingClass.cs" />
     <Compile Include="Model\DbSqlSpController.cs" />
+    <Compile Include="Model\Sql\QuerySqlServer.cs" />
+    <Compile Include="Model\Sql\SqlAccessChecks.cs" />
+    <Compile Include="Model\Sql\SqlConnectionStringCheck.cs" />
+    <Compile Include="Model\Sql\SqlDbCleanupThread.cs" />
+    <Compile Include="Model\Sql\SqlReadByProcessInfoThread.cs" />
+    <Compile Include="Model\Sql\SqlTestDbConnection.cs" />
+    <Compile Include="ViewModel\DbSqlSpControllerData.cs" />
+    <Compile Include="ViewModel\DbSqlSpControllerData.ServerType.cs" />
     <Compile Include="ViewModel\RecordsProfilingData.cs" />
     <Compile Include="ViewModel\ServerDetectionData.cs" />
     <Compile Include="Model\SqlDeletionEventargs.cs" />

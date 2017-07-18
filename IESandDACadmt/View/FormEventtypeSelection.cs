@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Lumension_Advanced_DB_Maintenance.Data;
-using Lumension_Advanced_DB_Maintenance.Logging;
+using IESandDACadmt.Data;
+using IESandDACadmt.Logging;
 
-namespace Lumension_Advanced_DB_Maintenance.Forms
+namespace IESandDACadmt.Forms
 {
     public partial class FormEventtypeSelection : Form
     {

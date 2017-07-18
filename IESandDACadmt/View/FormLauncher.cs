@@ -1,6 +1,6 @@
-﻿using Lumension_Advanced_DB_Maintenance.Data;
-using Lumension_Advanced_DB_Maintenance.Logging;
-using Lumension_Advanced_DB_Maintenance.Sql;
+﻿using IESandDACadmt.Data;
+using IESandDACadmt.Logging;
+using IESandDACadmt.Sql;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Security.Principal;
 
 
-namespace Lumension_Advanced_DB_Maintenance.Forms
+namespace IESandDACadmt.Forms
 {
 
     public partial class FormLauncher : Form
@@ -375,13 +375,13 @@ namespace Lumension_Advanced_DB_Maintenance.Forms
 
         private void requirementsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Lumension_Advanced_DB_Maintenance.Forms.FormHelpRequirements helpRequirements = new Lumension_Advanced_DB_Maintenance.Forms.FormHelpRequirements();
+            IESandDACadmt.Forms.FormHelpRequirements helpRequirements = new IESandDACadmt.Forms.FormHelpRequirements();
             helpRequirements.Show();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Lumension_Advanced_DB_Maintenance.Forms.FormAbout about = new Lumension_Advanced_DB_Maintenance.Forms.FormAbout();
+            IESandDACadmt.Forms.FormAbout about = new IESandDACadmt.Forms.FormAbout();
             about.Show();
         }
 

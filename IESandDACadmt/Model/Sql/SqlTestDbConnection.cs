@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using IESandDACadmt.Model.Logging;
 
-namespace SqlDbInteract
+namespace IESandDACadmt.Model.Sql
 {
     class SqlTestDbConnection
     {
-        private string _sqlConnectionString = "";
+        private DbSqlSpController _liveDbSqlSpController = new DbSqlSpController();
 
-        public SqlTestDbConnection(string sqlConnectionString)
+        public SqlTestDbConnection(DbSqlSpController theDbSqlSpController)
         {
-            _sqlConnectionString = sqlConnectionString;
+            _liveDbSqlSpController = theDbSqlSpController;
         }
 
         public void TestDbConnection()

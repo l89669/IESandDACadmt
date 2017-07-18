@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Lumension_Advanced_DB_Maintenance.Logging
+namespace IESandDACadmt.Model.Logging
 {
     public static class LoggingClass
     {

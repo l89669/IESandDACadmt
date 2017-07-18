@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lumension_Advanced_DB_Maintenance.Data
+namespace IESandDACadmt.Model
 {
     public class SqlDeletionEventargs : EventArgs
     {

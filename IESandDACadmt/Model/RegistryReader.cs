@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
-using Lumension_Advanced_DB_Maintenance.Logging;
+using IESandDACadmt.Model.Logging;
 
-namespace Lumension_Advanced_DB_Maintenance.BL
+namespace IESandDACadmt.Model
 {
     public static class RegistryReader
     {

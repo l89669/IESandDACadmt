@@ -1,4 +1,4 @@
-﻿using Lumension_Advanced_DB_Maintenance.Logging;
+﻿using IESandDACadmt.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,10 +8,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Lumension_Advanced_DB_Maintenance.Data;
-using Lumension_Advanced_DB_Maintenance.BL;
+using IESandDACadmt.Data;
+using IESandDACadmt.BL;
 
-namespace Lumension_Advanced_DB_Maintenance.Forms
+namespace IESandDACadmt.Forms
 {
     public partial class FormHealthReview : Form
     {

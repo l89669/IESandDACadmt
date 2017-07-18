@@ -6,12 +6,12 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Lumension_Advanced_DB_Maintenance.Data;
-using Lumension_Advanced_DB_Maintenance.Logging;
-using Lumension_Advanced_DB_Maintenance.Sql;
+using IESandDACadmt.Data;
+using IESandDACadmt.Logging;
+using IESandDACadmt.Sql;
 
 
-namespace Lumension_Advanced_DB_Maintenance.Forms
+namespace IESandDACadmt.Forms
 {
     public partial class FormRecordDeletion : Form
 	{
@@ -714,7 +714,7 @@ namespace Lumension_Advanced_DB_Maintenance.Forms
         
 		private void eventTypesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Lumension_Advanced_DB_Maintenance.Forms.FormEventtypeSelection eventTypeForm = new Lumension_Advanced_DB_Maintenance.Forms.FormEventtypeSelection(LiveDbSpSqlController);
+			IESandDACadmt.Forms.FormEventtypeSelection eventTypeForm = new IESandDACadmt.Forms.FormEventtypeSelection(LiveDbSpSqlController);
 			eventTypeForm.StartPosition = FormStartPosition.CenterParent;
 			eventTypeForm.Show();
 		}
@@ -757,10 +757,10 @@ namespace Lumension_Advanced_DB_Maintenance.Forms
 						toolStripStatusLabel1.Text = "Querying for top processes...";
 						try
 						{
-							Lumension_Advanced_DB_Maintenance.Sql.SqlReadByProcessInfoThread workerReadSqlByProcess = new Lumension_Advanced_DB_Maintenance.Sql.SqlReadByProcessInfoThread(LiveDbSpSqlController,
+							IESandDACadmt.Sql.SqlReadByProcessInfoThread workerReadSqlByProcess = new IESandDACadmt.Sql.SqlReadByProcessInfoThread(LiveDbSpSqlController,
 																													   LiveDbSpSqlController.SqlConnectionString,
 																													   3600,
-																													   Lumension_Advanced_DB_Maintenance.BL.RecordsProfilingQueryLogic.EmssByProcessQuery,
+																													   IESandDACadmt.BL.RecordsProfilingQueryLogic.EmssByProcessQuery,
 																													   LiveDbSpSqlController.ByProcessQueryDataTable);
 							_readByProcessSqlInfoThread = new Thread(workerReadSqlByProcess.ReadByProcessSqlInfo);
 							_readByProcessSqlInfoThread.IsBackground = true;

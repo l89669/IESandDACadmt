@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace Lumension_Advanced_DB_Maintenance.Data
+namespace IESandDACadmt.ViewModel
 {
     public class SqlHealthReviewData
     {

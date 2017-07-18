@@ -1,4 +1,4 @@
-﻿namespace Lumension_Advanced_DB_Maintenance.Logging
+﻿namespace IESandDACadmt.Model.Logging
 {
     class ExportToFile
     {

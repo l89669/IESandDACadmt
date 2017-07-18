@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Lumension_Advanced_DB_Maintenance.BL
+namespace IESandDACadmt.Model
 {
     public class SqlHealthReviewLogic
     {

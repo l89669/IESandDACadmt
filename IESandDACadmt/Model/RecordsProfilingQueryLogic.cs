@@ -1,4 +1,4 @@
-﻿namespace Lumension_Advanced_DB_Maintenance.BL
+﻿namespace IESandDACadmt.Model
 {
     public static class RecordsProfilingQueryLogic
 	{

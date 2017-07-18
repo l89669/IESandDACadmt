@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lumension_Advanced_DB_Maintenance.BL
+namespace IESandDACadmt.Model
 {
     class SqlHealthQueries
     {
-        private Data.DbSqlSpController _liveSqlDbSPController;
+        private DbSqlSpController _liveSqlDbSPController;
 
-        public SqlHealthQueries(Data.DbSqlSpController theLiveSqlDbSpController)
+        public SqlHealthQueries(DbSqlSpController theLiveSqlDbSpController)
         {
             _liveSqlDbSPController = theLiveSqlDbSpController;
             BuildSqlServerconfigQueryList();
@@ -282,11 +282,11 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 	                (total_logical_reads/execution_count) as Average_Logical_Writes
 	                FROM sys.dm_exec_procedure_stats
 	                ");
-            if (_liveSqlDbSPController.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.EMSS)
             {
                 runtimeString.Append(@" WHERE database_id IN (DB_ID('UPCCommon'), DB_ID('PLUS')) ");
             }
-            else if (_liveSqlDbSPController.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.ES)
             {
                 runtimeString.Append(@" WHERE database_id = (DB_ID('" + _liveSqlDbSPController.DataBaseName + @"')) ");
             }
@@ -518,7 +518,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
                 ReturnType = SqlQueryReturnType.String,
                 SqlRoleCheckNeeded = true
             });
-            if (_liveSqlDbSPController.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.EMSS)
             {
                 ReadDatabaseDetails("PLUS", _sqlHealthConfigQueryList);
                 ReadDatabaseDetails("UPCCommon", _sqlHealthConfigQueryList);
@@ -526,7 +526,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
                 ReadPolicyVersion(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList, "ApplicationControlPolicyVersion", "Application Control");
                 ReadPolicyVersion(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList, "DeviceControlPolicyVersion", "Device Control");
             }
-            else if (_liveSqlDbSPController.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.ES)
             {
                 ReadDatabaseDetails(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList);
                 _sqlHealthConfigQueryList.Add(new singleSqlHealthQuery

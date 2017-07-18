@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Lumension_Advanced_DB_Maintenance.Forms
+namespace IESandDACadmt.Forms
 {
     public partial class FormAbout : Form
     {

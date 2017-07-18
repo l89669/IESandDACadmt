@@ -1,29 +1,29 @@
-﻿namespace Lumension_Advanced_DB_Maintenance.BL
+﻿namespace IESandDACadmt.Model
 {
     public static class ServerDetectionLogic
     {
-        public static Data.DbSqlSpController.ServerType CheckServerType(Data.DbSqlSpController theLiveData, Data.ServerDetectionData theServerDetectionData)
+        public static DbSqlSpController.ServerType CheckServerType(DbSqlSpController theLiveData, IESandDACadmt.ViewModel.ServerDetectionData theServerDetectionData)
         {
-            Sql.SqlConnectionStringCheck.CheckForSqlServerString(theServerDetectionData.EmssConnectionStringRegistryLocation,
+            Model.Sql.SqlConnectionStringCheck.CheckForSqlServerString(theServerDetectionData.EmssConnectionStringRegistryLocation,
                                                                  theServerDetectionData.EmssConnectionStringRegistryWowLocation,
                                                                  theServerDetectionData.EmssConnectionStringRegistryItem, 
                                                                  theLiveData);
             if (theLiveData.SqlConnectionStringFound)
             {
-                return Data.DbSqlSpController.ServerType.EMSS;
+                return DbSqlSpController.ServerType.EMSS;
             }
             else
             {
-                Sql.SqlConnectionStringCheck.CheckForSqlServerString(theServerDetectionData.EsConnectionStringRegistryLocation,
+                Model.Sql.SqlConnectionStringCheck.CheckForSqlServerString(theServerDetectionData.EsConnectionStringRegistryLocation,
                                                                      theServerDetectionData.EsConnectionStringRegistryWowLocation,
                                                                      theServerDetectionData.EsConnectionStringRegistryItem,
                                                                      theLiveData);
                 if (theLiveData.SqlConnectionStringFound)
                 {
-                    return Data.DbSqlSpController.ServerType.ES;
+                    return DbSqlSpController.ServerType.ES;
                 }
             }
-            return Data.DbSqlSpController.ServerType.UNKNOWN;
+            return DbSqlSpController.ServerType.UNKNOWN;
         }
     }
 }

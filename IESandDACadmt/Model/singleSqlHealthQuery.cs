@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lumension_Advanced_DB_Maintenance.BL
+namespace IESandDACadmt.Model
 {
     public enum SqlQueryReturnType
     {

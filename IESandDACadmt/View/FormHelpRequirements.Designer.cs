@@ -1,4 +1,4 @@
-﻿namespace Lumension_Advanced_DB_Maintenance.Forms
+﻿namespace IESandDACadmt.Forms
 {
     partial class FormHelpRequirements
     {

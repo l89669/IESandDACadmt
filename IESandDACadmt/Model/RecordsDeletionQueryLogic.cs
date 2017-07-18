@@ -2,56 +2,56 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
-using Lumension_Advanced_DB_Maintenance.Logging;
+using IESandDACadmt.Model.Logging;
 
-namespace Lumension_Advanced_DB_Maintenance.BL
+namespace IESandDACadmt.Model
 {
     public static class RecordsDeletionQueryLogic
     {
 
-        public static string CreateRequiredStoredProcedures(Data.DbSqlSpController theLiveData)
+        public static string CreateRequiredStoredProcedures(DbSqlSpController theLiveData)
         {
             string result = "failure";
             BuildEventsToExclude(theLiveData);
             result = DeleteExistingMaintenanceStoredProcedures(theLiveData);
             if (result == "success")
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " Existing SQL Stored Procedures deleted.");
-                string recordDeletionSpSqlCode = BuildRecordDeletionSqlSpString(theLiveData.RecordDeletionStoredProcedureName, theLiveData);
-                result = CreateStoredProcedure(theLiveData.LogFileLocation, recordDeletionSpSqlCode, "Record Deletion", theLiveData.SqlConnectionString);
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Existing SQL Stored Procedures deleted.");
+                string recordDeletionSpSqlCode = BuildRecordDeletionSqlSpString(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData);
+                result = CreateStoredProcedure(theLiveData.DbSqlSpControllerData.LogFileLocation, recordDeletionSpSqlCode, "Record Deletion", theLiveData.DbSqlSpControllerData.SqlConnectionString);
                 if (result == "success")
                 {
-                    LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL Stored Procedure for Record-Deletion created.");
-                    string totalRecordsCalcSpSqlCode = BuildTotalRecordCalcSqlString(theLiveData.TotalRecordsCalcStoredProcedureName, theLiveData);
-                    result = CreateStoredProcedure(theLiveData.LogFileLocation, totalRecordsCalcSpSqlCode, "Total Record Calculation", theLiveData.SqlConnectionString);
+                    LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL Stored Procedure for Record-Deletion created.");
+                    string totalRecordsCalcSpSqlCode = BuildTotalRecordCalcSqlString(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData);
+                    result = CreateStoredProcedure(theLiveData.DbSqlSpControllerData.LogFileLocation, totalRecordsCalcSpSqlCode, "Total Record Calculation", theLiveData.DbSqlSpControllerData.SqlConnectionString);
                     if (result == "success")
                     {
-                        LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL Stored Procedure for Total-Record-Calculation created.");
+                        LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL Stored Procedure for Total-Record-Calculation created.");
                     }
                     else
                     {
-                        LoggingClass.SaveErrorToLogFile(theLiveData.LogFileLocation, " Error creating Total-Record-Calculation Stored Procedure:" + result);
+                        LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error creating Total-Record-Calculation Stored Procedure:" + result);
                         result = "failure";
                     }
                 }
                 else
                 {
-                    LoggingClass.SaveErrorToLogFile(theLiveData.LogFileLocation, " Error creating Record-Deletion Stored Procedure:" + result);
+                    LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error creating Record-Deletion Stored Procedure:" + result);
                     result = "failure";
                 }
             }
             else
             {
-                LoggingClass.SaveErrorToLogFile(theLiveData.LogFileLocation, " Error deleting existing Stored Procedures:" + result);
+                LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error deleting existing Stored Procedures:" + result);
                 result = "failure";
             }
             return result;
         }
 
-        private static bool BuildEventsToExclude(Data.DbSqlSpController theLiveData)
+        private static bool BuildEventsToExclude(DbSqlSpController theLiveData)
         {
             List<string> eventsToExcludeList = new List<string>();
-            foreach (KeyValuePair<string, bool> kvp in theLiveData.EventTypesToDelete)
+            foreach (KeyValuePair<string, bool> kvp in theLiveData.DbSqlSpControllerData.EventTypesToDelete)
             {
                 if (kvp.Value == false)
                 {
@@ -60,60 +60,60 @@ namespace Lumension_Advanced_DB_Maintenance.BL
             }
             if (eventsToExcludeList.Count > 0)
             {
-                theLiveData.EventsToExclude = String.Join(",", eventsToExcludeList) + ", 12";
+                theLiveData.DbSqlSpControllerData.EventsToExclude = String.Join(",", eventsToExcludeList) + ", 12";
             }
             else
             {
-                theLiveData.EventsToExclude = String.Join(",", eventsToExcludeList) + "12";
+                theLiveData.DbSqlSpControllerData.EventsToExclude = String.Join(",", eventsToExcludeList) + "12";
             }
-            LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, "The Events list to exclude from deleting:" + theLiveData.EventsToExclude + ":");
+            LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, "The Events list to exclude from deleting:" + theLiveData.DbSqlSpControllerData.EventsToExclude + ":");
             return true;
         }
 
-        private static string CreateStoredProcedure(string theLogFileLocation, string spSqlCode, string spAction, string theSqlConnectionString)
+        private static string CreateStoredProcedure(string LogFileLocation, string spSqlCode, string spAction, string theSqlConnectionString)
         {
             string result = "failure";
-            LoggingClass.SaveEventToLogFile(theLogFileLocation, " The required SQL Stored Procedure for " + spAction + " does not yet exist.");
-            LoggingClass.SaveEventToLogFile(theLogFileLocation, " " + spAction + " SQL Stored Procedure assembled:");
-            LoggingClass.SaveEventToLogFile(theLogFileLocation, spSqlCode);
+            LoggingClass.SaveEventToLogFile(LogFileLocation, " The required SQL Stored Procedure for " + spAction + " does not yet exist.");
+            LoggingClass.SaveEventToLogFile(LogFileLocation, " " + spAction + " SQL Stored Procedure assembled:");
+            LoggingClass.SaveEventToLogFile(LogFileLocation, spSqlCode);
             SqlConnection sqlDbConnection = new SqlConnection(theSqlConnectionString);
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(theLogFileLocation, " SQL connection for " + spAction + " Stored Procedure creation OPEN.");
+                LoggingClass.SaveEventToLogFile(LogFileLocation, " SQL connection for " + spAction + " Stored Procedure creation OPEN.");
                 SqlCommand spCreateCommand = new SqlCommand(spSqlCode, sqlDbConnection);
                 spCreateCommand.ExecuteNonQuery();
-                LoggingClass.SaveEventToLogFile(theLogFileLocation, " SQL command to create " + spAction + " Stored Procedure completed.");
+                LoggingClass.SaveEventToLogFile(LogFileLocation, " SQL command to create " + spAction + " Stored Procedure completed.");
                 sqlDbConnection.Close();
                 result = "success";
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(theLogFileLocation, ex.Message);
+                LoggingClass.SaveErrorToLogFile(LogFileLocation, ex.Message);
                 result = " Error creation " + spAction + " Stored Procedure:" + ex.Message;
             }
             return result;
         }
 
-        private static string BuildRecordDeletionSqlSpString(string storedProcedureName, Data.DbSqlSpController theLiveData)
+        private static string BuildRecordDeletionSqlSpString(string storedProcedureName, DbSqlSpController theLiveData)
         {
             StringBuilder theSpCode = new StringBuilder();
             theSpCode.Append(@"CREATE PROCEDURE [dbo].[" + storedProcedureName + @"]
 									(   @batchSize int");
-            if (theLiveData.CutOffDays)
+            if (theLiveData.DbSqlSpControllerData.CutOffDays)
             {
                 theSpCode.Append(@"	    ,@cutOffDate datetime");
             }
-            if (theLiveData.SelectedUser != "everyone")
+            if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
             {
                 theSpCode.Append(@"	    , @theUserAccountSid nvarchar(200)");
             }
-            if (theLiveData.SelectedComputer != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
             {
                 theSpCode.Append(@"	    , @WorkstationId nvarchar(255)
 										, @theWorkstationName nvarchar(255)");
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	    , @theProcessName nvarchar(255)");
             }
@@ -122,45 +122,45 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 														BEGIN
 															--SET NOCOUNT ON
 															DECLARE @numberOfRecordsProcessed int");
-            if (theLiveData.SelectedUser != "everyone")
+            if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
             {
                 theSpCode.Append(@"                                 , @theUserAccountID int ");
             }
-            if (theLiveData.SelectedComputer != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
             {
                 theSpCode.Append(@"                                 , @theWorkstationID int  ");
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	                                , @processName nvarchar(255)");
             }
 
-            if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
-                if (theLiveData.SelectedUser != "everyone")
+                if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
                 {
                     theSpCode.Append(@"	                        SET @theUserAccountID = (SELECT UserID FROM dbo.LogUser where UserSid = @theUserAccountSid)");
                 }
-                if (theLiveData.SelectedComputer != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
                 {
                     theSpCode.Append(@"                     	SET @theWorkstationID = (SELECT ComputerID FROM dbo.LogComputer where EPSGUID = @WorkstationId
 																															AND ComputerName = @theWorkstationName    )");
                 }
             }
-            else if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
-                if (theLiveData.SelectedUser != "everyone")
+                if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
                 {
                     theSpCode.Append(@"	                        SET @theUserAccountID = (SELECT UserID FROM [ActivityLog].[User] where UserSid = @theUserAccountSid)");
                 }
-                if (theLiveData.SelectedComputer != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
                 {
                     theSpCode.Append(@"                     	SET @theWorkstationID = (SELECT ComputerID FROM [ActivityLog].[Computer] where ComputerId = @WorkstationId
 																															AND ComputerName = @theWorkstationName    )");
                 }
             }
             
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	                        SET @processName = @theProcessName;
 																								");
@@ -180,47 +180,47 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 																	    SELECT  distinct top (@batchSize)
 																			    LE.EntryID
                             ");
-            if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
                 theSpCode.Append(@"												    FROM 	dbo.LogEntry as LE (NOLOCK)");
-                if (theLiveData.SelectedProcess != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
                 {
                     theSpCode.Append(@"	                                        join [dbo].[LogEntry_To_LogData] as LTL on LE.EntryID = LTL.EntryID
 																	        join [dbo].[LogData] as LD on (LTL.DataID = LD.DataID AND LTL.DataTypeID = 12)");
                 }
             }
-            else if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
                 theSpCode.Append(@"												    FROM 	[ActivityLog].[Entry] as LE (NOLOCK)");
-                if (theLiveData.SelectedProcess != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
                 {
                     theSpCode.Append(@"	                                        join [ActivityLog].[Entry_Data] as LTL on LE.EntryID = LTL.EntryID
 																	        join [ActivityLog].[Data] as LD on (LTL.DataID = LD.DataID AND LTL.DataTypeID = 12)");
                 }
             }
             theSpCode.Append(@"                                          WHERE   LE.ActionID NOT IN (");
-            theSpCode.Append(theLiveData.EventsToExclude);
+            theSpCode.Append(theLiveData.DbSqlSpControllerData.EventsToExclude);
             theSpCode.Append("                                                                     ) ");
-            if (theLiveData.CutOffDays)
+            if (theLiveData.DbSqlSpControllerData.CutOffDays)
             {
                 theSpCode.Append(@"                                      AND     LE.UTCDateTIME < @cutOffDate ");
             }
-            if (theLiveData.SelectedUser != "everyone")
+            if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
             {
                 theSpCode.Append(@"	                                     AND	 LE.UserID = @theUserAccountID ");
             }
-            if (theLiveData.SelectedComputer != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
             {
                 theSpCode.Append(@"	                                     AND     LE.ComputerID = @theWorkStationID ");
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	                                     AND     LD.Value = @processName; ");
             }
             theSpCode.Append(@"                                     SET  @numberOfRecordsProcessed = (@@ROWCOUNT);
 														                DELETE  LTL
                                                                         ");
-            if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
                 theSpCode.Append(@"
 														                FROM  dbo.LogEntry_To_LogData LTL
@@ -234,7 +234,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 															                ON  LE.EntryID = DE.EntryID;
                                                                         ");
             }
-            else if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
                 theSpCode.Append(@"
 														                FROM  [ActivityLog].[Entry_Data] LTL
@@ -258,7 +258,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 	
 												                    SET NOCOUNT OFF;
                                                                     ");
-            if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
                 theSpCode.Append(@"
 												                    IF EXISTS (SELECT * FROM dbo.LogData (NOLOCK) WHERE DataID NOT IN (SELECT DataID FROM LogEntry_To_LogData (NOLOCK)))
@@ -269,7 +269,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
                                                                                 WHERE  DataID NOT IN (SELECT DataID FROM LogEntry_To_LogData (NOLOCK));
 														                    ");
             }
-            else if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
                 theSpCode.Append(@"
 												                    IF EXISTS (SELECT * FROM [ActivityLog].[Data] (NOLOCK) WHERE DataID NOT IN (SELECT DataID FROM [ActivityLog].[Entry_Data] (NOLOCK)))
@@ -294,23 +294,23 @@ namespace Lumension_Advanced_DB_Maintenance.BL
             return theSpCode.ToString();
         }
 
-        private static string BuildTotalRecordCalcSqlString(string storedProcedureName, Data.DbSqlSpController theLiveData)
+        private static string BuildTotalRecordCalcSqlString(string storedProcedureName, DbSqlSpController theLiveData)
         {
             StringBuilder theSpCode = new StringBuilder();
             bool atLeastOneParamAlready = false;
             theSpCode.Append(@"CREATE PROCEDURE [dbo].[" + storedProcedureName + @"]
 								");
-            if (theLiveData.CutOffDays || theLiveData.SelectedUser != "everyone" || theLiveData.SelectedComputer != "all" || theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.CutOffDays || theLiveData.DbSqlSpControllerData.SelectedUser != "everyone" || theLiveData.DbSqlSpControllerData.SelectedComputer != "all" || theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	    (");
             }
 
-            if (theLiveData.CutOffDays)
+            if (theLiveData.DbSqlSpControllerData.CutOffDays)
             {
                 theSpCode.Append(@"     @cutOffDate datetime");
                 atLeastOneParamAlready = true;
             }
-            if (theLiveData.SelectedUser != "everyone")
+            if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
             {
                 if (atLeastOneParamAlready)
                 {
@@ -323,7 +323,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
                 }
 
             }
-            if (theLiveData.SelectedComputer != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
             {
                 if (atLeastOneParamAlready)
                 {
@@ -337,7 +337,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
                     atLeastOneParamAlready = true;
                 }
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 if (atLeastOneParamAlready)
                 {
@@ -349,7 +349,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
                     atLeastOneParamAlready = true;
                 }
             }
-            if (theLiveData.CutOffDays || theLiveData.SelectedUser != "everyone" || theLiveData.SelectedComputer != "all" || theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.CutOffDays || theLiveData.DbSqlSpControllerData.SelectedUser != "everyone" || theLiveData.DbSqlSpControllerData.SelectedComputer != "all" || theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	    )");
             }
@@ -358,84 +358,84 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 													AS
 													BEGIN
 														DECLARE @recordCount bigint");
-            if (theLiveData.SelectedUser != "everyone")
+            if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
             {
                 theSpCode.Append(@"                                 , @theUserAccountID int ");
             }
-            if (theLiveData.SelectedComputer != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
             {
                 theSpCode.Append(@"                                 , @theWorkstationID int  ");
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	                                , @processName nvarchar(255)");
             }
-            if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
-                if (theLiveData.SelectedUser != "everyone")
+                if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
                 {
                     theSpCode.Append(@"	                        SET @theUserAccountID = (SELECT UserID FROM dbo.LogUser where UserSid = @theUserAccountSid)");
                 }
-                if (theLiveData.SelectedComputer != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
                 {
                     theSpCode.Append(@"                     	SET @theWorkstationID = (SELECT ComputerID FROM dbo.LogComputer where EPSGUID = @WorkstationId
 																														AND ComputerName = @theWorkstationName    )");
                 }
             }
-            else if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
-                if (theLiveData.SelectedUser != "everyone")
+                if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
                 {
                     theSpCode.Append(@"	                        SET @theUserAccountID = (SELECT UserID FROM [ActivityLog].[User] where UserSid = @theUserAccountSid)");
                 }
-                if (theLiveData.SelectedComputer != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
                 {
                     theSpCode.Append(@"                     	SET @theWorkstationID = (SELECT ComputerID FROM [ActivityLog].[Computer] where ComputerId = @WorkstationId
 																														AND ComputerName = @theWorkstationName    )");
                 }
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	                        SET @processName = @theProcessName;
 																							");
             }
             
-            if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
                 theSpCode.Append(@"                             ---------------------------------------------------------------
 														SET @recordCount = (SELECT COUNT_BIG(*) FROM dbo.LogEntry As LE (NOLOCK)");
-                if (theLiveData.SelectedProcess != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
                 {
                     theSpCode.Append(@"	                                                            join [dbo].[LogEntry_To_LogData] as LTL on LE.EntryID = LTL.EntryID
 																							join [dbo].[LogData] as LD on (LTL.DataID = LD.DataID AND LTL.DataTypeID = 12)");
                 }
             }
-            else if (theLiveData.HeatServerType == Data.DbSqlSpController.ServerType.ES)
+            else if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
                 theSpCode.Append(@"                             ---------------------------------------------------------------
 														SET @recordCount = (SELECT COUNT_BIG(*) FROM [ActivityLog].[Entry] As LE (NOLOCK)");
-                if (theLiveData.SelectedProcess != "all")
+                if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
                 {
                     theSpCode.Append(@"	                                                            join [ActivityLog].[Entry_Data] as LTL on LE.EntryID = LTL.EntryID
 																							join [ActivityLog].[Data] as LD on (LTL.DataID = LD.DataID AND LTL.DataTypeID = 12)");
                 }
             }
             theSpCode.Append(@"                                                 WHERE   LE.ActionID NOT IN (");
-            theSpCode.Append(theLiveData.EventsToExclude);
+            theSpCode.Append(theLiveData.DbSqlSpControllerData.EventsToExclude);
             theSpCode.Append("                                                                     ) ");
-            if (theLiveData.CutOffDays)
+            if (theLiveData.DbSqlSpControllerData.CutOffDays)
             {
                 theSpCode.Append(@"                                             AND     LE.UTCDateTIME < @cutOffDate ");
             }
-            if (theLiveData.SelectedUser != "everyone")
+            if (theLiveData.DbSqlSpControllerData.SelectedUser != "everyone")
             {
                 theSpCode.Append(@"	                                            AND	 LE.UserID = @theUserAccountID ");
             }
-            if (theLiveData.SelectedComputer != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedComputer != "all")
             {
                 theSpCode.Append(@"	                                            AND     LE.ComputerID = @theWorkStationID ");
             }
-            if (theLiveData.SelectedProcess != "all")
+            if (theLiveData.DbSqlSpControllerData.SelectedProcess != "all")
             {
                 theSpCode.Append(@"	                                            AND     LD.Value = @processName ");
             }
@@ -446,25 +446,25 @@ namespace Lumension_Advanced_DB_Maintenance.BL
             
         }
 
-        private static string DeleteExistingMaintenanceStoredProcedures(Data.DbSqlSpController theLiveData)
+        private static string DeleteExistingMaintenanceStoredProcedures(DbSqlSpController theLiveData)
         {
             string result = "failure";
-            result = DropTheStoredProcedure(theLiveData.RecordDeletionStoredProcedureName, theLiveData);
+            result = DropTheStoredProcedure(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData);
             if (result == "success")
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " " + theLiveData.RecordDeletionStoredProcedureName + " Stored Procedure dropped.");
-                result = CheckForStoredProcedure(theLiveData.RecordDeletionStoredProcedureName, theLiveData);
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName + " Stored Procedure dropped.");
+                result = CheckForStoredProcedure(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData);
                 if (result == "success")
                 {
-                    LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " " + theLiveData.RecordDeletionStoredProcedureName + " Stored Procedure confirmed deleted.");
-                    result = DropTheStoredProcedure(theLiveData.TotalRecordsCalcStoredProcedureName, theLiveData);
+                    LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName + " Stored Procedure confirmed deleted.");
+                    result = DropTheStoredProcedure(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData);
                     if (result == "success")
                     {
-                        LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " " + theLiveData.TotalRecordsCalcStoredProcedureName + " Stored Procedure dropped.");
-                        result = CheckForStoredProcedure(theLiveData.TotalRecordsCalcStoredProcedureName, theLiveData);
+                        LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName + " Stored Procedure dropped.");
+                        result = CheckForStoredProcedure(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData);
                         if (result == "success")
                         {
-                            LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " " + theLiveData.TotalRecordsCalcStoredProcedureName + " Stored Procedure confirmed deleted.");
+                            LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName + " Stored Procedure confirmed deleted.");
                         }
                     }
                 }
@@ -472,7 +472,7 @@ namespace Lumension_Advanced_DB_Maintenance.BL
             return result;
         }
 
-        private static string CheckForStoredProcedure(string storedProcedureName, Data.DbSqlSpController theLiveData)
+        private static string CheckForStoredProcedure(string storedProcedureName, DbSqlSpController theLiveData)
         {
             string result = "failure";
             string checkForSpCode = @"  IF NOT EXISTS(SELECT 1 FROM sys.procedures 
@@ -480,36 +480,36 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 										BEGIN
 											PRINT 'none found' 
 										END";
-            SqlConnection sqlDbConnection = new SqlConnection(theLiveData.SqlConnectionString);
+            SqlConnection sqlDbConnection = new SqlConnection(theLiveData.DbSqlSpControllerData.SqlConnectionString);
             sqlDbConnection.InfoMessage += new SqlInfoMessageEventHandler(theLiveData.myConnection_InfoMessage);
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL connection for " + storedProcedureName + "Stored Procedure Check OPEN.");
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL connection for " + storedProcedureName + "Stored Procedure Check OPEN.");
                 SqlCommand spCreateCommand = new SqlCommand(checkForSpCode, sqlDbConnection);
                 spCreateCommand.ExecuteNonQuery();
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL command for " + storedProcedureName + " Stored Procedure Check finished.");
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL command for " + storedProcedureName + " Stored Procedure Check finished.");
                 sqlDbConnection.Close();
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(theLiveData.LogFileLocation, ex.Message.ToString());
+                LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, ex.Message.ToString());
                 result = " Error checking for Stored Procedure:" + ex.Message.ToString();
             }
-            if (theLiveData.SpCheckReturnString.Contains("none found"))
+            if (theLiveData.DbSqlSpControllerData.SpCheckReturnString.Contains("none found"))
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL check for Stored Procedure returned:" + theLiveData.SpCheckReturnString.ToString());
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL check for Stored Procedure returned:" + theLiveData.DbSqlSpControllerData.SpCheckReturnString.ToString());
                 result = "success";
             }
             else
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " Error: " + storedProcedureName + " Stored Procedure still exists after Dropping.");
-                result = theLiveData.SpCheckReturnString.ToString();
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error: " + storedProcedureName + " Stored Procedure still exists after Dropping.");
+                result = theLiveData.DbSqlSpControllerData.SpCheckReturnString.ToString();
             }
             return result;
         }
 
-        private static string DropTheStoredProcedure(string storedProcedureName, Data.DbSqlSpController theLiveData)
+        private static string DropTheStoredProcedure(string storedProcedureName, DbSqlSpController theLiveData)
         {
             string result = "failure";
             string dropSpCode = @"  IF EXISTS(SELECT 1 FROM sys.procedures 
@@ -517,20 +517,20 @@ namespace Lumension_Advanced_DB_Maintenance.BL
 										BEGIN
 											DROP PROCEDURE dbo." + storedProcedureName + @" 
 										END";
-            SqlConnection sqlDbConnection = new SqlConnection(theLiveData.SqlConnectionString);
+            SqlConnection sqlDbConnection = new SqlConnection(theLiveData.DbSqlSpControllerData.SqlConnectionString);
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL connection for " + storedProcedureName + " Stored Procedure Dropping OPEN.");
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL connection for " + storedProcedureName + " Stored Procedure Dropping OPEN.");
                 SqlCommand spCreateCommand = new SqlCommand(dropSpCode, sqlDbConnection);
                 spCreateCommand.ExecuteNonQuery();
-                LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, " SQL command for " + storedProcedureName + " Stored Procedure Drop completed.");
+                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL command for " + storedProcedureName + " Stored Procedure Drop completed.");
                 sqlDbConnection.Close();
                 result = "success";
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(theLiveData.LogFileLocation, ex.Message.ToString());
+                LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, ex.Message.ToString());
                 result = " Error with dropping the " + storedProcedureName + " Stored Procedure:" + ex.Message.ToString();
             }
             return result;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace Lumension_Advanced_DB_Maintenance.Forms
+namespace IESandDACadmt.Model
 {
     public class SqlQueryEventArgs : EventArgs
     {
