@@ -1,0 +1,17 @@
+﻿<Window x:Class="IESandDACadmt.View.WpfAbout"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IESandDACadmt.View"
+        mc:Ignorable="d"
+        Title="About" Height="250" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Background="White" Padding="10,2,10,2" TextAlignment="Justify" Text="This tool-set is meant to assist in the maintenance of the EMSS/IES and the HES/IDAC databases. It is best used for performing periodic analysis/maintenance, or targeted maintenance of UPCCommon in situations where a specific user/computer/event type is using up too much Database space. This is a Ivanti Technical Support Team provided tool. It is provided with no direct guarantees. To ensure correct operation, please contact the Ivanti Technical Support Team for the latest version." TextWrapping="Wrap"/>
+        <Button Grid.Row="1" Background="Red" Content="OK" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20,2,20,2" Click="Button_Click"/>
+    </Grid>
+</Window>
