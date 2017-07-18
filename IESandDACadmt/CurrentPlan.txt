@@ -1,0 +1,6 @@
+﻿The Core WinForms ADMT classes were added. 
+Some Data classes were moved to ViewModel (e.g. DbSpController) and will need to have their data split out into a new ViewModel class to adhere to structure. 
+Refactoring of namespace changes will be required. 
+Then WPF classes will be needed to replace all WinForms. 
+Static data can be used in static pages, but Binding to data classes will be needed for V to VM mapping. 
+Then UI Update mechanism will need to be refactored for full MVVM compliance.
