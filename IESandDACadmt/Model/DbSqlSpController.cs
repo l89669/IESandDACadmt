@@ -23,10 +23,13 @@ namespace IESandDACadmt.Model
             _dbSqlSpControllerData.ByProcessQueryAlreadyRan = false;
 		}
 
-        
+        public DbSqlSpController()
+        {
+            _dbSqlSpControllerData.ByProcessQueryAlreadyRan = false;
+        }
 
 
-		private string CalculateBatchSize()
+        private string CalculateBatchSize()
 		{
 			string result = "failure";
 			switch (_dbSqlSpControllerData.BatchSize.ToString().ToLower())

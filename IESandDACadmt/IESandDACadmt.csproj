@@ -75,14 +75,10 @@
     <Compile Include="Model\SqlDeletionEventargs.cs" />
     <Compile Include="ViewModel\SqlHealthReviewData.cs" />
     <Compile Include="Model\SqlQueryEventArgs.cs" />
-    <Compile Include="View\FormAlternateCredentials.cs" />
-    <Compile Include="View\FormAlternateCredentials.Designer.cs" />
     <Compile Include="View\FormEventtypeSelection.cs" />
     <Compile Include="View\FormEventtypeSelection.Designer.cs" />
     <Compile Include="View\FormHealthReview.cs" />
     <Compile Include="View\FormHealthReview.Designer.cs" />
-    <Compile Include="View\FormHelpRequirements.cs" />
-    <Compile Include="View\FormHelpRequirements.Designer.cs" />
     <Compile Include="View\FormLauncher.cs" />
     <Compile Include="View\FormLauncher.Designer.cs" />
     <Compile Include="View\FormRecordDeletion.cs" />
@@ -91,6 +87,15 @@
     <Compile Include="View\FormRecordsProfiler.Designer.cs" />
     <Compile Include="View\WpfAbout.xaml.cs">
       <DependentUpon>WpfAbout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WpfAlternateCredentials.xaml.cs">
+      <DependentUpon>WpfAlternateCredentials.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WpfEventTypeSelection.xaml.cs">
+      <DependentUpon>WpfEventTypeSelection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WpfHelpRequirements.xaml.cs">
+      <DependentUpon>WpfHelpRequirements.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +110,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\WpfAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WpfAlternateCredentials.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WpfEventTypeSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WpfHelpRequirements.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -134,10 +151,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\FormAlternateCredentials.resx" />
     <EmbeddedResource Include="View\FormEventtypeSelection.resx" />
     <EmbeddedResource Include="View\FormHealthReview.resx" />
-    <EmbeddedResource Include="View\FormHelpRequirements.resx" />
     <EmbeddedResource Include="View\FormLauncher.resx" />
     <EmbeddedResource Include="View\FormRecordDeletion.resx" />
     <EmbeddedResource Include="View\FormRecordsProfiler.resx" />

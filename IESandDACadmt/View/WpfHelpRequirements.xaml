@@ -1,0 +1,17 @@
+﻿<Window x:Class="IESandDACadmt.View.WpfHelpRequirements"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IESandDACadmt.View"
+        mc:Ignorable="d"
+        Title="WpfHelpRequirements" Height="250" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Background="White" Padding="10,2,10,2" TextAlignment="Justify" Text="1.   The User Credentials of this tool-set need access to the UPCCommon and PLUS SQL databases for EMSS with rights to Read, Write and to Create/Drop Stored Procedures. &#x0a;2.   For SQL servers with a Named-Instance, use the format of 'ServerAddress\\InstanceName' in the SQL Server Address field.&#x0a;3.   Full write access is required to the folder this EMSS DB Maintenance Tool-set is launched from so that all activities can be recorded in its Log File.&#x0a;4.   The default Settings for the DELETION tool excludes deleting the following event types:&#x0a;        ->DEVICE-ATTACHED&#x0a;        ->GRANTED&#x0a;        ->MEDIUM-NCRYPTED&#x0a;        ->WRITE-GRANTED &#x0a;       This can be modified if required in the OPTIONS=>Event Types menu." TextWrapping="Wrap" FontSize="9"/>
+        <Button Grid.Row="1" Background="Red" Content="OK" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20,2,20,2" Click="Button_Click"/>
+    </Grid>
+</Window>
