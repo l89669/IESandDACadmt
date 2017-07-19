@@ -75,8 +75,6 @@
     <Compile Include="Model\SqlDeletionEventargs.cs" />
     <Compile Include="ViewModel\SqlHealthReviewData.cs" />
     <Compile Include="Model\SqlQueryEventArgs.cs" />
-    <Compile Include="View\FormEventtypeSelection.cs" />
-    <Compile Include="View\FormEventtypeSelection.Designer.cs" />
     <Compile Include="View\FormHealthReview.cs" />
     <Compile Include="View\FormHealthReview.Designer.cs" />
     <Compile Include="View\FormLauncher.cs" />
@@ -96,6 +94,9 @@
     </Compile>
     <Compile Include="View\WpfHelpRequirements.xaml.cs">
       <DependentUpon>WpfHelpRequirements.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WpfLauncher.xaml.cs">
+      <DependentUpon>WpfLauncher.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -125,6 +126,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\WpfLauncher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\RecordsDeletionQueryLogic.cs" />
@@ -151,7 +156,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\FormEventtypeSelection.resx" />
     <EmbeddedResource Include="View\FormHealthReview.resx" />
     <EmbeddedResource Include="View\FormLauncher.resx" />
     <EmbeddedResource Include="View\FormRecordDeletion.resx" />

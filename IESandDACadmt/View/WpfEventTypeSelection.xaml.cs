@@ -19,26 +19,25 @@ namespace IESandDACadmt.View
     /// </summary>
     public partial class WpfEventTypeSelection : Window
     {
+        Model.DbSqlSpController _currentDbSqlSpController = null;
+        Dictionary<string, bool> tempoEventSelection = new Dictionary<string, bool>();
+
         public WpfEventTypeSelection(Model.DbSqlSpController liveDbSqlSpController)
         {
             _currentDbSqlSpController = liveDbSqlSpController;
             InitializeComponent();
-            AddEventTypesToCheckedListBox();
+            tempoEventSelection = AddEventTypesToCheckedListView(_currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete, tempoEventSelection);
+            //tempoEventSelection = _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete;
         }
 
-        Model.DbSqlSpController _currentDbSqlSpController = null;
-
- 
-        private void AddEventTypesToCheckedListBox()
+        private Dictionary<string, bool> AddEventTypesToCheckedListView(Dictionary<string, bool> theSelectedItems, Dictionary<string, bool> tempoEventSelection)
         {
-            foreach (KeyValuePair<string, bool> kvp in _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete)
+            foreach (KeyValuePair<string, bool> kvp in theSelectedItems)
             {
-                checkedListBoxEventTypes.Items.Add(kvp.Key);
-                int index = checkedListBoxEventTypes.Items.IndexOf(kvp.Key);
-                checkedListBoxEventTypes.SetItemChecked(index, kvp.Value);
+                tempoEventSelection.Add(kvp.Key, kvp.Value);
             }
+            return tempoEventSelection;
         }
-
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
@@ -46,15 +45,13 @@ namespace IESandDACadmt.View
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
-        {
-            Dictionary<string, bool> tempoEventSelection = new Dictionary<string, bool>();
-            tempoEventSelection = LoadNewEventSelections(tempoEventSelection);
-
+        {            
+            //tempoEventSelection = LoadNewEventSelections(tempoEventSelection);
             bool atLeastOneEventTypesSelected = CheckForAtLEastOneSelection(tempoEventSelection);
             if (atLeastOneEventTypesSelected)
             {
                 bool selectedEventTypeDiffer = false;
-                selectedEventTypeDiffer = CheckForSelectionDifferences(tempoEventSelection, selectedEventTypeDiffer);
+                selectedEventTypeDiffer = CheckForSelectionDifferences(tempoEventSelection, _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete);
                 if (selectedEventTypeDiffer)
                 {
                     MessageBoxResult goNoGoResponse = MessageBox.Show(@"We do not recommend altering the default selection of Event Types To Delete unless instructed to do so by the Support Team. Do you still want to continue?",
@@ -102,36 +99,36 @@ namespace IESandDACadmt.View
             return oneEventFound;
         }
 
-        private bool CheckForSelectionDifferences(Dictionary<string, bool> tempoEventSelection, bool selectedEventTypeDiffer)
+        private bool CheckForSelectionDifferences(Dictionary<string, bool> tempoEventSelection, Dictionary<string, bool> originalEventSelection)
         {
-            foreach (KeyValuePair<string, bool> kvp in _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete)
+            bool result = false;
+            foreach (KeyValuePair<string, bool> kvp in originalEventSelection)
             {
                 if (kvp.Value != tempoEventSelection[kvp.Key])
                 {
-                    selectedEventTypeDiffer = true;
+                    result = true;
                 }
             }
-            return selectedEventTypeDiffer;
+            return result;
         }
 
-        private Dictionary<string, bool> LoadNewEventSelections(Dictionary<string, bool> tempoEventSelection)
-        {
-            for (int i = 0; i < checkedListBoxEventTypes.Items.Count; i++)
-            {
-                if (checkedListBoxEventTypes.GetItemCheckState(i) == CheckState.Checked)
-                {
-                    tempoEventSelection.Add(checkedListBoxEventTypes.Items[i].ToString(), true);
-                }
-                else
-                {
-                    tempoEventSelection.Add(checkedListBoxEventTypes.Items[i].ToString(), false);
-                }
+        //private Dictionary<string, bool> LoadNewEventSelections(Dictionary<string, bool> tempoEventSelection)
+        //{
+        //    for (int i = 0; i < checkedListBoxEventTypes.Items.Count; i++)
+        //    {
+        //        if (checkedListBoxEventTypes.GetItemCheckState(i) == CheckState.Checked)
+        //        {
+        //            tempoEventSelection.Add(checkedListBoxEventTypes.Items[i].ToString(), true);
+        //        }
+        //        else
+        //        {
+        //            tempoEventSelection.Add(checkedListBoxEventTypes.Items[i].ToString(), false);
+        //        }
 
-            }
-            return tempoEventSelection;
-        }
+        //    }
+        //    return tempoEventSelection;
+        //}
     }
 }
 
 
-}

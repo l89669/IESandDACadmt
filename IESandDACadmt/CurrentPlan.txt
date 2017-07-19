@@ -5,7 +5,9 @@ Refactoring of namespace changes was done.
 
 
 To Do:
-Find out how to substitute for the CheckedListBox in WinForms into WPF.
 The WPF classes will be needed to replace all WinForms. 
 Static data can be used in static pages, but Binding to data classes will be needed for V to VM mapping. 
 Then UI Update mechanism will need to be refactored for full MVVM compliance.
+Add Trace Logging switch to make logging granular.
+Convert the Classes to Interface-drived for Dependancy Injection.
+Add Unit Tests for classes.

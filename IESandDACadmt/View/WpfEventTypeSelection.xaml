@@ -14,6 +14,17 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Select Event Types To Delete:" HorizontalAlignment="Center" />
 
+        <ListView Name="SelectedEventsListView" ItemsSource="{Binding Path=tempoEventSelection}" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Key"
+                            DisplayMemberBinding="{Binding Key}" />
+                    <GridViewColumn Header="Name"
+                            DisplayMemberBinding="{Binding Value}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Name="OK" VerticalAlignment="Center" HorizontalAlignment="Center" Content="OK" Padding="25,0,25,0" Click="OK_Click" Grid.Row="2" Grid.Column="1"/>
             <TextBlock Text="   "/>
