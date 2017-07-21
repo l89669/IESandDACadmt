@@ -5,8 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IESandDACadmt.View"
         mc:Ignorable="d"
-        Title="WpfRecordDeletion" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="WpfRecordDeletion" Height="675" Width="570">
+    <DockPanel>
+        <Menu Name="MainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" Click="exitToolStripMenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Options">
+                <MenuItem Header="_Event Types" Click="eventTypesToolStripMenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_View Log File" Click="viewLogFileToolStripMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar Name="ToolBarStatusBar" DockPanel.Dock="Bottom">
+            <ProgressBar Name="ToolBarProgressBar" Width="70"/>
+            <TextBlock Name="ToolBarLabel" Text="."/>
+        </StatusBar>
+        <Grid Name="MasterGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="16*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="5*" />
+            </Grid.RowDefinitions>
+            
+        </Grid>
+    </DockPanel>
 </Window>
