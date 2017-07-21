@@ -8,16 +8,7 @@
         mc:Ignorable="d"
         Title="Database Tool Launcher" Height="350" Width="560">
     <Window.Resources>
-        <Style x:Key="myWrap" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <TextBlock Text="{TemplateBinding Content}" FontSize="15" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Background="LightGray"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
+        
     </Window.Resources>
     <Grid Name="MasterGrid" DataContext="Path=locmod.DbSqlSpController.DbSqlSpControllerData}">
         <Grid.RowDefinitions>
@@ -25,11 +16,23 @@
             <RowDefinition Height="3*" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
+
+        <Grid Name="ServerTypeGrix" Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Heat Server Type: " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+            <ListBox Name="ServerType" Width="220" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+            <Button Name="ChangeType" Width="115" Content="CHANGE TYPE" Padding="5,0,5,0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+        </Grid>
         <StackPanel Grid.Row="0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0">
-            <TextBlock Text="Heat Server Type: "/>
-            <ListBox Name="ServerType" Width="100"/>
-            <Button Name="ChangeType" Content="CHANGE TYPE" Padding="5,0,5,0"/>
+            
         </StackPanel>
+        
+        
+        
         <Grid Name="SqlConnectionTestGrid" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
@@ -37,16 +40,37 @@
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="SQL Connection Test:" TextDecorations="Underline" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+            
+            <TextBlock Text="Heat Server Type:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+            <ListBox Name="ListBoxSqlAuthType" Width="220" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
+            <TextBlock Text="Server Name\Instance:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+            <TextBox Name="tbDbServerName" Width="220" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+            <Button Name="btnTestDBConnection"  Width="115" Content="TEST CONNECTION" Padding="5,0,5,0" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+
+            <TextBlock Text="Database Name" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+            <TextBox Name="tbDatabaseName" Width="220" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center"/>
+            <Button Name="btnChangeSqlServer" Width="115" Content="CHANGE SERVER" Padding="5,0,5,0" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+
         </Grid>
+        
+        
+        
         <Grid Name="LaunchButtonsGrid" Grid.Row="2" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="LaunchProfiler" Padding="5,0,5,0" Grid.Column="0" Style="{StaticResource myWrap}">LAUNCH PROFILING TOOL</Button>
-            <Button Name="LaunchDeletion" Padding="5,0,5,0" Grid.Column="1" Style="{StaticResource myWrap}">LAUNCH DELETION TOOL</Button>
-            <Button Name="LaunchHealth" Padding="5,0,5,0" Grid.Column="2" Style="{StaticResource myWrap}">LAUNCH HEALTH TOOL</Button>
+            <Button Name="LaunchProfiler" Padding="5,0,5,0" Grid.Column="0" Margin="20,30,20,30">PROFILING TOOL</Button>
+            <Button Name="LaunchDeletion" Padding="5,0,5,0" Grid.Column="1" Margin="20,30,20,30">DELETION TOOL</Button>
+            <Button Name="LaunchHealth" Padding="5,0,5,0" Grid.Column="2" Margin="20,30,20,30">HEALTH TOOL</Button>
         </Grid>
     </Grid>
 </Window>

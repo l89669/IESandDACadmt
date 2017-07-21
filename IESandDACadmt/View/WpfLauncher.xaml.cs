@@ -22,19 +22,7 @@ namespace IESandDACadmt.View
         public WpfLauncher()
         {
             InitializeComponent();
-        }
-
-        public volatile DbSqlSpController LiveDbSpSqlController = new DbSqlSpController();
-        SqlTestDbConnection _workerTestSql = null;
-        Thread _testDbConnectionThread = null;
-        FormRecordsProfiler _dataProfilerPage = null;
-        FormRecordDeletion _recordPurgePage = null;
-        Data.ServerDetectionData _serverDetectionData = new ServerDetectionData();
-
-        public FormLauncher()
-        {
-            InitializeComponent();
-            LiveDbSpSqlController.HeatServerType = BL.ServerDetectionLogic.CheckServerType(LiveDbSpSqlController, _serverDetectionData);
+            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = Model.ServerDetectionLogic.CheckServerType(LiveDbSpSqlController, _serverDetectionData);
             comboBoxServerType.Items.Add("EMSS");
             comboBoxServerType.Items.Add("ES");
             comboBoxServerType.SelectedItem = "EMSS";
@@ -43,61 +31,68 @@ namespace IESandDACadmt.View
             comboBoxSqlAuthType.SelectedItem = "Windows Authentication";
         }
 
-        private void SetLauncherGui(DbSqlSpController theLiveData)
+        public volatile Model.DbSqlSpController LiveDbSpSqlController = new Model.DbSqlSpController();
+        Model.Sql.SqlTestDbConnection _workerTestSql = null;
+        Thread _testDbConnectionThread = null;
+        FormRecordsProfiler _dataProfilerPage = null;
+        FormRecordDeletion _recordPurgePage = null;
+        ViewModel.ServerDetectionData _serverDetectionData = new ViewModel.ServerDetectionData();
+
+        private void SetLauncherGui(Model.DbSqlSpController theLiveData)
         {
-            if (theLiveData.HeatServerType == DbSqlSpController.ServerType.EMSS)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
             {
-                this.Text = "EMSS Advanced Database Maintenance Tool";
+                this.Title = "EMSS Advanced Database Maintenance Tool";
             }
-            if (theLiveData.HeatServerType == DbSqlSpController.ServerType.ES)
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
             {
-                this.Text = "ES Advanced Database Maintenance Tool";
+                this.Title = "ES Advanced Database Maintenance Tool";
             }
-            tbDbServerName.Text = LiveDbSpSqlController.DbServeraddress;
-            tbDatabaseName.Text = LiveDbSpSqlController.DataBaseName;
+            tbDbServerName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress;
+            tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
         }
 
         private void FormLauncher_Load(object sender, EventArgs e)
         {
-            if (LiveDbSpSqlController.HeatServerType == DbSqlSpController.ServerType.UNKNOWN)
+            if (LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.UNKNOWN)
             {
-                MessageBox.Show("Could not detect Heat Server Type. Please select it from the Heat Server Type drop-down list.", "Unknown Server Type", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBox.Show("Could not detect Heat Server Type. Please select it from the Heat Server Type drop-down list.", "Unknown Server Type", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 ModifyGuiOnUnknownServerType();
             }
             else
             {
-                comboBoxServerType.SelectedItem = LiveDbSpSqlController.HeatServerType.ToString();
+                comboBoxServerType.SelectedItem = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType.ToString();
                 ModifyGuiOnKnownServerType();
-                if (LiveDbSpSqlController.SqlConnectionStringFound)
+                if (LiveDbSpSqlController.DbSqlSpControllerData.SqlConnectionStringFound)
                 {
                     SetLauncherGui(LiveDbSpSqlController);
-                    DialogResult okToUseFoundString = MessageBox.Show("Discovered Server Name " + LiveDbSpSqlController.DbServeraddress + ", do you want to use this?",
+                    DialogResult okToUseFoundString = MessageBox.Show("Discovered Server Name " + LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress + ", do you want to use this?",
                                                                         "Discovered server details",
-                                                                        MessageBoxButtons.YesNo,
-                                                                        MessageBoxIcon.Question);
+                                                                        MessageBoxButton.YesNo,
+                                                                        MessageBoxImage.Question);
                     if (okToUseFoundString == DialogResult.Yes)
                     {
-                        tbDbServerName.Text = LiveDbSpSqlController.DbServeraddress;
-                        tbDatabaseName.Text = LiveDbSpSqlController.DataBaseName;
+                        tbDbServerName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress;
+                        tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
                         //btnTestDBConnection_Click(this, e = new EventArgs());
                     }
                     else
                     {
                         PromptForSqlDetails();
-                        tbDatabaseName.Text = LiveDbSpSqlController.DataBaseName;
+                        tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
                     }
                 }
                 else
                 {
                     PromptForSqlDetails();
-                    tbDatabaseName.Text = LiveDbSpSqlController.DataBaseName;
+                    tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
                 }
             }
         }
 
         private void PromptForSqlDetails()
         {
-            MessageBox.Show(@"Please provide SQL Server name\instance and Database Name details.", "Provide Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(@"Please provide SQL Server name\instance and Database Name details.", "Provide Details", MessageBoxButton.OK, MessageBoxImage.Information);
             tbDbServerName.Text = "";
             tbDatabaseName.Text = "";
         }
@@ -185,8 +180,8 @@ namespace IESandDACadmt.View
             }
             else
             {
-                LiveDbSpSqlController.DbServeraddress = tbDbServerName.Text.ToString();
-                LiveDbSpSqlController.DataBaseName = tbDatabaseName.Text.ToString();
+                LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress = tbDbServerName.Text.ToString();
+                LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = tbDatabaseName.Text.ToString();
                 return true;
             }
         }
@@ -200,15 +195,15 @@ namespace IESandDACadmt.View
 
         private void SetSqlSearchCommandsByServerType()
         {
-            switch (LiveDbSpSqlController.HeatServerType)
+            switch (LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType)
             {
-                case DbSqlSpController.ServerType.EMSS:
-                    LiveDbSpSqlController.ComputerReadSqlCode = _serverDetectionData.EmssComputerReadQuery;
-                    LiveDbSpSqlController.UserReadSqlCode = _serverDetectionData.EmssUserReadQuery;
+                case ViewModel.DbSqlSpControllerData.ServerType.EMSS:
+                    LiveDbSpSqlController.DbSqlSpControllerData.ComputerReadSqlCode = _serverDetectionData.EmssComputerReadQuery;
+                    LiveDbSpSqlController.DbSqlSpControllerData.UserReadSqlCode = _serverDetectionData.EmssUserReadQuery;
                     break;
-                case DbSqlSpController.ServerType.ES:
-                    LiveDbSpSqlController.ComputerReadSqlCode = _serverDetectionData.EsComputerReadQuery;
-                    LiveDbSpSqlController.UserReadSqlCode = _serverDetectionData.EsUserReadQuery;
+                case ViewModel.DbSqlSpControllerData.ServerType.ES:
+                    LiveDbSpSqlController.DbSqlSpControllerData.ComputerReadSqlCode = _serverDetectionData.EsComputerReadQuery;
+                    LiveDbSpSqlController.DbSqlSpControllerData.UserReadSqlCode = _serverDetectionData.EsUserReadQuery;
                     break;
                 default:
                     break;
@@ -233,14 +228,16 @@ namespace IESandDACadmt.View
 
         private void btnChangeSqlServer_Click(object sender, EventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
+            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
             dbConnectionTestTimer.Enabled = false;
             toolStripStatusLabel1.Text = "Connection attempt stopped";
             ModifyGuiOnFormLoad();
             toolStripProgressBar1.Value = 0;
-            DbSqlSpController.ServerType tempServerType = LiveDbSpSqlController.HeatServerType;
-            Dictionary<string, bool> tempo = LiveDbSpSqlController.EventTypesToDelete;
-            LiveDbSpSqlController = new DbSqlSpController { EventTypesToDelete = tempo, HeatServerType = tempServerType };
+            ViewModel.DbSqlSpControllerData.ServerType tempServerType = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType;
+            Dictionary<string, bool> tempo = LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete;
+            LiveDbSpSqlController = new Model.DbSqlSpController();
+            LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete = tempo;
+            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = tempServerType;
         }
 
         private void ModifyGuiOnFormLoad()
@@ -334,7 +331,7 @@ namespace IESandDACadmt.View
 
         private void dbConnectionTestTimer_Tick(object sender, EventArgs e)
         {
-            if (LiveDbSpSqlController.DbTestStillRunning)
+            if (LiveDbSpSqlController.DbSqlSpControllerData.DbTestStillRunning)
             {
                 int curProgBarValue = toolStripProgressBar1.Value;
                 if (curProgBarValue <= 100)
@@ -379,7 +376,7 @@ namespace IESandDACadmt.View
 
         private void viewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("notepad.exe", LiveDbSpSqlController.LogFileLocation);
+            Process.Start("notepad.exe", LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation);
         }
 
         private void requirementsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -425,19 +422,19 @@ namespace IESandDACadmt.View
                 DialogResult credsResult = altCredsForm.ShowDialog();
                 if (credsResult == DialogResult.OK)
                 {
-                    LiveDbSpSqlController.AltCredentialsSelected = true;
-                    tbDbServerName.Text = LiveDbSpSqlController.DbServeraddress;
-                    tbDatabaseName.Text = LiveDbSpSqlController.DataBaseName;
+                    LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected = true;
+                    tbDbServerName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress;
+                    tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
                 }
                 else
                 {
-                    LiveDbSpSqlController.AltCredentialsSelected = false;
+                    LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected = false;
                     comboBoxSqlAuthType.SelectedItem = "Windows Authentication";
                 }
             }
             else
             {
-                LiveDbSpSqlController.AltCredentialsSelected = false;
+                LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected = false;
             }
         }
     }
