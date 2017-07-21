@@ -48,6 +48,7 @@ namespace IESandDACadmt.View
 
         private void CANCEL_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
     }

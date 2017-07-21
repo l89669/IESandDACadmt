@@ -92,11 +92,20 @@
     <Compile Include="View\WpfEventTypeSelection.xaml.cs">
       <DependentUpon>WpfEventTypeSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\WpfHealthReview.xaml.cs">
+      <DependentUpon>WpfHealthReview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\WpfHelpRequirements.xaml.cs">
       <DependentUpon>WpfHelpRequirements.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\WpfLauncher.xaml.cs">
       <DependentUpon>WpfLauncher.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WpfRecordDeletion.xaml.cs">
+      <DependentUpon>WpfRecordDeletion.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WpfRecordsProfiler.xaml.cs">
+      <DependentUpon>WpfRecordsProfiler.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -122,11 +131,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\WpfHealthReview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\WpfHelpRequirements.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\WpfLauncher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WpfRecordDeletion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WpfRecordsProfiler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

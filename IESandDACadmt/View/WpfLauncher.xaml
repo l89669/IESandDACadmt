@@ -10,6 +10,7 @@
     <Window.Resources>
         
     </Window.Resources>
+    
     <Grid Name="MasterGrid" DataContext="Path=locmod.DbSqlSpController.DbSqlSpControllerData}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -17,15 +18,15 @@
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
-        <Grid Name="ServerTypeGrix" Grid.Row="0" >
+        <Grid Name="ServerTypeGrid" Grid.Row="0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Heat Server Type: " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
-            <ListBox Name="ServerType" Width="220" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-            <Button Name="ChangeType" Width="115" Content="CHANGE TYPE" Padding="5,0,5,0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+            <ListBox Name="ListboxServerType" Width="220" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+            <Button Name="ButtonChangeType" Width="115" Content="CHANGE TYPE" Padding="5,0,5,0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
         </Grid>
         <StackPanel Grid.Row="0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0">
             
@@ -59,18 +60,32 @@
             <Button Name="btnChangeSqlServer" Width="115" Content="CHANGE SERVER" Padding="5,0,5,0" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
 
         </Grid>
-        
-        
-        
-        <Grid Name="LaunchButtonsGrid" Grid.Row="2" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Name="LaunchProfiler" Padding="5,0,5,0" Grid.Column="0" Margin="20,30,20,30">PROFILING TOOL</Button>
-            <Button Name="LaunchDeletion" Padding="5,0,5,0" Grid.Column="1" Margin="20,30,20,30">DELETION TOOL</Button>
-            <Button Name="LaunchHealth" Padding="5,0,5,0" Grid.Column="2" Margin="20,30,20,30">HEALTH TOOL</Button>
+
+
+
+        <Grid  Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="9*" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            
+            <Grid Name="LaunchButtonsGrid" Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="btnLaunchProfiler" Padding="5,0,5,0" Grid.Column="0" Margin="20,30,20,30">PROFILING TOOL</Button>
+                <Button Name="btnLaunchDeletion" Padding="5,0,5,0" Grid.Column="1" Margin="20,30,20,30">DELETION TOOL</Button>
+                <Button Name="btnLaunchHealth" Padding="5,0,5,0" Grid.Column="2" Margin="20,30,20,30">HEALTH TOOL</Button>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <StatusBar Name="ToolBarStatusBar">
+                    <ProgressBar Name="ToolBarProgressBar" Width="70"/>
+                    <TextBlock Name="ToolBarLabel" Text="."/>
+                </StatusBar>
+            </StackPanel>
         </Grid>
+        
     </Grid>
 </Window>
