@@ -17,6 +17,9 @@ using IESandDACadmt.Model.Logging;
 using IESandDACadmt.Model.Sql;
 using IESandDACadmt.ViewModel;
 using IESandDACadmt.View;
+using System.Globalization;
+using System.Diagnostics;
+using System.Data;
 
 namespace IESandDACadmt.View
 {
@@ -75,154 +78,160 @@ namespace IESandDACadmt.View
             }
         }
 
-        private static void cbSpecificUser_DropDown(object sender, System.EventArgs e)
-        {
-            ComboBox senderComboBox = (ComboBox)sender;
-            int width = senderComboBox.DropDownWidth;
-            Graphics g = senderComboBox.CreateGraphics();
-            Font font = senderComboBox.Font;
-            int vertScrollBarWidth =
-                (senderComboBox.Items.Count > senderComboBox.MaxDropDownItems)
-                ? SystemInformation.VerticalScrollBarWidth : 0;
+        //private static void cbSpecificUser_DropDown(object sender, System.EventArgs e)
+        //{
+        //    ComboBox senderComboBox = (ComboBox)sender;
+        //    int width = senderComboBox.DropDownWidth;
+        //    Graphics g = senderComboBox.CreateGraphics();
+        //    Font font = senderComboBox.Font;
+        //    int vertScrollBarWidth =
+        //        (senderComboBox.Items.Count > senderComboBox.MaxDropDownItems)
+        //        ? SystemInformation.VerticalScrollBarWidth : 0;
 
-            foreach (string s in ((ComboBox)sender).Items)
-            {
-                var newWidth = (int)g.MeasureString(s, font).Width
-                               + vertScrollBarWidth;
-                if (width < newWidth)
-                {
-                    width = newWidth;
-                }
-            }
-            senderComboBox.DropDownWidth = width;
-        }
+        //    foreach (string s in ((ComboBox)sender).Items)
+        //    {
+        //        var newWidth = (int)g.MeasureString(s, font).Width
+        //                       + vertScrollBarWidth;
+        //        if (width < newWidth)
+        //        {
+        //            width = newWidth;
+        //        }
+        //    }
+        //    senderComboBox.DropDownWidth = width;
+        //}
 
-        private void cbSpecificComputer_DropDown(object sender, System.EventArgs e)
-        {
-            ComboBox senderComboBox = (ComboBox)sender;
-            int width = senderComboBox.DropDownWidth;
-            Graphics g = senderComboBox.CreateGraphics();
-            Font font = senderComboBox.Font;
-            int vertScrollBarWidth =
-                (senderComboBox.Items.Count > senderComboBox.MaxDropDownItems)
-                ? SystemInformation.VerticalScrollBarWidth : 0;
+        //private void cbSpecificComputer_DropDown(object sender, System.EventArgs e)
+        //{
+        //    ComboBox senderComboBox = (ComboBox)sender;
+        //    int width = senderComboBox.DropDownWidth;
+        //    Graphics g = senderComboBox.CreateGraphics();
+        //    Font font = senderComboBox.Font;
+        //    int vertScrollBarWidth =
+        //        (senderComboBox.Items.Count > senderComboBox.MaxDropDownItems)
+        //        ? SystemInformation.VerticalScrollBarWidth : 0;
 
-            foreach (string s in ((ComboBox)sender).Items)
-            {
-                var newWidth = (int)g.MeasureString(s, font).Width
-                               + vertScrollBarWidth;
-                if (width < newWidth)
-                {
-                    width = newWidth;
-                }
-            }
-            senderComboBox.DropDownWidth = width;
-        }
+        //    foreach (string s in ((ComboBox)sender).Items)
+        //    {
+        //        var newWidth = (int)g.MeasureString(s, font).Width
+        //                       + vertScrollBarWidth;
+        //        if (width < newWidth)
+        //        {
+        //            width = newWidth;
+        //        }
+        //    }
+        //    senderComboBox.DropDownWidth = width;
+        //}
 
         private void ModifyGuiAfterGoPromptCanceled()
         {
-            if (rbSelectUser.Checked == true)
+            if (rbSelectUser.IsChecked == true)
             {
-                rbEveryone.Enabled = true;
-                rbSelectUser.Enabled = true;
-                cbSpecificUser.Enabled = true;
-                rbEveryone.Checked = false;
-                rbSelectUser.Checked = true;
+                rbEveryone.IsEnabled = true;
+                rbSelectUser.IsEnabled = true;
+                cbSpecificUser.IsEnabled = true;
+                rbEveryone.IsChecked = false;
+                rbSelectUser.IsChecked = true;
             }
             else
             {
-                rbEveryone.Enabled = true;
-                rbSelectUser.Enabled = true;
-                cbSpecificUser.Enabled = false;
-                rbEveryone.Checked = true;
-                rbSelectUser.Checked = false;
+                rbEveryone.IsEnabled = true;
+                rbSelectUser.IsEnabled = true;
+                cbSpecificUser.IsEnabled = false;
+                rbEveryone.IsChecked = true;
+                rbSelectUser.IsChecked = false;
             }
 
-            if (rbSelectComputer.Checked == true)
+            if (rbSelectComputer.IsChecked == true)
             {
-                rbAllComputers.Enabled = true;
-                rbSelectComputer.Enabled = true;
-                cbSpecificComputer.Enabled = true;
-                rbAllComputers.Checked = false;
-                rbSelectComputer.Checked = true;
+                rbAllComputers.IsEnabled = true;
+                rbSelectComputer.IsEnabled = true;
+                cbSpecificComputer.IsEnabled = true;
+                rbAllComputers.IsChecked = false;
+                rbSelectComputer.IsChecked = true;
             }
             else
             {
-                rbAllComputers.Enabled = true;
-                rbSelectComputer.Enabled = true;
-                cbSpecificComputer.Enabled = false;
-                rbAllComputers.Checked = true;
-                rbSelectComputer.Checked = false;
+                rbAllComputers.IsEnabled = true;
+                rbSelectComputer.IsEnabled = true;
+                cbSpecificComputer.IsEnabled = false;
+                rbAllComputers.IsChecked = true;
+                rbSelectComputer.IsChecked = false;
             }
-            AlterPurgeCriteriaPanel(true);
-            AlterStartStopPanel(true);
-            AlterPurgeStatsPanel(false);
+            EventsCriteriaGrid.IsEnabled = true;
+            StopStartButtonGrid.IsEnabled = true;
+            ProgressGrid.IsEnabled = false;
+            //AlterPurgeCriteriaPanel(true);
+            //AlterStartStopPanel(true);
+            //AlterPurgeStatsPanel(false);
 
-            btnStopCleanup.Enabled = false;
-            btnStartCleanup.Enabled = true;
+            //btnStopCleanup.IsEnabled = false;
+            //btnStartCleanup.IsEnabled = true;
 
-            pCleanupCriteria.BackColor = SystemColors.ControlLightLight;
-            pStartStopButtons.BackColor = SystemColors.ControlLightLight;
-            pCleanupStats.BackColor = SystemColors.Control;
+            //EventsCriteriaGrid.BackColor = SystemColors.ControlLightLight;
+            //StopStartButtonGrid.BackColor = SystemColors.ControlLightLight;
+            //ProgressGrid.BackColor = SystemColors.Control;
 
-            btnStartCleanup.BackColor = SystemColors.Control;
-            btnStopCleanup.BackColor = SystemColors.Control;
-            btnStartCleanup.Enabled = true;
-            btnStopCleanup.Enabled = false;
+            //btnStartCleanup.BackColor = SystemColors.Control;
+            //btnStopCleanup.BackColor = SystemColors.Control;
+            //btnStartCleanup.IsEnabled = true;
+            //btnStopCleanup.IsEnabled = false;
 
             toolStripStatusLabel1.Text = "Record deletion canceled";
         }
 
         private void ModifyGuiAfterNoTargetRecordsFound()
         {
-            if (rbSelectUser.Checked == true)
+            if (rbSelectUser.IsChecked == true)
             {
-                rbEveryone.Enabled = true;
-                rbSelectUser.Enabled = true;
-                cbSpecificUser.Enabled = true;
-                rbEveryone.Checked = false;
-                rbSelectUser.Checked = true;
+                rbEveryone.IsEnabled = true;
+                rbSelectUser.IsEnabled = true;
+                cbSpecificUser.IsEnabled = true;
+                rbEveryone.IsChecked = false;
+                rbSelectUser.IsChecked = true;
             }
             else
             {
-                rbEveryone.Enabled = true;
-                rbSelectUser.Enabled = true;
-                cbSpecificUser.Enabled = false;
-                rbEveryone.Checked = true;
-                rbSelectUser.Checked = false;
+                rbEveryone.IsEnabled = true;
+                rbSelectUser.IsEnabled = true;
+                cbSpecificUser.IsEnabled = false;
+                rbEveryone.IsChecked = true;
+                rbSelectUser.IsChecked = false;
             }
 
-            if (rbSelectComputer.Checked == true)
+            if (rbSelectComputer.IsChecked == true)
             {
-                rbAllComputers.Enabled = true;
-                rbSelectComputer.Enabled = true;
-                cbSpecificComputer.Enabled = true;
-                rbAllComputers.Checked = false;
-                rbSelectComputer.Checked = true;
+                rbAllComputers.IsEnabled = true;
+                rbSelectComputer.IsEnabled = true;
+                cbSpecificComputer.IsEnabled = true;
+                rbAllComputers.IsChecked = false;
+                rbSelectComputer.IsChecked = true;
             }
             else
             {
-                rbAllComputers.Enabled = true;
-                rbSelectComputer.Enabled = true;
-                cbSpecificComputer.Enabled = false;
-                rbAllComputers.Checked = true;
-                rbSelectComputer.Checked = false;
+                rbAllComputers.IsEnabled = true;
+                rbSelectComputer.IsEnabled = true;
+                cbSpecificComputer.IsEnabled = false;
+                rbAllComputers.IsChecked = true;
+                rbSelectComputer.IsChecked = false;
             }
-            AlterPurgeCriteriaPanel(true);
-            AlterStartStopPanel(true);
-            AlterPurgeStatsPanel(false);
+            EventsCriteriaGrid.IsEnabled = true;
+            StopStartButtonGrid.IsEnabled = true;
+            ProgressGrid.IsEnabled = false;
+            //AlterPurgeCriteriaPanel(true);
+            //AlterStartStopPanel(true);
+            //AlterPurgeStatsPanel(false);
 
-            btnStopCleanup.Enabled = false;
-            btnStartCleanup.Enabled = true;
+            //btnStopCleanup.IsEnabled = false;
+            //btnStartCleanup.IsEnabled = true;
 
-            pCleanupCriteria.BackColor = SystemColors.ControlLightLight;
-            pStartStopButtons.BackColor = SystemColors.ControlLightLight;
-            pCleanupStats.BackColor = SystemColors.Control;
+            //EventsCriteriaGrid.BackColor = SystemColors.ControlLightLight;
+            //StopStartButtonGrid.BackColor = SystemColors.ControlLightLight;
+            //ProgressGrid.BackColor = SystemColors.Control;
 
-            btnStartCleanup.BackColor = SystemColors.Control;
-            btnStopCleanup.BackColor = SystemColors.Control;
-            btnStartCleanup.Enabled = true;
-            btnStopCleanup.Enabled = false;
+            //btnStartCleanup.BackColor = SystemColors.Control;
+            //btnStopCleanup.BackColor = SystemColors.Control;
+            //btnStartCleanup.IsEnabled = true;
+            //btnStopCleanup.IsEnabled = false;
 
             toolStripStatusLabel1.Text = "No target records found. Action canceled";
         }
@@ -232,80 +241,83 @@ namespace IESandDACadmt.View
             LoadUsersComputersIntoGui();
             ModifyGuiAfterFormLoad();
             LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " The known Users and Computers read from SQL and loaded into GUI.");
-            cbSpecificComputer.DropDown += new System.EventHandler(this.cbSpecificComputer_DropDown);
-            cbSpecificUser.DropDown += new System.EventHandler(cbSpecificUser_DropDown);
+            //cbSpecificComputer.DropDown += new System.EventHandler(this.cbSpecificComputer_DropDown);
+            //cbSpecificUser.DropDown += new System.EventHandler(cbSpecificUser_DropDown);
             toolStripStatusLabel1.Text = "Connected to:" + LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress + " User:" + LiveDbSpSqlController.DbSqlSpControllerData.SqlConnUserName;
         }
 
         private void ModifyGuiAfterFormLoad()
         {
-            pCleanupCriteria.BackColor = SystemColors.ControlLightLight;
-            pStartStopButtons.BackColor = SystemColors.ControlLightLight;
-            pCleanupStats.BackColor = SystemColors.Control;
-            AlterPurgeCriteriaPanel(true);
-            AlterStartStopPanel(true);
-            AlterPurgeStatsPanel(false);
+            //EventsCriteriaGrid.BackColor = SystemColors.ControlLightLight;
+            //StopStartButtonGrid.BackColor = SystemColors.ControlLightLight;
+            //ProgressGrid.BackColor = SystemColors.Control;
+            EventsCriteriaGrid.IsEnabled = true;
+            StopStartButtonGrid.IsEnabled = true;
+            ProgressGrid.IsEnabled = false;
+            //AlterPurgeCriteriaPanel(true);
+            //AlterStartStopPanel(true);
+            //AlterPurgeStatsPanel(false);
 
-            rbEveryone.Checked = true;
-            rbEveryone.Enabled = true;
-            rbSelectUser.Checked = false;
-            rbSelectUser.Enabled = true;
-            cbSpecificUser.Enabled = false;
+            rbEveryone.IsChecked = true;
+            rbEveryone.IsEnabled = true;
+            rbSelectUser.IsChecked = false;
+            rbSelectUser.IsEnabled = true;
+            cbSpecificUser.IsEnabled = false;
 
-            rbAllComputers.Checked = true;
-            rbAllComputers.Enabled = true;
-            rbSelectComputer.Checked = false;
-            rbSelectComputer.Enabled = true;
-            cbSpecificComputer.Enabled = false;
+            rbAllComputers.IsChecked = true;
+            rbAllComputers.IsEnabled = true;
+            rbSelectComputer.IsChecked = false;
+            rbSelectComputer.IsEnabled = true;
+            cbSpecificComputer.IsEnabled = false;
 
-            rbAllProcesses.Checked = true;
-            rbAllProcesses.Enabled = true;
-            rbSpecificProcess.Checked = false;
-            rbSpecificProcess.Enabled = true;
-            cbSpecificProcess.Enabled = false;
+            rbAllProcesses.IsChecked = true;
+            rbAllProcesses.IsEnabled = true;
+            rbSpecificProcess.IsChecked = false;
+            rbSpecificProcess.IsEnabled = true;
+            cbSpecificProcess.IsEnabled = false;
 
-            btnStartCleanup.BackColor = SystemColors.Control;
-            btnStopCleanup.BackColor = SystemColors.Control;
-            btnStartCleanup.Enabled = true;
-            btnStopCleanup.Enabled = false;
+            //btnStartCleanup.BackColor = SystemColors.Control;
+            //btnStopCleanup.BackColor = SystemColors.Control;
+            btnStartCleanup.IsEnabled = true;
+            btnStopCleanup.IsEnabled = false;
 
-            dtpCutOffDate.Value = DateTime.Today.AddDays(-1);
-            rbCutOffDate.Checked = true;
-            rbNoCutOffDate.Checked = false;
+            dtpCutOffDate.DisplayDate = DateTime.Today.AddDays(-1);
+            rbCutOffDate.IsChecked = true;
+            rbNoCutOffDate.IsChecked = false;
             cbBatchSize.SelectedIndex = 1;
             toolStripProgressBar1.Value = 0;
         }
 
-        private void AlterPurgeStatsPanel(bool state)
-        {
-            pCleanupStats.Enabled = state;
-            lblRecordsToPurge.Enabled = state;
-            RecordsLeftToPurgeTextBox.Enabled = state;
-            lblRecordsPurged.Enabled = state;
-            RecordsPurgedTextBox.Enabled = state;
-            lblPercentRecordsPurged.Enabled = state;
-            percentageRecordsProcessedTextBox.Enabled = state;
-            lblRemainingRunTime.Enabled = state;
-            remainingRunTimeMinutes.Enabled = state;
+        //private void AlterPurgeStatsPanel(bool state)
+        //{
+        //    ProgressGrid.IsEnabled = state;
+        //    lblRecordsToPurge.IsEnabled = state;
+        //    RecordsLeftToPurgeTextBox.IsEnabled = state;
+        //    lblRecordsPurged.IsEnabled = state;
+        //    RecordsPurgedTextBox.IsEnabled = state;
+        //    lblPercentRecordsPurged.IsEnabled = state;
+        //    PercentageRecordsProcessedTextBox.IsEnabled = state;
+        //    lblRemainingRunTime.IsEnabled = state;
+        //    remainingRunTimeMinutes.IsEnabled = state;
 
-        }
+        //}
 
-        private void AlterStartStopPanel(bool state)
-        {
-            pStartStopButtons.Enabled = state;
-        }
+        //private void AlterStartStopPanel(bool state)
+        //{
+        //    StopStartButtonGrid.IsEnabled = state;
+        //}
 
-        private void AlterPurgeCriteriaPanel(bool state)
-        {
-            pCleanupCriteria.Enabled = state;
-            lblPurgeCriteria.Enabled = state;
-            gbUser.Enabled = state;
-            gbComputer.Enabled = state;
-            gbByProcess.Enabled = state;
-            gbDataRetentionLimit.Enabled = state;
-            gbBatchSize.Enabled = state;
-            gbTaskRunTime.Enabled = state;
-        }
+        //private void AlterPurgeCriteriaPanel(bool state)
+        //{
+        //    EventsCriteriaGrid.IsEnabled = state;
+        //    lblPurgeCriteria.IsEnabled = state;
+        //    gbUser.IsEnabled = state;
+        //    gbComputer.IsEnabled = state;
+        //    gbByProcess.IsEnabled = state;
+        //    gbDataRetentionLimit.IsEnabled = state;
+        //    gbBatchSize.IsEnabled = state;
+        //    gbTaskRunTime.IsEnabled = state;
+        //}
 
         private void btnStartCleanup_Click(object sender, EventArgs e)
         {
@@ -314,7 +326,7 @@ namespace IESandDACadmt.View
             ActionOutcome theResult = LoadGuiValuesIntoDbSqlSpController();
             if (theResult.Success)
             {
-                DialogResult backupDone = MessageBox.Show("It is highly recommended to have a backup of the " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName + " database before deleting records. Do you want to continue with the deletion?", "Backup check for database " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult backupDone = MessageBox.Show("It is highly recommended to have a backup of the " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName + " database before deleting records. Do you want to continue with the deletion?", "Backup check for database " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName, MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (backupDone == DialogResult.Yes)
                 {
                     StartPurging();
@@ -337,21 +349,21 @@ namespace IESandDACadmt.View
         {
             LiveDbSpSqlController.DbSqlSpControllerData.StopController = false;
             toolStripStatusLabel1.Text = "Building required Stored Procedures...";
-            var parameterValidationResult = LiveDbSpSqlController.DbSqlSpControllerData.ValidateParameters();
+            var parameterValidationResult = LiveDbSpSqlController.ValidateParameters();
             if (parameterValidationResult == "success")
             {
                 LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " GUI Parameters validation and SQL Stored Procedure creation successful.");
-                _calculateTotalRecordsToPurgeThread = new Thread(LiveDbSpSqlController.DbSqlSpControllerData.CalculateTotalRecordsToPurge);
+                _calculateTotalRecordsToPurgeThread = new Thread(LiveDbSpSqlController.CalculateTotalRecordsToPurge);
                 _calculateTotalRecordsToPurgeThread.IsBackground = true;
                 _calculateTotalRecordsToPurgeThread.Start();
                 Thread.Sleep(100);
-                timerCalcTotRecToPurge.Enabled = true;
+                timerCalcTotRecToPurge.IsEnabled = true;
                 toolStripStatusLabel1.Text = "Identifying target records...";
             }
             else
             {
                 LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, parameterValidationResult.ToString());
-                MessageBox.Show("Error validating the GUI parameters or Creating SQL Stored Procedures. See the Log File for further details.", "Error Processing Criteria", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error validating the GUI parameters or Creating SQL Stored Procedures. See the Log File for further details.", "Error Processing Criteria", MessageBoxButton.OK, MessageBoxImage.Error);
                 LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, parameterValidationResult);
                 ModifyGuiAfterStopButtonClick();
             }
@@ -361,8 +373,8 @@ namespace IESandDACadmt.View
         {
             RecordsLeftToPurgeTextBox.Text = "0";
             RecordsPurgedTextBox.Text = "0";
-            remainingRunTimeMinutes.Text = "0";
-            percentageRecordsProcessedTextBox.Text = "0";
+            RemainingRunTimeMinutes.Text = "0";
+            PercentageRecordsProcessedTextBox.Text = "0";
             toolStripProgressBar1.Value = 100;
         }
 
@@ -399,25 +411,25 @@ namespace IESandDACadmt.View
             bool computerFound = false;
             bool processFound = false;
             string errorMessage = "";
-            LiveDbSpSqlController.DbSqlSpControllerData.RunTime = (((int)runtimeHours.Value * 60) + (int)runtimeMinutes.Value);
+            LiveDbSpSqlController.DbSqlSpControllerData.RunTime = (((int)runtimeHours.SelectedValue * 60) + (int)runtimeMinutes.SelectedValue);
             LiveDbSpSqlController.DbSqlSpControllerData.BatchSize = cbBatchSize.Items[cbBatchSize.SelectedIndex].ToString();
-            if (rbNoCutOffDate.Checked == true)
+            if (rbNoCutOffDate.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.CutOffDate = DateTime.Today;
                 LiveDbSpSqlController.DbSqlSpControllerData.CutOffDays = false;
             }
             else
             {
-                LiveDbSpSqlController.DbSqlSpControllerData.CutOffDate = dtpCutOffDate.Value.Date;
+                LiveDbSpSqlController.DbSqlSpControllerData.CutOffDate = dtpCutOffDate.SelectedDate.Value.Date;
                 LiveDbSpSqlController.DbSqlSpControllerData.CutOffDays = true;
             }
-            if (rbEveryone.Checked == true)
+            if (rbEveryone.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.SelectedUser = "everyone";
                 LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected User: EVERYONE.");
                 userFound = true;
             }
-            if (rbSelectUser.Checked == true)
+            if (rbSelectUser.IsChecked == true)
             {
                 string selectedUserEntry = cbSpecificUser.Items[cbSpecificUser.SelectedIndex].ToString();
                 if (selectedUserEntry != "No Users Found")
@@ -436,13 +448,13 @@ namespace IESandDACadmt.View
                     errorMessage = " Invalid User target criteria selected. Please review the selection.";
                 }
             }
-            if (rbAllComputers.Checked == true)
+            if (rbAllComputers.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.SelectedComputer = "all";
                 LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected Computer: ALL.");
                 computerFound = true;
             }
-            if (rbSelectComputer.Checked == true)
+            if (rbSelectComputer.IsChecked == true)
             {
                 string selectedComputerEntry = cbSpecificComputer.Items[cbSpecificComputer.SelectedIndex].ToString();
                 if (selectedComputerEntry != "No Computers Found")
@@ -462,13 +474,13 @@ namespace IESandDACadmt.View
                 }
             }
 
-            if (rbAllProcesses.Checked == true)
+            if (rbAllProcesses.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.SelectedProcess = "all";
                 LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected Process: ALL.");
                 processFound = true;
             }
-            if (rbSpecificProcess.Checked == true)
+            if (rbSpecificProcess.IsChecked == true)
             {
                 if (cbSpecificProcess.Items[cbSpecificProcess.SelectedIndex].ToString() != "No Processes Found")
                 {
@@ -496,37 +508,41 @@ namespace IESandDACadmt.View
 
         private void ModifyGuiAfterStartButtonClick()
         {
-            eventTypesToolStripMenuItem.Enabled = false;
+            EventTypesMenuItem.IsEnabled = false;
 
-            AlterPurgeCriteriaPanel(false);
-            AlterStartStopPanel(true);
-            AlterPurgeStatsPanel(true);
+            EventsCriteriaGrid.IsEnabled = false;
+            StopStartButtonGrid.IsEnabled = true;
+            ProgressGrid.IsEnabled = true;
 
-            btnStopCleanup.Enabled = true;
-            btnStartCleanup.Enabled = false;
+            //AlterPurgeCriteriaPanel(false);
+            //AlterStartStopPanel(true);
+            //AlterPurgeStatsPanel(true);
 
-            pCleanupCriteria.BackColor = SystemColors.Control;
-            pStartStopButtons.BackColor = SystemColors.ControlLightLight;
-            pCleanupStats.BackColor = SystemColors.ControlLightLight;
+            btnStopCleanup.IsEnabled = true;
+            btnStartCleanup.IsEnabled = false;
 
-            btnStartCleanup.BackColor = SystemColors.Control;
-            btnStopCleanup.BackColor = SystemColors.Control;
+            //EventsCriteriaGrid.BackColor = SystemColors.Control;
+            //StopStartButtonGrid.BackColor = SystemColors.ControlLightLight;
+            //ProgressGrid.BackColor = SystemColors.ControlLightLight;
 
-            btnStartCleanup.Enabled = false;
-            btnStopCleanup.Enabled = true;
+            //btnStartCleanup.BackColor = SystemColors.Control;
+            //btnStopCleanup.BackColor = SystemColors.Control;
+
+            btnStartCleanup.IsEnabled = false;
+            btnStopCleanup.IsEnabled = true;
         }
 
         private void btnStopCleanup_Click(object sender, EventArgs e)
         {
             LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " STOP CLEANUP button was clicked.");
             StopPurgeThreadAndWaitForThreadStop();
-            btnStartCleanup.Enabled = false;
-            btnStopCleanup.Enabled = false;
+            btnStartCleanup.IsEnabled = false;
+            btnStopCleanup.IsEnabled = false;
         }
 
         private void StopPurgeThreadAndWaitForThreadStop()
         {
-            LiveDbSpSqlController.DbSqlSpControllerData.RequestStop();
+            LiveDbSpSqlController.RequestStop();
             while (!LiveDbSpSqlController.DbSqlSpControllerData.WorkerCompleted)
             {
                 Thread.Sleep(100);
@@ -536,53 +552,57 @@ namespace IESandDACadmt.View
 
         private void ModifyGuiAfterStopButtonClick()
         {
-            eventTypesToolStripMenuItem.Enabled = true;
+            EventTypesMenuItem.IsEnabled = true;
 
-            AlterPurgeCriteriaPanel(true);
-            AlterStartStopPanel(true);
-            AlterPurgeStatsPanel(false);
+            EventsCriteriaGrid.IsEnabled = true;
+            StopStartButtonGrid.IsEnabled = true;
+            ProgressGrid.IsEnabled = false;
 
-            btnStopCleanup.Enabled = false;
-            btnStartCleanup.Enabled = true;
+            //AlterPurgeCriteriaPanel(true);
+            //AlterStartStopPanel(true);
+            //AlterPurgeStatsPanel(false);
 
-            pCleanupCriteria.BackColor = SystemColors.ControlLightLight;
-            pStartStopButtons.BackColor = SystemColors.ControlLightLight;
-            pCleanupStats.BackColor = SystemColors.Control;
+            btnStopCleanup.IsEnabled = false;
+            btnStartCleanup.IsEnabled = true;
 
-            btnStartCleanup.BackColor = SystemColors.Control;
-            btnStopCleanup.BackColor = SystemColors.Control;
+            //EventsCriteriaGrid.BackColor = SystemColors.ControlLightLight;
+            //StopStartButtonGrid.BackColor = SystemColors.ControlLightLight;
+            //ProgressGrid.BackColor = SystemColors.Control;
 
-            btnStartCleanup.Enabled = true;
-            btnStopCleanup.Enabled = false;
+            //btnStartCleanup.BackColor = SystemColors.Control;
+            //btnStopCleanup.BackColor = SystemColors.Control;
+
+            btnStartCleanup.IsEnabled = true;
+            btnStopCleanup.IsEnabled = false;
         }
 
         private void rbEveryone_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbEveryone.Checked != true) return;
-            rbSelectUser.Checked = false;
-            cbSpecificUser.Enabled = false;
+            if (rbEveryone.IsChecked != true) return;
+            rbSelectUser.IsChecked = false;
+            cbSpecificUser.IsEnabled = false;
         }
 
         private void rbSelectUser_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbSelectUser.Checked != true) return;
-            rbEveryone.Checked = false;
-            cbSpecificUser.Enabled = true;
+            if (rbSelectUser.IsChecked != true) return;
+            rbEveryone.IsChecked = false;
+            cbSpecificUser.IsEnabled = true;
             cbSpecificUser.SelectedIndex = 0;
         }
 
         private void rbAllComputers_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbAllComputers.Checked != true) return;
-            rbSelectComputer.Checked = false;
-            cbSpecificComputer.Enabled = false;
+            if (rbAllComputers.IsChecked != true) return;
+            rbSelectComputer.IsChecked = false;
+            cbSpecificComputer.IsEnabled = false;
         }
 
         private void rbSpecificComputer_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbSelectComputer.Checked != true) return;
-            rbAllComputers.Checked = false;
-            cbSpecificComputer.Enabled = true;
+            if (rbSelectComputer.IsChecked != true) return;
+            rbAllComputers.IsChecked = false;
+            cbSpecificComputer.IsEnabled = true;
             cbSpecificComputer.SelectedIndex = 0;
         }
 
@@ -600,7 +620,7 @@ namespace IESandDACadmt.View
         {
             if (_sqlPurgeWorkerThread.IsAlive)
             {
-                int curProgBarValue = toolStripProgressBar1.Value;
+                int curProgBarValue = Convert.ToInt32(toolStripProgressBar1.Value);
                 if (curProgBarValue <= 100)
                 {
                     curProgBarValue = curProgBarValue + 10;
@@ -627,16 +647,16 @@ namespace IESandDACadmt.View
                 int theMinsRemaining = Convert.ToInt32(minsRemaining);
                 int secsRemaining = LiveDbSpSqlController.DbSqlSpControllerData.ProcessingEndTime.Subtract(DateTime.Now).Seconds;
                 string timeLeft = PadStringIfBelowTen(theDaysRemaining) + "d " + PadStringIfBelowTen(theHoursRemaining) + "h " + PadStringIfBelowTen(theMinsRemaining) + "m " + PadStringIfBelowTen(secsRemaining) + "s";
-                remainingRunTimeMinutes.Text = (timeLeft);
+                RemainingRunTimeMinutes.Text = (timeLeft);
             }
             else
             {
-                processingStatsTimer.Enabled = false;
+                processingStatsTimer.IsEnabled = false;
                 if (LiveDbSpSqlController.DbSqlSpControllerData.WorkerCompleted)
                 {
                     RecordsLeftToPurgeTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge.ToString();
-                    percentageRecordsProcessedTextBox.Text = (((LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge - LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge) * 100) / LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge).ToString();
-                    remainingRunTimeMinutes.Text = "0:00";
+                    PercentageRecordsProcessedTextBox.Text = (((LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge - LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge) * 100) / LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge).ToString();
+                    RemainingRunTimeMinutes.Text = "0:00";
                     RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
                     toolStripProgressBar1.Value = 100;
                     toolStripStatusLabel1.Text = "Processing complete";
@@ -645,7 +665,7 @@ namespace IESandDACadmt.View
                     LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".");
                     MessageBox.Show("Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar,
                                                                       "Record Processing Complete",
-                                                                      MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                                                                      MessageBoxButton.OK, MessageBoxImage.Information);
 
 
                 }
@@ -657,7 +677,7 @@ namespace IESandDACadmt.View
                     LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".");
                     MessageBox.Show("Record processing stopped unexpectedly. Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".",
                                                                       "Record Processing Warning",
-                                                                      MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                                                                      MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 ModifyGuiAfterStopButtonClick();
             }
@@ -688,32 +708,41 @@ namespace IESandDACadmt.View
 
         private void RuntimesLogicCheck()
         {
-            if (runtimeHours.Text == "")
+           
+            if ((Convert.ToInt32(runtimeHours.SelectedValue) == 0) && (Convert.ToInt32(runtimeMinutes.SelectedValue) == 0))
             {
-                runtimeHours.Text = "0";
-                runtimeHours.Value = 0;
+                runtimeMinutes.SelectedValue = 1;
             }
-            if (runtimeMinutes.Text == "")
+            if ((Convert.ToInt32(runtimeHours.SelectedValue) == 90) && (Convert.ToInt32(runtimeMinutes.SelectedValue) > 0))
             {
-                runtimeMinutes.Text = "0";
-                runtimeMinutes.Value = 0;
+                runtimeMinutes.SelectedValue = 0;
             }
-            if ((runtimeHours.Value == 0) && (runtimeMinutes.Value == 0))
-            {
-                runtimeMinutes.Value = 1;
-            }
-            if ((runtimeHours.Value == 90) && (runtimeMinutes.Value > 0))
-            {
-                runtimeMinutes.Value = 0;
-            }
+            //if (runtimeHours.Text == "")
+            //{
+            //    runtimeHours.Text = "0";
+            //    runtimeHours.Value = 0;
+            //}
+            //if (runtimeMinutes.Text == "")
+            //{
+            //    runtimeMinutes.Text = "0";
+            //    runtimeMinutes.Value = 0;
+            //}
+            //if ((runtimeHours.Value == 0) && (runtimeMinutes.Value == 0))
+            //{
+            //    runtimeMinutes.Value = 1;
+            //}
+            //if ((runtimeHours.Value == 90) && (runtimeMinutes.Value > 0))
+            //{
+            //    runtimeMinutes.Value = 0;
+            //}
         }
 
         private void dtpCutOffDate_ValueChanged(object sender, EventArgs e)
         {
-            if (dtpCutOffDate.Value.Date < DateTime.Today.Date) return;
-            MessageBox.Show("You cannot select today or a future date as the cut-off date. Please select an older date.", "Invalid date selection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (dtpCutOffDate.SelectedDate.Value.Date < DateTime.Today.Date) return;
+            MessageBox.Show("You cannot select today or a future date as the cut-off date. Please select an older date.", "Invalid date selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " User tried to select " + dtpCutOffDate.Value.Date.ToString() + " as the cut-off date.");
-            dtpCutOffDate.Value = DateTime.Today.AddDays(-1);
+            dtpCutOffDate.DisplayDate = DateTime.Today.AddDays(-1);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -723,8 +752,8 @@ namespace IESandDACadmt.View
 
         private void eventTypesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IESandDACadmt.Forms.FormEventtypeSelection eventTypeForm = new IESandDACadmt.Forms.FormEventtypeSelection(LiveDbSpSqlController);
-            eventTypeForm.StartPosition = FormStartPosition.CenterParent;
+            IESandDACadmt.View.WpfEventTypeSelection eventTypeForm = new WpfEventTypeSelection(LiveDbSpSqlController);
+            //eventTypeForm.StartPosition = FormStartPosition.CenterParent;
             eventTypeForm.Show();
         }
 
@@ -735,9 +764,9 @@ namespace IESandDACadmt.View
 
         private void rbSpecificProcess_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbSpecificProcess.Checked == true)
+            if (rbSpecificProcess.IsChecked == true)
             {
-                rbAllProcesses.Checked = false;
+                rbAllProcesses.IsChecked = false;
                 if (LiveDbSpSqlController.DbSqlSpControllerData.ByProcessQueryAlreadyRan)
                 {
                     // Sort the already gotten results into GUI CB alphabetically.
@@ -749,7 +778,7 @@ namespace IESandDACadmt.View
                         {
                             cbSpecificProcess.Items.Add(processString);
                         }
-                        cbSpecificProcess.Enabled = true;
+                        cbSpecificProcess.IsEnabled = true;
                         cbSpecificProcess.SelectedIndex = 0;
                     }
                     else
@@ -759,22 +788,22 @@ namespace IESandDACadmt.View
                 }
                 else
                 {
-                    DialogResult result1 = MessageBox.Show("This data will need to be retrieved from the database and this could take some time. Do you want to proceed with this?", "Process-related SQL query", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                    if (result1 == System.Windows.Forms.DialogResult.Yes)
+                    MessageBoxResult result1 = MessageBox.Show("This data will need to be retrieved from the database and this could take some time. Do you want to proceed with this?", "Process-related SQL query", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    if (result1 == MessageBoxResult.Yes)
                     {
                         // Run the Query in a new thread
                         toolStripStatusLabel1.Text = "Querying for top processes...";
                         try
                         {
-                            IESandDACadmt.Sql.SqlReadByProcessInfoThread workerReadSqlByProcess = new IESandDACadmt.Sql.SqlReadByProcessInfoThread(LiveDbSpSqlController,
+                            IESandDACadmt.Model.Sql.SqlReadByProcessInfoThread workerReadSqlByProcess = new IESandDACadmt.Model.Sql.SqlReadByProcessInfoThread(LiveDbSpSqlController,
                                                                                                                        LiveDbSpSqlController.DbSqlSpControllerData.SqlConnectionString,
                                                                                                                        3600,
-                                                                                                                       IESandDACadmt.BL.RecordsProfilingQueryLogic.EmssByProcessQuery,
+                                                                                                                       IESandDACadmt.Model.RecordsProfilingQueryLogic.EmssByProcessQuery,
                                                                                                                        LiveDbSpSqlController.DbSqlSpControllerData.ByProcessQueryDataTable);
                             _readByProcessSqlInfoThread = new Thread(workerReadSqlByProcess.ReadByProcessSqlInfo);
                             _readByProcessSqlInfoThread.IsBackground = true;
                             _readByProcessSqlInfoThread.Start();
-                            readByProcessInfoTimer.Enabled = true;
+                            readByProcessInfoTimer.IsEnabled = true;
                         }
                         catch (Exception ex)
                         {
@@ -793,11 +822,11 @@ namespace IESandDACadmt.View
 
         private void ModifyByProcessControlsForNoProcessInfo()
         {
-            rbAllProcesses.Checked = true;
-            rbAllProcesses.Enabled = true;
-            rbSpecificProcess.Checked = false;
-            rbSpecificProcess.Enabled = true;
-            cbSpecificProcess.Enabled = false;
+            rbAllProcesses.IsChecked = true;
+            rbAllProcesses.IsEnabled = true;
+            rbSpecificProcess.IsChecked = false;
+            rbSpecificProcess.IsEnabled = true;
+            cbSpecificProcess.IsEnabled = false;
         }
 
         private void readByProcessInfoTimer_Tick(object sender, EventArgs e)
@@ -826,7 +855,7 @@ namespace IESandDACadmt.View
                     {
                         cbSpecificProcess.Items.Add(processString);
                     }
-                    cbSpecificProcess.Enabled = true;
+                    cbSpecificProcess.IsEnabled = true;
                     cbSpecificProcess.SelectedIndex = 0;
                 }
                 else
@@ -835,12 +864,12 @@ namespace IESandDACadmt.View
                 }
                 toolStripProgressBar1.Value = 100;
                 toolStripStatusLabel1.Text = "Finished reading processes";
-                readByProcessInfoTimer.Enabled = false;
+                readByProcessInfoTimer.IsEnabled = false;
             }
             else
             {
                 // Make the progress bar increment.
-                int curProgBarValue = toolStripProgressBar1.Value;
+                int curProgBarValue = Convert.ToInt32(toolStripProgressBar1.Value);
                 if (curProgBarValue <= 100)
                 {
                     curProgBarValue = curProgBarValue + 10;
@@ -855,10 +884,10 @@ namespace IESandDACadmt.View
 
         private void rbAllProcesses_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbAllProcesses.Checked == true)
+            if (rbAllProcesses.IsChecked == true)
             {
-                rbSpecificProcess.Checked = false;
-                cbSpecificProcess.Enabled = false;
+                rbSpecificProcess.IsChecked = false;
+                cbSpecificProcess.IsEnabled = false;
             }
 
         }
@@ -915,7 +944,7 @@ namespace IESandDACadmt.View
             {
                 RecordsLeftToPurgeTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge.ToString();
                 double percentage = (((LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge - LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge) * 100) / LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge);
-                percentageRecordsProcessedTextBox.Text = Math.Round(percentage, 2).ToString();
+                PercentageRecordsProcessedTextBox.Text = Math.Round(percentage, 2).ToString();
                 RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
             }
         }
@@ -924,7 +953,7 @@ namespace IESandDACadmt.View
         {
             if (_calculateTotalRecordsToPurgeThread.IsAlive)
             {
-                int curProgBarValue = toolStripProgressBar1.Value;
+                int curProgBarValue = toolStripProgressBar1.;
                 if (curProgBarValue <= 100)
                 {
                     curProgBarValue = curProgBarValue + 10;
@@ -938,7 +967,7 @@ namespace IESandDACadmt.View
             }
             else
             {
-                timerCalcTotRecToPurge.Enabled = false;
+                timerCalcTotRecToPurge.IsEnabled = false;
                 if (LiveDbSpSqlController.DbSqlSpControllerData.Result.Success)
                 {
                     toolStripProgressBar1.Value = 100;
@@ -946,17 +975,17 @@ namespace IESandDACadmt.View
                     {
                         LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Calculation of total Records to Purge: " + LiveDbSpSqlController.DbSqlSpControllerData.Result.Message.ToString() + " : " + LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge.ToString() + ".");
                         string whoSpWillCleanfor = BuildWarningMessage();
-                        DialogResult goNoGoResponse = MessageBox.Show(whoSpWillCleanfor,
+                        MessageBoxResult goNoGoResponse = MessageBox.Show(whoSpWillCleanfor,
                                                                       "Record Deletion Warning",
-                                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-                        if (goNoGoResponse == DialogResult.Yes)
+                                                                      MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxDefaultButton.Button2);
+                        if (goNoGoResponse == MessageBoxResult.Yes)
                         {
-                            processingStatsTimer.Enabled = true;
-                            //btnChangeSqlServer.Enabled = false;
+                            processingStatsTimer.IsEnabled = true;
+                            //btnChangeSqlServer.IsEnabled = false;
                             if (StartCleanup() == false)
                             {
                                 // Thread did not start so run stop button code
-                                processingStatsTimer.Enabled = false;
+                                processingStatsTimer.IsEnabled = false;
                                 ModifyGuiAfterStopButtonClick();
                             }
                         }
@@ -969,8 +998,8 @@ namespace IESandDACadmt.View
                     }
                     else
                     {
-                        processingStatsTimer.Enabled = false;
-                        MessageBox.Show("No records match these characteristics.", "Target records calculation", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        processingStatsTimer.IsEnabled = false;
+                        MessageBox.Show("No records match these characteristics.", "Target records calculation", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                         SetGuiStatsToZeros();
                         ModifyGuiAfterStopButtonClick();
                         ModifyGuiAfterNoTargetRecordsFound();
@@ -992,19 +1021,19 @@ namespace IESandDACadmt.View
 
         private void rbNoCutOffDate_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbNoCutOffDate.Checked == true)
+            if (rbNoCutOffDate.IsChecked == true)
             {
-                rbCutOffDate.Checked = false;
-                dtpCutOffDate.Enabled = false;
+                rbCutOffDate.IsChecked = false;
+                dtpCutOffDate.IsEnabled = false;
             }
         }
 
         private void rbCutOffDate_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbCutOffDate.Checked == true)
+            if (rbCutOffDate.IsChecked == true)
             {
-                rbNoCutOffDate.Checked = false;
-                dtpCutOffDate.Enabled = true;
+                rbNoCutOffDate.IsChecked = false;
+                dtpCutOffDate.IsEnabled = true;
             }
         }
 
