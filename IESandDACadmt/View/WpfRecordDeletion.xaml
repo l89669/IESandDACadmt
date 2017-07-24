@@ -28,7 +28,122 @@
                 <RowDefinition Height="3*" />
                 <RowDefinition Height="5*" />
             </Grid.RowDefinitions>
+
+            <Grid Name="EventDetailsGrid" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" VerticalAlignment="Center" TextDecorations="Underline">Select Event details to Delete:</TextBlock>
+                <GroupBox Name="gbUser" Header="User Criteria:" Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <RadioButton Name="rbEveryone" Grid.Row="0" Content="All Users"/>
+                            <RadioButton Name="rbSelectUser" Grid.Row="0" Content="Specific User" Margin="50,0,0,0"/>
+                        </StackPanel>
+                        <ComboBox Name="cbSpecificUser" Grid.Row="1" Height="23"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Name="gbComputer" Header="Computer Criteria:" Grid.Row="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <RadioButton Name="rbAllComputers" Grid.Row="0" Content="All Computers"/>
+                            <RadioButton Name="rbSelectComputer" Grid.Row="0" Content="Specific Computer" Margin="50,0,0,0"/>
+                        </StackPanel>
+                        <ComboBox Name="cbSpecificComputer" Grid.Row="1" Height="23"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Name="gbProcess" Header="Process Criteria:" Grid.Row="3">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <RadioButton Name="rbAllProcesses" Grid.Row="0" Content="All Processes"/>
+                            <RadioButton Name="rbSpecificProcess" Grid.Row="0" Content="Specific Process" Margin="50,0,0,0"/>
+                        </StackPanel>
+                        <ComboBox Name="cbSpecificProcess" Grid.Row="1" Height="23"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Name="gbDataRetention" Header="Data Retention Criteria:" Grid.Row="4">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <RadioButton Name="rbCutOffDate" Content="Cut-Off Date:" Margin="0,0,10,0"/>
+                        <DatePicker Name="dtpCutOffDate" Width="150" Height="25"/>
+                        <RadioButton Name="rbNoCutOffDate" Content="No Cut-Off Date:" Margin="80,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+                <StackPanel Grid.Row="5" Orientation="Horizontal">
+                    <GroupBox Name="gbBatch" Header="Batch Size:" Width="200" Margin="10,0,30,0">
+                        <ComboBox Name="cbBatchSize" Height="23"/>
+                    </GroupBox>
+                    <GroupBox Name="gbRunTime" Header="Deletion Run Time:" Width="280" Margin="10,0,30,0">
+                        <StackPanel Orientation="Horizontal">
+                            
+                        </StackPanel>
+
+                    </GroupBox>
+                </StackPanel>
+            </Grid>
+            <StackPanel Name="StopStartButtonSection" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Name="btnStartCleanup" Content="START DELETION" Padding="15" Margin="20,0,20,0"/>
+                <Button Name="btnStopCleanup" Content="STOPT DELETION" Padding="15" Margin="20,0,20,0"/>
+            </StackPanel>
+            <Grid Name="ProgressGrid" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" VerticalAlignment="Center" TextDecorations="Underline" Padding="10,0,0,0">Select Event details to Delete:</TextBlock>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="10,0,0,0">Total Records to Delete:</TextBlock>
+                    <TextBox Grid.Column="1" Name="RecordsLeftToPurgeTextBox" Width="100" Height="25"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center">Remaining Run-Time:</TextBlock>
+                    <TextBox Grid.Column="3" Name="RemainingRunTimeMinutes"  Width="100" Height="25"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="10,0,0,0">Records Deleted:</TextBlock>
+                    <TextBox Grid.Column="1" Name="RecordsPurgedTextBox"  Width="100" Height="25"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center">% Records Processed:</TextBlock>
+                    <TextBox Grid.Column="3" Name="PpercentageRecordsProcessedTextBox"  Width="100" Height="25"/>
+                </Grid>
+                
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                   
+                </StackPanel>
+            </Grid>
+                
             
+
+
         </Grid>
+       
+        
+        
     </DockPanel>
 </Window>
