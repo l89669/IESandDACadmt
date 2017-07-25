@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IESandDACadmt.View"
+        xmlns:loc="clr-namespace:IESandDACadmt.ViewModel"
         mc:Ignorable="d"
         Title="WpfRecordDeletion" Height="675" Width="570">
     <DockPanel>
@@ -46,8 +47,8 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <RadioButton Name="rbEveryone" Grid.Row="0" Content="All Users"/>
-                            <RadioButton Name="rbSelectUser" Grid.Row="0" Content="Specific User" Margin="50,0,0,0"/>
+                            <RadioButton Name="rbEveryone" Grid.Row="0" Content="All Users" Checked="rbEveryone_CheckedChanged" Unchecked="rbEveryone_CheckedChanged"/>
+                            <RadioButton Name="rbSelectUser" Grid.Row="0" Content="Specific User" Margin="50,0,0,0" Checked="rbSelectUser_CheckedChanged" Unchecked="rbSelectUser_CheckedChanged"/>
                         </StackPanel>
                         <ComboBox Name="cbSpecificUser" Grid.Row="1" Height="23"/>
                     </Grid>
@@ -59,8 +60,8 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <RadioButton Name="rbAllComputers" Grid.Row="0" Content="All Computers"/>
-                            <RadioButton Name="rbSelectComputer" Grid.Row="0" Content="Specific Computer" Margin="50,0,0,0"/>
+                            <RadioButton Name="rbAllComputers" Grid.Row="0" Content="All Computers" Checked="rbAllComputers_CheckedChanged" Unchecked="rbAllComputers_CheckedChanged"/>
+                            <RadioButton Name="rbSelectComputer" Grid.Row="0" Content="Specific Computer" Margin="50,0,0,0" Checked="rbSpecificComputer_CheckedChanged" Unchecked="rbSpecificComputer_CheckedChanged"/>
                         </StackPanel>
                         <ComboBox Name="cbSpecificComputer" Grid.Row="1" Height="23"/>
                     </Grid>
@@ -72,17 +73,17 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <RadioButton Name="rbAllProcesses" Grid.Row="0" Content="All Processes"/>
-                            <RadioButton Name="rbSpecificProcess" Grid.Row="0" Content="Specific Process" Margin="50,0,0,0"/>
+                            <RadioButton Name="rbAllProcesses" Grid.Row="0" Content="All Processes" Checked="rbAllProcesses_CheckedChanged" Unchecked="rbAllProcesses_CheckedChanged"/>
+                            <RadioButton Name="rbSpecificProcess" Grid.Row="0" Content="Specific Process" Margin="50,0,0,0" Checked="rbSpecificProcess_CheckedChanged" Unchecked="rbSpecificProcess_CheckedChanged"/>
                         </StackPanel>
                         <ComboBox Name="cbSpecificProcess" Grid.Row="1" Height="23"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Name="gbDataRetention" Header="Data Retention Criteria:" Grid.Row="4" Margin="10,0,10,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <RadioButton Name="rbCutOffDate" Content="Cut-Off Date:" Margin="0,0,10,0"/>
-                        <DatePicker Name="dtpCutOffDate" Width="150" Height="25"/>
-                        <RadioButton Name="rbNoCutOffDate" Content="No Cut-Off Date:" Margin="80,0,0,0"/>
+                        <RadioButton Name="rbCutOffDate" Content="Cut-Off Date:" Margin="0,0,10,0" Checked="rbCutOffDate_CheckedChanged" Unchecked="rbCutOffDate_CheckedChanged"/>
+                        <DatePicker Name="dtpCutOffDate" Width="150" Height="25" SelectedDateChanged="dtpCutOffDate_ValueChanged"/>
+                        <RadioButton Name="rbNoCutOffDate" Content="No Cut-Off Date:" Margin="80,0,0,0" Checked="rbNoCutOffDate_CheckedChanged" Unchecked="rbNoCutOffDate_CheckedChanged"/>
                     </StackPanel>
                 </GroupBox>
                 <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="10,0,10,0">
@@ -91,9 +92,9 @@
                     </GroupBox>
                     <GroupBox Name="gbRunTime" Header="Deletion Run Time:" Width="200" Margin="90,0,30,0">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ListBox Name="runtimeHours" Width="40" Height="23" Margin="20,0,0,0"/>
+                            <ListBox Name="runtimeHours" Width="40" Height="23" Margin="20,0,0,0" SelectionChanged="runtimeHours_SelectionChanged"/>
                             <TextBlock Text="Hrs" Margin="10,0,30,0" VerticalAlignment="Bottom"/>
-                            <ListBox Name="runtimeMinutes" Width="40" Height="23"/>
+                            <ListBox Name="runtimeMinutes" Width="40" Height="23" SelectionChanged="runtimeMinutes_SelectionChanged"/>
                             <TextBlock Text="mins" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
 
                         </StackPanel>
@@ -103,8 +104,8 @@
             </Grid>
             <Grid Name="StopStartButtonGrid" Grid.Row="1">
                 <StackPanel Name="StopStartButtonSection" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button Name="btnStartCleanup" Content="START DELETION" Padding="15" Margin="20,0,20,0"/>
-                    <Button Name="btnStopCleanup" Content="STOPT DELETION" Padding="15" Margin="20,0,20,0"/>
+                    <Button Name="btnStartCleanup" Content="START DELETION" Padding="15" Margin="20,0,20,0" Click="btnStartCleanup_Click"/>
+                    <Button Name="btnStopCleanup" Content="STOPT DELETION" Padding="15" Margin="20,0,20,0" Click="btnStopCleanup_Click"/>
                 </StackPanel>
             </Grid>
             <Grid Name="ProgressGrid" Grid.Row="2">

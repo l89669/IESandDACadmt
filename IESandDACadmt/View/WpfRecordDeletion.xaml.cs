@@ -31,19 +31,31 @@ namespace IESandDACadmt.View
         public WpfRecordDeletion(Model.DbSqlSpController theDbSqlSpController)
         {
             LiveDbSpSqlController = theDbSqlSpController;
+            LiveDbSpSqlControllerData = LiveDbSpSqlController.DbSqlSpControllerData;
+            this.DataContext = LiveDbSpSqlControllerData;
             LiveDbSpSqlController.BuildEventTypesDictionary();
             InitializeComponent();
             cbSpecificUser.Items.Clear();
             cbSpecificComputer.Items.Clear();
+            Loaded += Form1_Load;
+            processingStatsTimer.Interval = new TimeSpan(0,0,1);
+            timerCalcTotRecToPurge.Interval = new TimeSpan(0, 0, 1);
+            readByProcessInfoTimer.Interval = new TimeSpan(0, 0, 1);
         }
 
         public volatile DbSqlSpController LiveDbSpSqlController = new DbSqlSpController();
+        IESandDACadmt.ViewModel.DbSqlSpControllerData LiveDbSpSqlControllerData = new DbSqlSpControllerData();
         Thread _testDbConnectionThread = null;
         Thread _readByProcessSqlInfoThread = null;
         Thread _calculateTotalRecordsToPurgeThread = null;
         Thread _sqlPurgeWorkerThread = null;
 
+        System.Windows.Threading.DispatcherTimer processingStatsTimer = new System.Windows.Threading.DispatcherTimer();
+        System.Windows.Threading.DispatcherTimer timerCalcTotRecToPurge = new System.Windows.Threading.DispatcherTimer();
+        System.Windows.Threading.DispatcherTimer readByProcessInfoTimer = new System.Windows.Threading.DispatcherTimer();
+        
         delegate void UpdateGuiWithNewValuesCallBack(DbSqlSpController theLiveDbSpSqlController);
+
 
         private void SetGuiForServerType()
         {
@@ -157,9 +169,11 @@ namespace IESandDACadmt.View
                 rbAllComputers.IsChecked = true;
                 rbSelectComputer.IsChecked = false;
             }
+
             EventsCriteriaGrid.IsEnabled = true;
             StopStartButtonGrid.IsEnabled = true;
             ProgressGrid.IsEnabled = false;
+
             //AlterPurgeCriteriaPanel(true);
             //AlterStartStopPanel(true);
             //AlterPurgeStatsPanel(false);
@@ -326,8 +340,8 @@ namespace IESandDACadmt.View
             ActionOutcome theResult = LoadGuiValuesIntoDbSqlSpController();
             if (theResult.Success)
             {
-                DialogResult backupDone = MessageBox.Show("It is highly recommended to have a backup of the " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName + " database before deleting records. Do you want to continue with the deletion?", "Backup check for database " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName, MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (backupDone == DialogResult.Yes)
+                MessageBoxResult backupDone = MessageBox.Show("It is highly recommended to have a backup of the " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName + " database before deleting records. Do you want to continue with the deletion?", "Backup check for database " + LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (backupDone == MessageBoxResult.Yes)
                 {
                     StartPurging();
                 }
@@ -546,7 +560,7 @@ namespace IESandDACadmt.View
             while (!LiveDbSpSqlController.DbSqlSpControllerData.WorkerCompleted)
             {
                 Thread.Sleep(100);
-                Application.DoEvents();  // Does this hand back to the calling method to then allow GUI button changes?
+                //Application.DoEvents();  // Does this hand back to the calling method to then allow GUI button changes?
             }
         }
 
@@ -606,14 +620,14 @@ namespace IESandDACadmt.View
             cbSpecificComputer.SelectedIndex = 0;
         }
 
-        private void StopDbConnTestThreadAndWaitForThreadStop()
-        {
-            _testDbConnectionThread.Abort();
-            while (_testDbConnectionThread.IsAlive)
-            {
-                Application.DoEvents();
-            }
-        }
+        //private void StopDbConnTestThreadAndWaitForThreadStop()
+        //{
+        //    _testDbConnectionThread.Abort();
+        //    while (_testDbConnectionThread.IsAlive)
+        //    {
+        //        //Application.DoEvents();
+        //    }
+        //}
 
 
         private void processingStatsTimer_Tick(object sender, EventArgs e)
@@ -741,7 +755,7 @@ namespace IESandDACadmt.View
         {
             if (dtpCutOffDate.SelectedDate.Value.Date < DateTime.Today.Date) return;
             MessageBox.Show("You cannot select today or a future date as the cut-off date. Please select an older date.", "Invalid date selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " User tried to select " + dtpCutOffDate.Value.Date.ToString() + " as the cut-off date.");
+            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " User tried to select " + dtpCutOffDate.SelectedDate.Value.Date.ToString() + " as the cut-off date.");
             dtpCutOffDate.DisplayDate = DateTime.Today.AddDays(-1);
         }
 
@@ -977,7 +991,7 @@ namespace IESandDACadmt.View
                         string whoSpWillCleanfor = BuildWarningMessage();
                         MessageBoxResult goNoGoResponse = MessageBox.Show(whoSpWillCleanfor,
                                                                       "Record Deletion Warning",
-                                                                      MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxDefaultButton.Button2);
+                                                                      MessageBoxButton.YesNo, MessageBoxImage.Warning);
                         if (goNoGoResponse == MessageBoxResult.Yes)
                         {
                             processingStatsTimer.IsEnabled = true;
@@ -1037,29 +1051,15 @@ namespace IESandDACadmt.View
             }
         }
 
-        private void cbBatchSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void runtimeMinutes_Enter(object sender, EventArgs e)
+        private void runtimeMinutes_SelectionChanged(object sender, EventArgs e)
         {
             RuntimesLogicCheck();
         }
 
-        private void runtimeHours_Enter(object sender, EventArgs e)
+        private void runtimeHours_SelectionChanged(object sender, EventArgs e)
         {
             RuntimesLogicCheck();
         }
 
-        private void runtimeMinutes_Leave(object sender, EventArgs e)
-        {
-            RuntimesLogicCheck();
-        }
-
-        private void runtimeHours_Leave(object sender, EventArgs e)
-        {
-            RuntimesLogicCheck();
-        }
     }
 }
