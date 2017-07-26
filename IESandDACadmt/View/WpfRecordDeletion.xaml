@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IESandDACadmt.View"
-        xmlns:loc="clr-namespace:IESandDACadmt.ViewModel"
+        xmlns:locVm="clr-namespace:IESandDACadmt.ViewModel"
         mc:Ignorable="d"
         Title="WpfRecordDeletion" Height="675" Width="570">
     <DockPanel>
@@ -123,9 +123,9 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="10,0,0,0">Total Records to Delete:</TextBlock>
-                    <TextBox Grid.Column="1" Name="RecordsLeftToPurgeTextBox" Width="100" Height="25"/>
+                    <TextBox Grid.Column="1" Name="RecordsLeftToPurgeTextBox" Width="100" Height="25" Text="{Binding RemainingRowsToPurge}"/>
                     <TextBlock Grid.Column="2" VerticalAlignment="Center">Remaining Run-Time:</TextBlock>
-                    <TextBox Grid.Column="3" Name="RemainingRunTimeMinutes"  Width="100" Height="25"/>
+                    <TextBox Grid.Column="3" Name="RemainingRunTimeMinutes"  Width="100" Height="25" Text="{Binding RemainingRowsToPurge}"/>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -135,9 +135,9 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="10,0,0,0">Records Deleted:</TextBlock>
-                    <TextBox Grid.Column="1" Name="RecordsPurgedTextBox"  Width="100" Height="25"/>
+                    <TextBox Grid.Column="1" Name="RecordsPurgedTextBox"  Width="100" Height="25" Text="{Binding RecordsProcessedSoFar}"/>
                     <TextBlock Grid.Column="2" VerticalAlignment="Center">% Records Processed:</TextBlock>
-                    <TextBox Grid.Column="3" Name="PercentageRecordsProcessedTextBox"  Width="100" Height="25"/>
+                    <TextBox Grid.Column="3" Name="PercentageRecordsProcessedTextBox"  Width="100" Height="25"  Text="{Binding PercentageRecordsProcessed}"/>
                 </Grid>
                 
                 <StackPanel Grid.Row="2" Orientation="Horizontal">

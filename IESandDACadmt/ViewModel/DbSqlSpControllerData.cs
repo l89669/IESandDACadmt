@@ -365,6 +365,22 @@ namespace IESandDACadmt.ViewModel
             set { _cutOffDate = value; }
         }
 
+        private string _percentageRecordsProcessed;
+
+        public string PercentageRecordsProcessed
+        {
+            get { return _percentageRecordsProcessed; }
+            set { _percentageRecordsProcessed = value; }
+        }
+
+        private string _runtimeRemaining;
+
+        public string RuntimeRemaining
+        {
+            get { return _runtimeRemaining; }
+            set { _runtimeRemaining = value; }
+        }
+
 
         private Dictionary<string, bool> _eventTypesToDelete = new Dictionary<string, bool>();
 

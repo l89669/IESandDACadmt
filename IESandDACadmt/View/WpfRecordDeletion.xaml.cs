@@ -661,17 +661,17 @@ namespace IESandDACadmt.View
                 int theMinsRemaining = Convert.ToInt32(minsRemaining);
                 int secsRemaining = LiveDbSpSqlController.DbSqlSpControllerData.ProcessingEndTime.Subtract(DateTime.Now).Seconds;
                 string timeLeft = PadStringIfBelowTen(theDaysRemaining) + "d " + PadStringIfBelowTen(theHoursRemaining) + "h " + PadStringIfBelowTen(theMinsRemaining) + "m " + PadStringIfBelowTen(secsRemaining) + "s";
-                RemainingRunTimeMinutes.Text = (timeLeft);
+                LiveDbSpSqlControllerData.RuntimeRemaining = (timeLeft);
             }
             else
             {
                 processingStatsTimer.IsEnabled = false;
                 if (LiveDbSpSqlController.DbSqlSpControllerData.WorkerCompleted)
                 {
-                    RecordsLeftToPurgeTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge.ToString();
-                    PercentageRecordsProcessedTextBox.Text = (((LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge - LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge) * 100) / LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge).ToString();
+                    //RecordsLeftToPurgeTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge.ToString();
+                    //PercentageRecordsProcessedTextBox.Text = (((LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge - LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge) * 100) / LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge).ToString();
                     RemainingRunTimeMinutes.Text = "0:00";
-                    RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
+                    //RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
                     toolStripProgressBar1.Value = 100;
                     toolStripStatusLabel1.Text = "Processing complete";
                     LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " The Worker Thread has completed cleaning.");
@@ -949,25 +949,25 @@ namespace IESandDACadmt.View
 
         private void UpdateGuiWithNewValues(DbSqlSpController updatedResults)
         {
-            if (this.RecordsLeftToPurgeTextBox.InvokeRequired)
-            {
-                UpdateGuiWithNewValuesCallBack del = new UpdateGuiWithNewValuesCallBack(UpdateGuiWithNewValues);
-                this.Invoke(del, new object[] { updatedResults });
-            }
-            else
-            {
-                RecordsLeftToPurgeTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge.ToString();
+            //if (this.RecordsLeftToPurgeTextBox.InvokeRequired)
+            //{
+            //    UpdateGuiWithNewValuesCallBack del = new UpdateGuiWithNewValuesCallBack(UpdateGuiWithNewValues);
+            //    this.Invoke(del, new object[] { updatedResults });
+            //}
+            //else
+            //{
+            //    RecordsLeftToPurgeTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge.ToString();
                 double percentage = (((LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge - LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge) * 100) / LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge);
-                PercentageRecordsProcessedTextBox.Text = Math.Round(percentage, 2).ToString();
-                RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
-            }
+                updatedResults.DbSqlSpControllerData.PercentageRecordsProcessed = Math.Round(percentage, 2).ToString();
+            //    RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
+            //}
         }
 
         private void timerCalcTotRecToPurge_Tick(object sender, EventArgs e)
         {
             if (_calculateTotalRecordsToPurgeThread.IsAlive)
             {
-                int curProgBarValue = toolStripProgressBar1.;
+                int curProgBarValue = Convert.ToInt32(toolStripProgressBar1.Value);
                 if (curProgBarValue <= 100)
                 {
                     curProgBarValue = curProgBarValue + 10;
