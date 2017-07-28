@@ -37,6 +37,8 @@ namespace IESandDACadmt.View
 
             Loaded += WpfRecordsProfilerUi_Load;
 
+
+
             SetGuiForServerType();
         }
 
@@ -107,7 +109,7 @@ namespace IESandDACadmt.View
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EmssByDateQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
                             theCurrentQueryData.ByDateDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByDate);
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EmssByTypeQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
-                            theCurrentQueryData.ByTypeDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByType);
+                            theCurrentQueryData.ByEventTypeDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByType);
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EmssByUserQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
                         theCurrentQueryData.ByUserDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByUser);
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EmssByComputerQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
@@ -122,7 +124,7 @@ namespace IESandDACadmt.View
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EsByDateQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
                             theCurrentQueryData.ByDateDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByDate);
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EsByTypeQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
-                            theCurrentQueryData.ByTypeDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByType);
+                            theCurrentQueryData.ByEventTypeDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByType);
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EsByUserQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
                         theCurrentQueryData.ByUserDataRecords, Model.RecordsProfilingQueryLogic.DataQueryType.ByUser);
                 RunSqlQuery(Model.RecordsProfilingQueryLogic.EsByComputerQuery, theDbSqlSpController.DbSqlSpControllerData.SqlConnectionString,
@@ -193,19 +195,21 @@ namespace IESandDACadmt.View
 
         private void SetNewByDateDataResults(DataTable queryResults)
         {
-            if (this.ByDateChart.InvokeRequired)
-            {
-                SetByDateQueryDataCallBack del = new SetByDateQueryDataCallBack(SetNewByDateDataResults);
-                this.Invoke(del, new object[] { queryResults });
-            }
-            else
-            {
+            //if (this.ByDateChart.InvokeRequired)
+            //{
+            //    SetByDateQueryDataCallBack del = new SetByDateQueryDataCallBack(SetNewByDateDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
                 _currentQueryData.ByDateDataRecords = queryResults;
-                ByDateDataGridView.Visible = true;
-                labelDateRawDataProcessing.Visible = false;
+                ByDateRawStackPanel.IsEnabled = true;
+
+                //ByDateDataGridView.Visible = true;
+                //labelDateRawDataProcessing.Visible = false;
                 UpdateByDateCharts(_currentQueryData.ByDateDataRecords);
                 _numQueriesStillRunning -= 1;
-            }
+            //}
         }
 
         private void UpdateByDateCharts(DataTable queryResults)
@@ -233,67 +237,70 @@ namespace IESandDACadmt.View
 
         private void SetNewByUserDataResults(DataTable queryResults)
         {
-            if (this.byUserDataGridView.InvokeRequired)
-            {
-                SetByUserQueryDataCallBack del = new SetByUserQueryDataCallBack(SetNewByUserDataResults);
-                this.Invoke(del, new object[] { queryResults });
-            }
-            else
-            {
+            //if (this.byUserDataGridView.InvokeRequired)
+            //{
+            //    SetByUserQueryDataCallBack del = new SetByUserQueryDataCallBack(SetNewByUserDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
                 _currentQueryData.ByUserDataRecords = queryResults;
                 ByUserDataGrid.DataContext = _currentQueryData.ByUserDataRecords.DefaultView;
-                ByUserDataGridView.AutoResizeColumns();
-                byUserDataGridView.Visible = true;
-                labelUserDataProcessing.Visible = false;
+                ByUserStackPanel.IsEnabled = true;
+                //ByUserDataGridView.AutoResizeColumns();
+                //byUserDataGridView.Visible = true;
+                //labelUserDataProcessing.Visible = false;
                 _numQueriesStillRunning -= 1;
-            }
+            //}
         }
 
         private void SetNewByComputerDataResults(DataTable queryResults)
         {
-            if (this.byComputerDataGridView.InvokeRequired)
-            {
-                SetByComputerQueryDataCallBack del = new SetByComputerQueryDataCallBack(SetNewByComputerDataResults);
-                this.Invoke(del, new object[] { queryResults });
-            }
-            else
-            {
+            //if (this.byComputerDataGridView.InvokeRequired)
+            //{
+            //    SetByComputerQueryDataCallBack del = new SetByComputerQueryDataCallBack(SetNewByComputerDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
                 _currentQueryData.ByComputerDataRecords = queryResults;
                 ByComputerDataGrid.DataContext = _currentQueryData.ByComputerDataRecords.DefaultView;
-                byComputerDataGridView.AutoResizeColumns();
-                byComputerDataGridView.Visible = true;
-                labelComputerDataProcessing.Visible = false;
+                ByComputerStackPanel.IsEnabled = true;
+                //byComputerDataGridView.AutoResizeColumns();
+                //byComputerDataGridView.Visible = true;
+                //labelComputerDataProcessing.Visible = false;
                 _numQueriesStillRunning -= 1;
-            }
+            //}
         }
 
         private void SetNewByTypeDataResults(DataTable queryResults)
         {
-            if (this.byTypeDataGridView.InvokeRequired)
-            {
-                SetByTypeQueryDataCallBack del = new SetByTypeQueryDataCallBack(SetNewByTypeDataResults);
-                this.Invoke(del, new object[] { queryResults });
-            }
-            else
-            {
-                _currentQueryData.ByTypeDataRecords = queryResults;
-                ByEventTypeDataGrid.DataContext = _currentQueryData.ByTypeDataRecords.DefaultView;
-                byTypeDataGridView.AutoResizeColumns();
-                byTypeDataGridView.Visible = true;
-                labelTypeDataProcessing.Visible = false;
+            //if (this.byTypeDataGridView.InvokeRequired)
+            //{
+            //    SetByTypeQueryDataCallBack del = new SetByTypeQueryDataCallBack(SetNewByTypeDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
+                _currentQueryData.ByEventTypeDataRecords = queryResults;
+                ByEventTypeDataGrid.DataContext = _currentQueryData.ByEventTypeDataRecords.DefaultView;
+                ByEventTypeStackPanel.IsEnabled = true;
+                //byTypeDataGridView.AutoResizeColumns();
+                //byTypeDataGridView.Visible = true;
+                //labelTypeDataProcessing.Visible = false;
                 _numQueriesStillRunning -= 1;
-            }
+            //}
         }
 
         private void SetNewByProcessDataResults(DataTable queryResults)
         {
-            if (this.byProcessDataGridView.InvokeRequired)
-            {
-                SetByProcessQueryDataCallBack del = new SetByProcessQueryDataCallBack(SetNewByProcessDataResults);
-                this.Invoke(del, new object[] { queryResults });
-            }
-            else
-            {
+            //if (this.byProcessDataGridView.InvokeRequired)
+            //{
+            //    SetByProcessQueryDataCallBack del = new SetByProcessQueryDataCallBack(SetNewByProcessDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
                 // This can be an expensive set of results to get, so best to reuse them where possible,
                 // so we set them into the DbSqlController data set.
                 if (queryResults.Rows.Count >= 0)
@@ -307,29 +314,31 @@ namespace IESandDACadmt.View
                 }
                 _currentQueryData.ByProcessDataRecords = queryResults;
                 ByProcessDataGrid.DataContext = _currentQueryData.ByProcessDataRecords.DefaultView;
-                byProcessDataGridView.AutoResizeColumns();
-                byProcessDataGridView.Visible = true;
-                labelProcessDataProcessing.Visible = false;
+                ByProcessStackPanel.IsEnabled = true;
+                //byProcessDataGridView.AutoResizeColumns();
+                //byProcessDataGridView.Visible = true;
+                //labelProcessDataProcessing.Visible = false;
                 _numQueriesStillRunning -= 1;
-            }
+            //}
         }
 
         private void SetNewByDeviceDataResults(DataTable queryResults)
         {
-            if (this.byDeviceDataGridView.InvokeRequired)
-            {
-                SetByDeviceQueryDataCallBack del = new SetByDeviceQueryDataCallBack(SetNewByDeviceDataResults);
-                this.Invoke(del, new object[] { queryResults });
-            }
-            else
-            {
+            //if (this.byDeviceDataGridView.InvokeRequired)
+            //{
+            //    SetByDeviceQueryDataCallBack del = new SetByDeviceQueryDataCallBack(SetNewByDeviceDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
                 _currentQueryData.ByDeviceDataRecords = queryResults;
                 ByDeviceDataGrid.DataContext = _currentQueryData.ByDeviceDataRecords.DefaultView;
-                byDeviceDataGridView.AutoResizeColumns();
-                byDeviceDataGridView.Visible = true;
-                labelDeviceDataProcessing.Visible = false;
+                ByDeviceStackPanel.IsEnabled = true;
+                //byDeviceDataGridView.AutoResizeColumns();
+                //byDeviceDataGridView.Visible = true;
+                //labelDeviceDataProcessing.Visible = false;
                 _numQueriesStillRunning -= 1;
-            }
+            //}
         }
 
         private void WpfRecordsProfilerUi_Load(object sender, EventArgs e)
@@ -339,7 +348,7 @@ namespace IESandDACadmt.View
             _currentQueryData.ByComputerDataRecords = new DataTable();
             _currentQueryData.ByDeviceDataRecords = new DataTable();
             _currentQueryData.ByProcessDataRecords = new DataTable();
-            _currentQueryData.ByTypeDataRecords = new DataTable();
+            _currentQueryData.ByEventTypeDataRecords = new DataTable();
             _currentQueryData.ByUserDataRecords = new DataTable();
             _profilingSqlReadThread = new Thread(() => ProfilerSqlWorker(theDbSqlController, _currentQueryData));
             _profilingSqlReadThread.IsBackground = true;
@@ -349,21 +358,30 @@ namespace IESandDACadmt.View
 
         private void ModifyGuiForLoad()
         {
-            labelGraphedDateCountsProcessing.Visible = true;
-            labelLineGraphProcessing.Visible = true;
-            labelDateRawDataProcessing.Visible = true;
-            labelComputerDataProcessing.Visible = true;
-            labelUserDataProcessing.Visible = true;
-            labelTypeDataProcessing.Visible = true;
-            labelProcessDataProcessing.Visible = true;
-            labelDeviceDataProcessing.Visible = true;
-            ByDateChart.Visible = false;
-            byDateDataGridView.Visible = false;
-            byComputerDataGridView.Visible = false;
-            byUserDataGridView.Visible = false;
-            byTypeDataGridView.Visible = false;
-            byProcessDataGridView.Visible = false;
-            byDeviceDataGridView.Visible = false;
+            //labelGraphedDateCountsProcessing.Visible = true;
+            //labelLineGraphProcessing.Visible = true;
+            //labelDateRawDataProcessing.Visible = true;
+            //labelComputerDataProcessing.Visible = true;
+            //labelUserDataProcessing.Visible = true;
+            //labelTypeDataProcessing.Visible = true;
+            //labelProcessDataProcessing.Visible = true;
+            //labelDeviceDataProcessing.Visible = true;
+            //ByDateChart.Visible = false;
+
+            //byDateDataGridView.Visible = false;
+            //byComputerDataGridView.Visible = false;
+            //byUserDataGridView.Visible = false;
+            //byTypeDataGridView.Visible = false;
+            //byProcessDataGridView.Visible = false;
+            //byDeviceDataGridView.Visible = false;
+
+            ByDateRawStackPanel.IsEnabled = false;
+            ByDateGraphedStackPanel.IsEnabled = false;
+            ByUserStackPanel.IsEnabled = false;
+            ByComputerStackPanel.IsEnabled = false;
+            ByEventTypeStackPanel.IsEnabled = false;
+            ByProcessStackPanel.IsEnabled = false;
+            ByDeviceStackPanel.IsEnabled = false;
         }
 
         private void timeProfilerActivity_Tick(object sender, EventArgs e)
@@ -376,42 +394,38 @@ namespace IESandDACadmt.View
             {
                 ProfilerActivityCountForProgressBars += 1;
             }
-            ActivityTimerToPrint = "Querying " + theDbSqlController.DbSqlSpControllerData.DbServeraddress + ": ";
+            //ActivityTimerToPrint = "Querying " + theDbSqlController.DbSqlSpControllerData.DbServeraddress + ": ";
             for (int i = 0; i < ProfilerActivityCountForProgressBars; i++)
             {
                 ActivityTimerToPrint += "I";
             }
-            if (labelGraphedDateCountsProcessing.Visible == true)
+            if (ByDateGraphedStackPanel.IsEnabled == true)
             {
-                labelGraphedDateCountsProcessing.Text = ActivityTimerToPrint;
+                ByDateGraphedTab.Header = "By Date (Graphed): " + ActivityTimerToPrint;
             }
-            if (labelComputerDataProcessing.Visible == true)
+            if (ByDateRawStackPanel.IsEnabled == true)
             {
-                labelComputerDataProcessing.Text = ActivityTimerToPrint;
+                ByDateRawTab.Header = "By Date (Raw): " + ActivityTimerToPrint;
             }
-            if (labelDateRawDataProcessing.Visible == true)
+            if (ByUserStackPanel.IsEnabled == true)
             {
-                labelDateRawDataProcessing.Text = ActivityTimerToPrint;
+                ByUserTab.Header = "By User: " + ActivityTimerToPrint;
             }
-            if (labelDeviceDataProcessing.Visible == true)
+            if (ByComputerStackPanel.IsEnabled == true)
             {
-                labelDeviceDataProcessing.Text = ActivityTimerToPrint;
+                ByComputerTab.Header = "By Computer: " + ActivityTimerToPrint;
             }
-            if (labelLineGraphProcessing.Visible == true)
+            if (ByEventTypeStackPanel.IsEnabled == true)
             {
-                labelLineGraphProcessing.Text = ActivityTimerToPrint;
+                ByEventTypeTab.Header = "By Event Type: " + ActivityTimerToPrint;
             }
-            if (labelProcessDataProcessing.Visible == true)
+            if (ByProcessStackPanel.IsEnabled == true)
             {
-                labelProcessDataProcessing.Text = ActivityTimerToPrint;
+                ByProcessTab.Header = "By Process: " + ActivityTimerToPrint;
             }
-            if (labelUserDataProcessing.Visible == true)
+            if (ByDeviceStackPanel.IsEnabled == true)
             {
-                labelUserDataProcessing.Text = ActivityTimerToPrint;
-            }
-            if (labelTypeDataProcessing.Visible == true)
-            {
-                labelTypeDataProcessing.Text = ActivityTimerToPrint;
+                ByComputerTab.Header = "By Device: " + ActivityTimerToPrint;
             }
             if (_numQueriesStillRunning <= 0)
             {
@@ -427,7 +441,7 @@ namespace IESandDACadmt.View
 
         private void buttonRerunAnalysis_Click(object sender, EventArgs e)
         {
-            FormSqlDataProfiler_Load(this, new EventArgs());
+            WpfRecordsProfilerUi_Load(this, new EventArgs());
         }
 
         private void byDateDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -532,7 +546,7 @@ namespace IESandDACadmt.View
             outputData.Tables.Add(byUser);
             DataTable byComputer = _currentQueryData.ByComputerDataRecords.Copy();
             outputData.Tables.Add(byComputer);
-            DataTable byType = _currentQueryData.ByTypeDataRecords.Copy();
+            DataTable byType = _currentQueryData.ByEventTypeDataRecords.Copy();
             outputData.Tables.Add(byType);
             DataTable byProcess = _currentQueryData.ByProcessDataRecords.Copy();
             outputData.Tables.Add(byProcess);

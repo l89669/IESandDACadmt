@@ -13,12 +13,12 @@ namespace IESandDACadmt.ViewModel
             set { _byDateDataRecords = value; }
         }
 
-        private DataTable _byTypeDataRecords = new DataTable();
+        private DataTable _byEventTypeDataRecords = new DataTable();
 
-        public DataTable ByTypeDataRecords
+        public DataTable ByEventTypeDataRecords
         {
-            get { return _byTypeDataRecords; }
-            set { _byTypeDataRecords = value; }
+            get { return _byEventTypeDataRecords; }
+            set { _byEventTypeDataRecords = value; }
         }
 
         private DataTable _byUserDataRecords = new DataTable();

@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IESandDACadmt.View"
+        xmlns:locVm="clr-namespace:IESandDACadmt.ViewModel"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" 
+        DataContext="locVm:RecordsProfilingData"
         xmlns:MSChart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
         mc:Ignorable="d"
         Title="WpfRecordsProfiler" Height="681" Width="893">
@@ -38,7 +40,7 @@
         <Grid Name="MasterGrid">
             <TabControl>
                 <TabItem Name="ByDateGraphedTab" Header="By Date: Graphed">
-                    <StackPanel>
+                    <StackPanel Name="ByDateGraphedStackPanel">
                         <WindowsFormsHost x:Name="ByDateChartHost">
                             <MSChart:Chart x:Name="ByDateChart" Dock="Fill">
 
@@ -48,33 +50,33 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByDateRawTab" Header="By Date: Raw">
-                    <StackPanel>
-                        <DataGrid Name="ByDateDataGrid" ItemsSource="{Binding}"/>
+                    <StackPanel Name="ByDateRawStackPanel">
+                        <DataGrid Name="ByDateDataGrid" ItemsSource="{Binding ByDateDataRecords}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByUserTab" Header="By User">
-                    <StackPanel>
-                        <DataGrid Name="ByUserDataGrid" ItemsSource="{Binding}"/>
+                    <StackPanel Name="ByUserStackPanel">
+                        <DataGrid Name="ByUserDataGrid" ItemsSource="{Binding ByUserDataRecords}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByComputerTab" Header="By Computer">
-                    <StackPanel>
-                        <DataGrid Name="ByComputerDataGrid" ItemsSource="{Binding}"/>
+                    <StackPanel Name="ByComputerStackPanel">
+                        <DataGrid Name="ByComputerDataGrid" ItemsSource="{Binding ByComputerDataRecords}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByEventTypeTab" Header="By Event Type">
-                    <StackPanel>
-                        <DataGrid Name="ByEventTypeDataGrid" ItemsSource="{Binding}"/>
+                    <StackPanel Name="ByEventTypeStackPanel">
+                        <DataGrid Name="ByEventTypeDataGrid" ItemsSource="{Binding ByEventTypeDataRecords}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByProcessTab" Header="By Process">
-                    <StackPanel>
-                        <DataGrid Name="ByProcessDataGrid" ItemsSource="{Binding}"/>
+                    <StackPanel Name="ByProcessStackPanel">
+                        <DataGrid Name="ByProcessDataGrid" ItemsSource="{Binding ByProcessDataRecords}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByDeviceTab" Header="By Device">
-                    <StackPanel>
-                        <DataGrid Name="ByDeviceDataGrid" ItemsSource="{Binding}"/>
+                    <StackPanel Name="ByDeviceStackPanel">
+                        <DataGrid Name="ByDeviceDataGrid" ItemsSource="{Binding ByDeviceDataRecords}"/>
                     </StackPanel>
                 </TabItem>
             </TabControl>
