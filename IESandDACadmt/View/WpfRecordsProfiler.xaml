@@ -4,9 +4,83 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IESandDACadmt.View"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" 
+        xmlns:MSChart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
         mc:Ignorable="d"
-        Title="WpfRecordsProfiler" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="WpfRecordsProfiler" Height="681" Width="893">
+    <DockPanel>
+        <Menu Name="MainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" Click="buttonCloseProfiler_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_View Log File" Click="buttonOpenLogFile_Click"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar Name="ToolBarStatusBar" DockPanel.Dock="Bottom" Height="30">
+            <Grid Name="BottomBarButtonGrid" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Name="btnReRunAnalysis" Content="RERUN ANALYSIS" Background="LightGreen" Margin="10,0,20,0" Width="120" Click="buttonRerunAnalysis_Click"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Name="btnCloseProfiler" Content="CLOSE PROFILER" Background="LightBlue" Margin="10,0,20,0" Width="120" Click="buttonCloseProfiler_Click"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Name="BottomStatusBarText" Text="starting up..." Margin="10,0,20,0" Width="120"/>
+                </StackPanel>
+            </Grid>
+        </StatusBar>
+        <Grid Name="MasterGrid">
+            <TabControl>
+                <TabItem Name="ByDateGraphedTab" Header="By Date: Graphed">
+                    <StackPanel>
+                        <WindowsFormsHost x:Name="ByDateChartHost">
+                            <MSChart:Chart x:Name="ByDateChart" Dock="Fill">
+
+                            </MSChart:Chart>
+                        </WindowsFormsHost>
+                        <ListBox Name="EventTypesList"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="ByDateRawTab" Header="By Date: Raw">
+                    <StackPanel>
+                        <DataGrid Name="ByDateDataGrid" ItemsSource="{Binding}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="ByUserTab" Header="By User">
+                    <StackPanel>
+                        <DataGrid Name="ByUserDataGrid" ItemsSource="{Binding}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="ByComputerTab" Header="By Computer">
+                    <StackPanel>
+                        <DataGrid Name="ByComputerDataGrid" ItemsSource="{Binding}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="ByEventTypeTab" Header="By Event Type">
+                    <StackPanel>
+                        <DataGrid Name="ByEventTypeDataGrid" ItemsSource="{Binding}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="ByProcessTab" Header="By Process">
+                    <StackPanel>
+                        <DataGrid Name="ByProcessDataGrid" ItemsSource="{Binding}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="ByDeviceTab" Header="By Device">
+                    <StackPanel>
+                        <DataGrid Name="ByDeviceDataGrid" ItemsSource="{Binding}"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+            
+            
+            
+        </Grid>
+    </DockPanel>
 </Window>
