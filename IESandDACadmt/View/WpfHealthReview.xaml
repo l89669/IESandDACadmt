@@ -4,9 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IESandDACadmt.View"
+        xmlns:locVm="clr-namespace:IESandDACadmt.ViewModel"
+        DataContext="locVm:SqlHealthReviewData"
         mc:Ignorable="d"
-        Title="WpfHealthReview" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="WpfHealthReview" Height="537" Width="1040">
+    <DockPanel>
+        <Menu Name="MainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" Click="buttonCloseProfiler_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Tasks">
+                <MenuItem Header="_Rerun Analysis" Click="buttonRerunAnalysis_Click"/>
+                <MenuItem Header="Start _Index Changes" />
+                <MenuItem Header="Stop I_ndex Changes" />
+                <MenuItem Header="Start _Table Stats Updates" />
+                <MenuItem Header="Stop T_able Stats Updates" />
+                <MenuItem Header="Export Data to _File" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_View Log File" Click="buttonOpenLogFile_Click"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar Name="ToolBarStatusBar" DockPanel.Dock="Bottom" Height="30">
+            <StackPanel Name="ProgressBarStackPanel" Height="23" Orientation="Horizontal">
+                    <ProgressBar Name="progressBarSql" Width="100"/>
+            </StackPanel>
+        </StatusBar>
+        <Grid Name="MasterGrid">
+            <TabControl Name="MasterTabControl">
+                <TabItem Name="ServerConfigTab" Header="Server Configuration">
+                    <StackPanel Name="ServerConfigStackPanel">
+                        <DataGrid Name="ServerConfigDataGrid" ItemsSource="{Binding ServerConfigResults}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="WaitStatsTab" Header="Wait Stats Info">
+                    <StackPanel Name="WaitStatsStackPanel">
+                        <DataGrid Name="WaitStatsDataGrid" ItemsSource="{Binding WaitStatsResults}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="StoredProcedureStatsTab" Header="Stored Procedure Stats Info">
+                    <StackPanel Name="StoredProcedureStatsStackPanel">
+                        <DataGrid Name="StoredProcedureStatsDataGrid" ItemsSource="{Binding SpWaitStatsResults}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="LogTableIndexTab" Header="Log Table Index Health">
+                    <StackPanel Name="LogTableIndexStackPanel">
+                        <DataGrid Name="LogTableIndexDataGrid" ItemsSource="{Binding LogTableIndexStatsResults}"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="LogTableStatsTab" Header="Log Table Statistics Health">
+                    <StackPanel Name="LogTableStatsStackPanel">
+                        <DataGrid Name="LogTableStatsDataGrid" ItemsSource="{Binding LogTableStatisticsResults}"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+
+
+
+        </Grid>
+    </DockPanel>
 </Window>

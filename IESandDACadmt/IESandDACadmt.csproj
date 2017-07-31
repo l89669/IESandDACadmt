@@ -78,22 +78,6 @@
     <Compile Include="Model\SqlDeletionEventargs.cs" />
     <Compile Include="ViewModel\SqlHealthReviewData.cs" />
     <Compile Include="Model\SqlQueryEventArgs.cs" />
-    <Compile Include="View\FormHealthReview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\FormHealthReview.Designer.cs" />
-    <Compile Include="View\FormLauncher.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\FormLauncher.Designer.cs" />
-    <Compile Include="View\FormRecordDeletion.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\FormRecordDeletion.designer.cs" />
-    <Compile Include="View\FormRecordsProfiler.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\FormRecordsProfiler.Designer.cs" />
     <Compile Include="View\WpfAbout.xaml.cs">
       <DependentUpon>WpfAbout.xaml</DependentUpon>
     </Compile>
@@ -188,10 +172,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\FormHealthReview.resx" />
-    <EmbeddedResource Include="View\FormLauncher.resx" />
-    <EmbeddedResource Include="View\FormRecordDeletion.resx" />
-    <EmbeddedResource Include="View\FormRecordsProfiler.resx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
