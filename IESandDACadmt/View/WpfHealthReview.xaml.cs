@@ -634,9 +634,9 @@ namespace IESandDACadmt.View
         private bool CheckForRebuilds()
         {
             int rebuildsSelectedCount = 0;
-            foreach (DataGridRow row in dataGridViewIndex.Rows)
+            foreach (System.Data.DataRow row in LogTableIndexDataGrid.ItemsSource)
             {
-                if (Convert.ToBoolean(row.Cells["Rebuild"].Value) == true)
+                if (Convert.ToBoolean(row["Rebuild"]) == true)
                 {
                     rebuildsSelectedCount += 1;
                 }
@@ -653,8 +653,8 @@ namespace IESandDACadmt.View
 
         private void RunAllIndexCommands()
         {
-            List<string> rebuildStringsList = BuildIndexChangeCommands("REBUILD", dataGridViewIndex, "Rebuild");
-            List<string> reorgStringsList = BuildIndexChangeCommands("REORGANIZE", dataGridViewIndex, "Reorganize");
+            List<string> rebuildStringsList = BuildIndexChangeCommands("REBUILD", LogTableIndexDataGrid, "Rebuild");
+            List<string> reorgStringsList = BuildIndexChangeCommands("REORGANIZE", LogTableIndexDataGrid, "Reorganize");
             if (!token.IsCancellationRequested)
             {
                 ProcessSqlCommands(rebuildStringsList);
@@ -667,18 +667,29 @@ namespace IESandDACadmt.View
             _allowTabSwitch = true;
         }
 
-        private List<string> BuildIndexChangeCommands(string changeType, DataGridView theDGV, string recommendationRowName)
+        private List<string> BuildIndexChangeCommands(string changeType, DataGrid theDGV, string recommendationRowName)
         {
-            List<string> rebuildStrings = new List<string>();
-            foreach (DataGridViewRow row in theDGV.Rows)
+            List<string> indexChangeStrings = new List<string>();
+            foreach (System.Data.DataRow dRow in theDGV.ItemsSource)
             {
-                if (Convert.ToBoolean(row.Cells[recommendationRowName].Value) == true)
+                if (Convert.ToBoolean(dRow[recommendationRowName]) == true)
                 {
-                    rebuildStrings.Add("ALTER INDEX " + row.Cells["IndexName"].Value.ToString() + " ON " + _theLiveDbSqlSpData.DbSqlSpControllerData.DataBaseName + "." + row.Cells["SchemaName"].Value.ToString() + "." + row.Cells["TableName"].Value.ToString() + " " + changeType);
+                    indexChangeStrings.Add("ALTER INDEX " + dRow["IndexName"].ToString() + " ON " + _theLiveDbSqlSpData.DbSqlSpControllerData.DataBaseName + "." + dRow["SchemaName"].ToString() + "." + dRow["TableName"].ToString() + " " + changeType);
                 }
             }
-            return rebuildStrings.ToList();
+
+
+
+            //foreach (DataGridRow row in theDGV. .Rows)
+            //{
+            //    if (Convert.ToBoolean(row.Cells[recommendationRowName].Value) == true)
+            //    {
+            //        rebuildStrings.Add("ALTER INDEX " + row.Cells["IndexName"].Value.ToString() + " ON " + _theLiveDbSqlSpData.DbSqlSpControllerData.DataBaseName + "." + row.Cells["SchemaName"].Value.ToString() + "." + row.Cells["TableName"].Value.ToString() + " " + changeType);
+            //    }
+            //}
+            return indexChangeStrings.ToList();
         }
+
 
         private void ProcessSqlCommands(List<string> theCommands)
         {
@@ -721,25 +732,20 @@ namespace IESandDACadmt.View
 
         private void tabControlHealthReview_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // This needs to be updates to disable/enable the menuitem buttons for the respective tabs.
-
-
-
-
-
+            // This needs to be updated to disable/enable the menuitem buttons for the respective tabs.
             if (_allowTabSwitch)
             {
-                progressBarSql.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
-                buttonReRunAnalysis.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
-                buttonExportToFile.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
-                buttonOpenLogFile.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
-                buttonClose.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
-                _previousTab = tabControlHealthReview.SelectedIndex;
+                //progressBarSql.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
+                //buttonReRunAnalysis.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
+                //buttonExportToFile.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
+                //buttonOpenLogFile.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
+                //buttonClose.Parent = tabControlHealthReview.TabPages[tabControlHealthReview.SelectedIndex];
+                _previousTab = MasterTabControl.SelectedIndex;
             }
             else
             {
-                tabControlHealthReview.SelectedIndex = _previousTab;
-                MessageBox.Show("You cannot switch tabs while tasks are processing.", "Tab switch not possible", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MasterTabControl.SelectedIndex = _previousTab;
+                MessageBox.Show("You cannot switch tabs while tasks are processing. Please use the TASKS menu item to stop current running tasks.", "Tab switch not possible", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 
         }
@@ -768,7 +774,7 @@ namespace IESandDACadmt.View
 
         private void RunAllTableStatsCommands()
         {
-            List<string> updateStatsStringsList = BuildTableStatsUpdateCommands(dataGridViewLogTableStatisticsHealth, "StatsRecommendation");
+            List<string> updateStatsStringsList = BuildTableStatsUpdateCommands(LogTableStatsDataGrid, "StatsRecommendation");
             if (!token.IsCancellationRequested)
             {
                 ProcessSqlCommands(updateStatsStringsList);
@@ -777,17 +783,25 @@ namespace IESandDACadmt.View
             _processingOngoing = 0;
         }
 
-        private List<string> BuildTableStatsUpdateCommands(DataGridView theDGV, string recommendationRowName)
+        private List<string> BuildTableStatsUpdateCommands(DataGrid theDGV, string recommendationRowName)
         {
-            List<string> rebuildStrings = new List<string>();
-            foreach (DataGridViewRow row in theDGV.Rows)
+            List<string> tableStatsStrings = new List<string>();
+            //foreach (DataGridViewRow row in theDGV.Rows)
+            //{
+            //    if (Convert.ToBoolean(row.Cells[recommendationRowName].Value) == true)
+            //    {
+            //        rebuildStrings.Add("UPDATE STATISTICS " + _theLiveDbSqlSpData.DbSqlSpControllerData.DataBaseName + "." + row.Cells["SchemaName"].Value.ToString() + "." + row.Cells["TableName"].Value.ToString() + " " + row.Cells["IndexName"].Value.ToString());
+            //    }
+            //}
+
+            foreach(System.Data.DataRow dRow in theDGV.ItemsSource)
             {
-                if (Convert.ToBoolean(row.Cells[recommendationRowName].Value) == true)
+                if (Convert.ToBoolean(dRow[recommendationRowName]) == true)
                 {
-                    rebuildStrings.Add("UPDATE STATISTICS " + _theLiveDbSqlSpData.DbSqlSpControllerData.DataBaseName + "." + row.Cells["SchemaName"].Value.ToString() + "." + row.Cells["TableName"].Value.ToString() + " " + row.Cells["IndexName"].Value.ToString());
+                    tableStatsStrings.Add("UPDATE STATISTICS " + _theLiveDbSqlSpData.DbSqlSpControllerData.DataBaseName + "." + dRow["SchemaName"].ToString() + "." + dRow["TableName"].ToString() + " " + dRow["IndexName"].ToString());
                 }
             }
-            return rebuildStrings.ToList();
+            return tableStatsStrings.ToList();
         }
 
         private void buttonOpenLogFile_Click(object sender, EventArgs e)
@@ -810,7 +824,7 @@ namespace IESandDACadmt.View
         /// <param name="theColTwoName"></param>
         private void CheckOneBoolColumnAgainstAnother(int theRowIndex, int theColIndex, string theColOneName, string theColTwoName)
         {
-            DataGridViewRow clickedRow = dataGridViewIndex.Rows[theRowIndex];
+            DataGridRow clickedRow = LogTableIndexDataGrid [theRowIndex];
             DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)clickedRow.Cells[theColIndex];
             if ((bool)chk.Value == true)
             {
