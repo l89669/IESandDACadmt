@@ -379,21 +379,21 @@ namespace IESandDACadmt.View
             //}
         }
 
-        private void buttonReRunAnalysis_Click(object sender, EventArgs e)
-        {
-            cancelSource = new CancellationTokenSource();
-            token = cancelSource.Token;
-            MessageBoxResult dialogResult = MessageBox.Show("Re-run ALL analysis (YES) or just current tab (NO)?", "Re-run Analysis", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-            if (dialogResult == MessageBoxResult.Yes)
-            {
-                PrepForAndRunAllAnalysis();
-            }
-            else if (dialogResult == MessageBoxResult.No)
-            {
+        //private void buttonReRunAnalysis_Click(object sender, EventArgs e)
+        //{
+        //    cancelSource = new CancellationTokenSource();
+        //    token = cancelSource.Token;
+        //    MessageBoxResult dialogResult = MessageBox.Show("Re-run ALL analysis (YES) or just current tab (NO)?", "Re-run Analysis", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+        //    if (dialogResult == MessageBoxResult.Yes)
+        //    {
+        //        PrepForAndRunAllAnalysis();
+        //    }
+        //    else if (dialogResult == MessageBoxResult.No)
+        //    {
 
-                PrepForAndRunSingleTabAnalysis();
-            }
-        }
+        //        PrepForAndRunSingleTabAnalysis();
+        //    }
+        //}
 
         private void PrepForAndRunSingleTabAnalysis()
         {
@@ -604,26 +604,26 @@ namespace IESandDACadmt.View
             }
         }
 
-        private void buttonStartIndexChanges_Click(object sender, EventArgs e)
-        {
-            bool needOffline = CheckForRebuilds();
-            if (needOffline)
-            {
-                // Give need for off line message
-                MessageBoxResult requireOfflineResponse = MessageBox.Show("Index Rebuilds lock the tables so you need to have the " + _theLiveDbSqlSpData.DbSqlSpControllerData.HeatServerType.ToString()
-                                                                        + " Services (" + _appServerServicesNames + ") stopped to prevent data corruption. Click OK if you have done this and it is safe to proceed.",
-                                                                        "Index Rebuild requests detected", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if (requireOfflineResponse == MessageBoxResult.OK)
-                {
-                    PrepAndRunIndexCommands();
-                }
-            }
-            else
-            {
-                PrepAndRunIndexCommands();
-            }
+        //private void buttonStartIndexChanges_Click(object sender, EventArgs e)
+        //{
+        //    bool needOffline = CheckForRebuilds();
+        //    if (needOffline)
+        //    {
+        //        // Give need for off line message
+        //        MessageBoxResult requireOfflineResponse = MessageBox.Show("Index Rebuilds lock the tables so you need to have the " + _theLiveDbSqlSpData.DbSqlSpControllerData.HeatServerType.ToString()
+        //                                                                + " Services (" + _appServerServicesNames + ") stopped to prevent data corruption. Click OK if you have done this and it is safe to proceed.",
+        //                                                                "Index Rebuild requests detected", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+        //        if (requireOfflineResponse == MessageBoxResult.OK)
+        //        {
+        //            PrepAndRunIndexCommands();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        PrepAndRunIndexCommands();
+        //    }
 
-        }
+        //}
 
         private void PrepAndRunIndexCommands()
         {
@@ -716,10 +716,10 @@ namespace IESandDACadmt.View
             }
         }
 
-        private void buttonStopIndexChanges_Click(object sender, EventArgs e)
-        {
-            StopSqlProcessing();
-        }
+        //private void buttonStopIndexChanges_Click(object sender, EventArgs e)
+        //{
+        //    StopSqlProcessing();
+        //}
 
         private void StopSqlProcessing()
         {
@@ -750,11 +750,11 @@ namespace IESandDACadmt.View
 
         }
 
-        private void buttonUpdateTableStats_Click(object sender, EventArgs e)
-        {
-            ConfigureSubThreadControlItems();
-            Task.Factory.StartNew(() => { RunAllTableStatsCommands(); }, token);
-        }
+        //private void buttonUpdateTableStats_Click(object sender, EventArgs e)
+        //{
+        //    ConfigureSubThreadControlItems();
+        //    Task.Factory.StartNew(() => { RunAllTableStatsCommands(); }, token);
+        //}
 
         private void ConfigureSubThreadControlItems()
         {
@@ -767,10 +767,10 @@ namespace IESandDACadmt.View
             timerProcessing.IsEnabled = true;
         }
 
-        private void buttonStopUpdatingTableStats_Click(object sender, EventArgs e)
-        {
-            StopSqlProcessing();
-        }
+        //private void buttonStopUpdatingTableStats_Click(object sender, EventArgs e)
+        //{
+        //    StopSqlProcessing();
+        //}
 
         private void RunAllTableStatsCommands()
         {
@@ -804,16 +804,78 @@ namespace IESandDACadmt.View
             return tableStatsStrings.ToList();
         }
 
-        private void buttonOpenLogFile_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("notepad.exe", _theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation);
-        }
+        //private void buttonOpenLogFile_Click(object sender, EventArgs e)
+        //{
+        //    System.Diagnostics.Process.Start("notepad.exe", _theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation);
+        //}
 
         private void buttonCloseProfiler_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        private void menuRerunanalysis_Click(object sender, RoutedEventArgs e)
+        {
+            cancelSource = new CancellationTokenSource();
+            token = cancelSource.Token;
+            MessageBoxResult dialogResult = MessageBox.Show("Re-run ALL analysis (YES) or just current tab (NO)?", "Re-run Analysis", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                PrepForAndRunAllAnalysis();
+            }
+            else if (dialogResult == MessageBoxResult.No)
+            {
+
+                PrepForAndRunSingleTabAnalysis();
+            }
+        }
+
+        private void menuStartIndexChanges_Click(object sender, RoutedEventArgs e)
+        {
+            bool needOffline = CheckForRebuilds();
+            if (needOffline)
+            {
+                // Give need for off line message
+                MessageBoxResult requireOfflineResponse = MessageBox.Show("Index Rebuilds lock the tables so you need to have the " + _theLiveDbSqlSpData.DbSqlSpControllerData.HeatServerType.ToString()
+                                                                        + " Services (" + _appServerServicesNames + ") stopped to prevent data corruption. Click OK if you have done this and it is safe to proceed.",
+                                                                        "Index Rebuild requests detected", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                if (requireOfflineResponse == MessageBoxResult.OK)
+                {
+                    PrepAndRunIndexCommands();
+                }
+            }
+            else
+            {
+                PrepAndRunIndexCommands();
+            }
+
+        }
+
+        private void menuStopIndexChanges_Click(object sender, RoutedEventArgs e)
+        {
+            StopSqlProcessing();
+        }
+
+        private void menuStartTableStatsUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigureSubThreadControlItems();
+            Task.Factory.StartNew(() => { RunAllTableStatsCommands(); }, token);
+        }
+
+        private void menuStopTableStatsUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            StopSqlProcessing();
+        }
+
+        private void menuExportDataToFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menuOpenLogFile_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("notepad.exe", _theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation);
+        }
 
         /// <summary>
         /// Checks if One DGV boolean column is checked and it if it, it unchecks the second
@@ -822,66 +884,66 @@ namespace IESandDACadmt.View
         /// <param name="theColIndex"></param>
         /// <param name="theColOneName"></param>
         /// <param name="theColTwoName"></param>
-        private void CheckOneBoolColumnAgainstAnother(int theRowIndex, int theColIndex, string theColOneName, string theColTwoName)
-        {
-            DataGridRow clickedRow = LogTableIndexDataGrid [theRowIndex];
-            DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)clickedRow.Cells[theColIndex];
-            if ((bool)chk.Value == true)
-            {
-                int reorgCol = 0;
-                foreach (DataGridViewColumn column in dataGridViewIndex.Columns)
-                {
-                    if (column.Name == theColTwoName)
-                    {
-                        reorgCol = column.Index;
-                    }
-                }
-                DataGridViewCheckBoxCell reorgCell = (DataGridViewCheckBoxCell)clickedRow.Cells[reorgCol];
-                if ((bool)reorgCell.Value == true)
-                {
-                    reorgCell.Value = false;
-                }
+        //private void CheckOneBoolColumnAgainstAnother(int theRowIndex, int theColIndex, string theColOneName, string theColTwoName)
+        //{
+        //    DataGridRow clickedRow = LogTableIndexDataGrid [theRowIndex];
+        //    DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)clickedRow.Cells[theColIndex];
+        //    if ((bool)chk.Value == true)
+        //    {
+        //        int reorgCol = 0;
+        //        foreach (DataGridViewColumn column in dataGridViewIndex.Columns)
+        //        {
+        //            if (column.Name == theColTwoName)
+        //            {
+        //                reorgCol = column.Index;
+        //            }
+        //        }
+        //        DataGridViewCheckBoxCell reorgCell = (DataGridViewCheckBoxCell)clickedRow.Cells[reorgCol];
+        //        if ((bool)reorgCell.Value == true)
+        //        {
+        //            reorgCell.Value = false;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
-        private void dataGridViewIndex_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dataGridViewIndex.Columns[e.ColumnIndex].Name == "Rebuild" || dataGridViewIndex.Columns[e.ColumnIndex].Name == "Reorganize")
-            {
-                //MessageBox.Show("Clicked a monitored row");
-                if (dataGridViewIndex.Columns[e.ColumnIndex].Name == "Rebuild")
-                {
-                    CheckOneBoolColumnAgainstAnother(e.RowIndex, e.ColumnIndex, "Rebuild", "Reorganize");
-                }
-                else
-                {
-                    CheckOneBoolColumnAgainstAnother(e.RowIndex, e.ColumnIndex, "Reorganize", "Rebuild");
-                }
-            }
-        }
+        //private void dataGridViewIndex_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    if (dataGridViewIndex.Columns[e.ColumnIndex].Name == "Rebuild" || dataGridViewIndex.Columns[e.ColumnIndex].Name == "Reorganize")
+        //    {
+        //        //MessageBox.Show("Clicked a monitored row");
+        //        if (dataGridViewIndex.Columns[e.ColumnIndex].Name == "Rebuild")
+        //        {
+        //            CheckOneBoolColumnAgainstAnother(e.RowIndex, e.ColumnIndex, "Rebuild", "Reorganize");
+        //        }
+        //        else
+        //        {
+        //            CheckOneBoolColumnAgainstAnother(e.RowIndex, e.ColumnIndex, "Reorganize", "Rebuild");
+        //        }
+        //    }
+        //}
 
-        private void dataGridViewIndex_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            dataGridViewIndex_CellValueChanged(this, e);
-        }
+        //private void dataGridViewIndex_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    dataGridViewIndex_CellValueChanged(this, e);
+        //}
 
-        private void dataGridViewIndex_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            dataGridViewIndex_CellValueChanged(this, e);
-        }
+        //private void dataGridViewIndex_CellClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    dataGridViewIndex_CellValueChanged(this, e);
+        //}
 
-        private void dataGridViewIndex_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            dataGridViewIndex_CellValueChanged(this, e);
-        }
+        //private void dataGridViewIndex_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    dataGridViewIndex_CellValueChanged(this, e);
+        //}
 
-        private void dataGridViewIndex_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            if (dataGridViewIndex.IsCurrentCellDirty)
-            {
-                dataGridViewIndex.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
-        }
+        //private void dataGridViewIndex_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        //{
+        //    if (dataGridViewIndex.IsCurrentCellDirty)
+        //    {
+        //        dataGridViewIndex.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        //    }
+        //}
     }
 }

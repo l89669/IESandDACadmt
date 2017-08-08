@@ -26,16 +26,16 @@ namespace IESandDACadmt.Model.Sql
         {
             try
             {
-                while ((_dbSqlSpController.StopController == false) && (DateTime.Now < _dbSqlSpController.ProcessingEndTime)
-                        && _dbSqlSpController.RemainingRowsToPurge > 0)
+                while ((_dbSqlSpController.DbSqlSpControllerData.StopController == false) && (DateTime.Now < _dbSqlSpController.DbSqlSpControllerData.ProcessingEndTime)
+                        && _dbSqlSpController.DbSqlSpControllerData.RemainingRowsToPurge > 0)
                 {
-                    using (var conn = new SqlConnection(_dbSqlSpController.SqlConnectionString))
-                    using (var command = new SqlCommand(_dbSqlSpController.RecordDeletionStoredProcedureName, conn) { CommandType = CommandType.StoredProcedure })
+                    using (var conn = new SqlConnection(_dbSqlSpController.DbSqlSpControllerData.SqlConnectionString))
+                    using (var command = new SqlCommand(_dbSqlSpController.DbSqlSpControllerData.RecordDeletionStoredProcedureName, conn) { CommandType = CommandType.StoredProcedure })
                     {
                         command.CommandTimeout = 0;
                         SqlParameter spParam2 = new SqlParameter("@batchSize", SqlDbType.Int, 11)
                         {
-                            Value = _dbSqlSpController.RecordsForBatchSize
+                            Value = _dbSqlSpController.DbSqlSpControllerData.RecordsForBatchSize
                         };
                         command.Parameters.Add(spParam2);
 
@@ -45,43 +45,43 @@ namespace IESandDACadmt.Model.Sql
                         };
                         command.Parameters.Add(spReturnParam1);
 
-                        if (_dbSqlSpController.CutOffDays)
+                        if (_dbSqlSpController.DbSqlSpControllerData.CutOffDays)
                         {
                             SqlParameter spParam1 = new SqlParameter("@cutOffDate", SqlDbType.DateTime, 11)
                             {
-                                Value = _dbSqlSpController.CutOffDate
+                                Value = _dbSqlSpController.DbSqlSpControllerData.CutOffDate
                             };
                             command.Parameters.Add(spParam1);
                         }
 
-                        if (_dbSqlSpController.SelectedComputer != "all")
+                        if (_dbSqlSpController.DbSqlSpControllerData.SelectedComputer != "all")
                         {
                             SqlParameter spParam3 = new SqlParameter("@WorkstationId", SqlDbType.NVarChar, 255)
                             {
-                                Value = _dbSqlSpController.EpsGuid.ToString()
+                                Value = _dbSqlSpController.DbSqlSpControllerData.EpsGuid.ToString()
                             };
                             command.Parameters.Add(spParam3);
                             SqlParameter spParam5 = new SqlParameter("@theWorkstationName", SqlDbType.NVarChar, 255)
                             {
-                                Value = _dbSqlSpController.SelectedComputer.ToString()
+                                Value = _dbSqlSpController.DbSqlSpControllerData.SelectedComputer.ToString()
                             };
                             command.Parameters.Add(spParam5);
                         }
 
-                        if (_dbSqlSpController.SelectedUser != "everyone")
+                        if (_dbSqlSpController.DbSqlSpControllerData.SelectedUser != "everyone")
                         {
                             SqlParameter spParam4 = new SqlParameter("@theUserAccountSid", SqlDbType.NVarChar, 200)
                             {
-                                Value = _dbSqlSpController.UserSid.ToString()
+                                Value = _dbSqlSpController.DbSqlSpControllerData.UserSid.ToString()
                             };
                             command.Parameters.Add(spParam4);
                         }
 
-                        if (_dbSqlSpController.SelectedProcess != "all")
+                        if (_dbSqlSpController.DbSqlSpControllerData.SelectedProcess != "all")
                         {
                             SqlParameter spParam6 = new SqlParameter("@theProcessName", SqlDbType.NVarChar, 255)
                             {
-                                Value = _dbSqlSpController.SelectedProcess.ToString()
+                                Value = _dbSqlSpController.DbSqlSpControllerData.SelectedProcess.ToString()
                             };
                             command.Parameters.Add(spParam6);
                         }
@@ -96,15 +96,15 @@ namespace IESandDACadmt.Model.Sql
                     // ****************************************************************************
                     
                 }
-                _dbSqlSpController.WorkerCompleted = true;
+                _dbSqlSpController.DbSqlSpControllerData.WorkerCompleted = true;
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(_dbSqlSpController.LogFileLocation," Error in thread for Processing Records:" + ex.Message.ToString());
+                LoggingClass.SaveErrorToLogFile(_dbSqlSpController.DbSqlSpControllerData.LogFileLocation," Error in thread for Processing Records:" + ex.Message.ToString());
             }
             finally
             {
-                _dbSqlSpController.WorkerCompleted = true;
+                _dbSqlSpController.DbSqlSpControllerData.WorkerCompleted = true;
             }
         }
 

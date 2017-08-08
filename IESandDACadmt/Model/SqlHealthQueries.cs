@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using IESandDACadmt.ViewModel;
 
 namespace IESandDACadmt.Model
 {
@@ -45,7 +46,7 @@ namespace IESandDACadmt.Model
 						        PercentageOfWayToNextStatsUpdate decimal(5,2),
 						        StatsRecommendation bit,
 						        );
-	        SET @DatabaseId = (SELECT db_id('" + _liveSqlDbSPController.DataBaseName + @"'));
+	        SET @DatabaseId = (SELECT db_id('" + _liveSqlDbSPController.DbSqlSpControllerData.DataBaseName + @"'));
 	        INSERT INTO #statsChecks
 			        (
 					        TableName,
@@ -59,7 +60,7 @@ namespace IESandDACadmt.Model
 			        ORDER BY 1 asc;
 	
 	        -- 3. Check the last update times for each index and Check #changes since last update for each index
-	        USE " + _liveSqlDbSPController.DataBaseName + @"
+	        USE " + _liveSqlDbSPController.DbSqlSpControllerData.DataBaseName + @"
 	        BEGIN
 		        SET @MyCursor = CURSOR FOR
 		        select IndexName,TableName from #statsChecks
@@ -153,7 +154,7 @@ namespace IESandDACadmt.Model
 						                Rebuild bit,
 						                Reorganize bit
 						                );
-	                SET @DatabaseId = (SELECT db_id('" + _liveSqlDbSPController.DataBaseName + @"'));
+	                SET @DatabaseId = (SELECT db_id('" + _liveSqlDbSPController.DbSqlSpControllerData.DataBaseName + @"'));
 
                     INSERT INTO #statsChecks
 			                (
@@ -282,13 +283,13 @@ namespace IESandDACadmt.Model
 	                (total_logical_reads/execution_count) as Average_Logical_Writes
 	                FROM sys.dm_exec_procedure_stats
 	                ");
-            if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.EMSS)
+            if (_liveSqlDbSPController.DbSqlSpControllerData.HeatServerType == DbSqlSpControllerData.ServerType.EMSS)
             {
                 runtimeString.Append(@" WHERE database_id IN (DB_ID('UPCCommon'), DB_ID('PLUS')) ");
             }
-            else if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.ES)
+            else if (_liveSqlDbSPController.DbSqlSpControllerData.HeatServerType == DbSqlSpControllerData.ServerType.ES)
             {
-                runtimeString.Append(@" WHERE database_id = (DB_ID('" + _liveSqlDbSPController.DataBaseName + @"')) ");
+                runtimeString.Append(@" WHERE database_id = (DB_ID('" + _liveSqlDbSPController.DbSqlSpControllerData.DataBaseName + @"')) ");
             }
             runtimeString.Append(@"
 	                ORDER BY DBname asc, Average_Execution_Time desc
@@ -518,17 +519,17 @@ namespace IESandDACadmt.Model
                 ReturnType = SqlQueryReturnType.String,
                 SqlRoleCheckNeeded = true
             });
-            if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.EMSS)
+            if (_liveSqlDbSPController.DbSqlSpControllerData.HeatServerType == DbSqlSpControllerData.ServerType.EMSS)
             {
                 ReadDatabaseDetails("PLUS", _sqlHealthConfigQueryList);
                 ReadDatabaseDetails("UPCCommon", _sqlHealthConfigQueryList);
-                ReadPolicyVersion(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList, "AntivirusPolicyVersion", "AntiVirus");
-                ReadPolicyVersion(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList, "ApplicationControlPolicyVersion", "Application Control");
-                ReadPolicyVersion(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList, "DeviceControlPolicyVersion", "Device Control");
+                ReadPolicyVersion(_liveSqlDbSPController.DbSqlSpControllerData.DataBaseName, _sqlHealthConfigQueryList, "AntivirusPolicyVersion", "AntiVirus");
+                ReadPolicyVersion(_liveSqlDbSPController.DbSqlSpControllerData.DataBaseName, _sqlHealthConfigQueryList, "ApplicationControlPolicyVersion", "Application Control");
+                ReadPolicyVersion(_liveSqlDbSPController.DbSqlSpControllerData.DataBaseName, _sqlHealthConfigQueryList, "DeviceControlPolicyVersion", "Device Control");
             }
-            else if (_liveSqlDbSPController.HeatServerType == DbSqlSpController.ServerType.ES)
+            else if (_liveSqlDbSPController.DbSqlSpControllerData.HeatServerType == DbSqlSpControllerData.ServerType.ES)
             {
-                ReadDatabaseDetails(_liveSqlDbSPController.DataBaseName, _sqlHealthConfigQueryList);
+                ReadDatabaseDetails(_liveSqlDbSPController.DbSqlSpControllerData.DataBaseName, _sqlHealthConfigQueryList);
                 _sqlHealthConfigQueryList.Add(new singleSqlHealthQuery
                 {
                     QueryName = "Policy USN",

@@ -16,9 +16,9 @@
                 <MenuItem Header="E_xit" Click="exitToolStripMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_Requirements" Click="rerequirementsToolStripMenuItem_Click"/>
-                <MenuItem Header="_View Log File" Click="viewLogFileToolStripMenuItem_Click"/>
-                <MenuItem Header="_About" Click="aboutToolStripMenuItem_Click"/>
+                <MenuItem Name="menuRequirements" Header="_Requirements" Click="menuRequirements_Click"/>
+                <MenuItem Name="menuViewLogFile" Header="_View Log File" Click="menuViewLogFile_Click"/>
+                <MenuItem Name="menuAbout" Header="_About" Click="menuAbout_Click"/>
             </MenuItem>
         </Menu>
         <StatusBar Name="ToolBarStatusBar" DockPanel.Dock="Bottom">
@@ -37,9 +37,10 @@
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Heat Server Type: " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
-                <ListBox Name="ListboxServerType" Width="220" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                <Button Name="ButtonChangeType" Width="115" Content="CHANGE TYPE" Padding="5,0,5,0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+                <TextBlock Text="Heat Server Type: " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,5,0"/>
+                <ComboBox Name="ListboxServerType" Width="220" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                <Button Name="ButtonChangeType" Width="115" Content="CHANGE TYPE" Padding="5,0,5,0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"
+                        Click="ButtonChangeType_Click"/>
             </Grid>
             <Grid Name="SqlConnectionTestGrid" Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -49,22 +50,24 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="10*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="SQL Connection Test:" TextDecorations="Underline" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+                <TextBlock Text="SQL Connection Test:" TextDecorations="Underline" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,5,0"/>
 
-                <TextBlock Text="Heat Server Type:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
-                <ListBox Name="ListBoxSqlAuthType" Width="220" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                <TextBlock Text="Heat Server Type:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,5,0"/>
+                <ComboBox Name="ListBoxSqlAuthType" Width="220" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
-                <TextBlock Text="Server Name\Instance:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+                <TextBlock Text="Server Name\Instance:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,5,0"/>
                 <TextBox Name="tbDbServerName" Width="220" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                <Button Name="btnTestDBConnection"  Width="115" Content="TEST CONNECTION" Padding="5,0,5,0" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+                <Button Name="btnTestDBConnection"  Width="115" Content="TEST CONNECTION" Padding="5,0,5,0" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"
+                        Click="btnTestDBConnection_Click_1"/>
 
-                <TextBlock Text="Database Name" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,10,0"/>
+                <TextBlock Text="Database Name" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,5,0"/>
                 <TextBox Name="tbDatabaseName" Width="220" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center"/>
-                <Button Name="btnChangeSqlServer" Width="115" Content="CHANGE SERVER" Padding="5,0,5,0" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0"/>
+                <Button Name="btnChangeSqlServer" Width="115" Content="CHANGE SERVER" Padding="5,0,5,0" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"
+                        Click="btnChangeSqlServer_Click"/>
             </Grid>
             <Grid Name="LaunchButtonsGrid" Grid.Row="2">
                 <Grid.ColumnDefinitions>

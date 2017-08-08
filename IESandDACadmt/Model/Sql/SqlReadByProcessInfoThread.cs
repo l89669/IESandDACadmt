@@ -26,12 +26,12 @@ namespace IESandDACadmt.Model.Sql
             Logging.ActionOutcome readActionOutcome = QuerySqlServer.RunSqlQueryIntoDataTable(_sqlServerConnectionString, _sqlCommandTimeout, _sqlQuery, _dataTableResults);
             if (readActionOutcome.Success)
             {
-                _liveDbSqlSpController.ByProcessQuerySuccess = true;
+                _liveDbSqlSpController.DbSqlSpControllerData.ByProcessQuerySuccess = true;
             }
             else
             {
-                _liveDbSqlSpController.ByProcessQuerySuccess = false;
-                _liveDbSqlSpController.ByProcessQueryMessage = readActionOutcome.Message;
+                _liveDbSqlSpController.DbSqlSpControllerData.ByProcessQuerySuccess = false;
+                _liveDbSqlSpController.DbSqlSpControllerData.ByProcessQueryMessage = readActionOutcome.Message;
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using IESandDACadmt.Model.Logging;
+using IESandDACadmt.ViewModel;
 
 namespace IESandDACadmt.Model.Sql
 {
@@ -16,10 +17,10 @@ namespace IESandDACadmt.Model.Sql
 
         public void TestDbConnection()
         {
-            _liveDbSqlSpController.OperationResult = "";
-            _liveDbSqlSpController.DbTestStillRunning = true;
+            _liveDbSqlSpController.DbSqlSpControllerData.OperationResult = "";
+            _liveDbSqlSpController.DbSqlSpControllerData.DbTestStillRunning = true;
             ActionOutcome theResult = new ActionOutcome();
-            SqlConnection dbConnection = new SqlConnection(_liveDbSqlSpController.SqlConnectionString);
+            SqlConnection dbConnection = new SqlConnection(_liveDbSqlSpController.DbSqlSpControllerData.SqlConnectionString);
             try
             {
                 dbConnection.Open();
@@ -43,8 +44,8 @@ namespace IESandDACadmt.Model.Sql
             }
             else
             {
-                _liveDbSqlSpController.OperationResult = theResult.Message;
-                _liveDbSqlSpController.DbTestStillRunning = false;
+                _liveDbSqlSpController.DbSqlSpControllerData.OperationResult = theResult.Message;
+                _liveDbSqlSpController.DbSqlSpControllerData.DbTestStillRunning = false;
             }
         }
 
@@ -54,22 +55,22 @@ namespace IESandDACadmt.Model.Sql
             bool computerRead = false;
 
             // 1. Check if USer Creds has DBowner or SysAdmin
-            bool isSysAdmin = Sql.SqlAccessChecks.IsUserInThisSqlRole(_liveDbSqlSpController.SqlConnectionString, 1, "sysadmin");
-            bool isDbowner = Sql.SqlAccessChecks.IsUserInThisSqlRole(_liveDbSqlSpController.SqlConnectionString, 1, "db_owner");
+            bool isSysAdmin = Sql.SqlAccessChecks.IsUserInThisSqlRole(_liveDbSqlSpController.DbSqlSpControllerData.SqlConnectionString, 1, "sysadmin");
+            bool isDbowner = Sql.SqlAccessChecks.IsUserInThisSqlRole(_liveDbSqlSpController.DbSqlSpControllerData.SqlConnectionString, 1, "db_owner");
 
             if (isDbowner || isSysAdmin)
             {
                 // 2. Check if Log User table exists
                 ActionOutcome logTableTestResult = new ActionOutcome();
-                switch (_liveDbSqlSpController.HeatServerType)
+                switch (_liveDbSqlSpController.DbSqlSpControllerData.HeatServerType)
                 {
-                    case DbSqlSpController.ServerType.UNKNOWN:
+                    case DbSqlSpControllerData.ServerType.UNKNOWN:
                         break;
-                    case DbSqlSpController.ServerType.EMSS:
-                        logTableTestResult = Sql.QuerySqlServer.RunSqlQueryScalar(_liveDbSqlSpController.SqlConnectionString, 2, "SELECT COUNT(*) FROM dbo.LogUser");
+                    case DbSqlSpControllerData.ServerType.EMSS:
+                        logTableTestResult = Sql.QuerySqlServer.RunSqlQueryScalar(_liveDbSqlSpController.DbSqlSpControllerData.SqlConnectionString, 2, "SELECT COUNT(*) FROM dbo.LogUser");
                         break;
-                    case DbSqlSpController.ServerType.ES:
-                        logTableTestResult = Sql.QuerySqlServer.RunSqlQueryScalar(_liveDbSqlSpController.SqlConnectionString, 2, "SELECT COUNT(*) FROM ActivityLog.[User]");
+                    case DbSqlSpControllerData.ServerType.ES:
+                        logTableTestResult = Sql.QuerySqlServer.RunSqlQueryScalar(_liveDbSqlSpController.DbSqlSpControllerData.SqlConnectionString, 2, "SELECT COUNT(*) FROM ActivityLog.[User]");
                         break;
                     default:
                         break;
@@ -77,25 +78,25 @@ namespace IESandDACadmt.Model.Sql
                 if (logTableTestResult.Success)
                 {
                     // 3. Read in th eUSer and Computers to the _liveDbSqlSpController
-                    SqlConnection dbConnection = new SqlConnection(_liveDbSqlSpController.SqlConnectionString);
+                    SqlConnection dbConnection = new SqlConnection(_liveDbSqlSpController.DbSqlSpControllerData.SqlConnectionString);
                     ReadInUsersFromSql(ref userRead, dbConnection, _liveDbSqlSpController);
                     ReadInComputersFromSql(ref computerRead, dbConnection, _liveDbSqlSpController);
                     if (userRead && computerRead)
                     {
-                        _liveDbSqlSpController.OperationResult = "success";
-                        _liveDbSqlSpController.DbTestStillRunning = false;
+                        _liveDbSqlSpController.DbSqlSpControllerData.OperationResult = "success";
+                        _liveDbSqlSpController.DbSqlSpControllerData.DbTestStillRunning = false;
                     }
                 }
                 else
                 {
-                    _liveDbSqlSpController.OperationResult = "Could not read the Log Users table from the specified server/database so cannot proceed further. Please recheck the server/database name you specified.";
-                    _liveDbSqlSpController.DbTestStillRunning = false;
+                    _liveDbSqlSpController.DbSqlSpControllerData.OperationResult = "Could not read the Log Users table from the specified server/database so cannot proceed further. Please recheck the server/database name you specified.";
+                    _liveDbSqlSpController.DbSqlSpControllerData.DbTestStillRunning = false;
                 }
             }
             else
             {
-                _liveDbSqlSpController.OperationResult = "Could not detect SysAdmin or DB_Owner access to the specified server/database so cannot proceed further. Please recheck the user credentials used for this tool.";
-                _liveDbSqlSpController.DbTestStillRunning = false;
+                _liveDbSqlSpController.DbSqlSpControllerData.OperationResult = "Could not detect SysAdmin or DB_Owner access to the specified server/database so cannot proceed further. Please recheck the user credentials used for this tool.";
+                _liveDbSqlSpController.DbSqlSpControllerData.DbTestStillRunning = false;
             }
         }
 
@@ -105,28 +106,28 @@ namespace IESandDACadmt.Model.Sql
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile( liveDbSqlSpController.LogFileLocation, " SQL connection to read Computer names OPEN.");
-                SqlCommand computerListCommand = new SqlCommand(liveDbSqlSpController.ComputerReadSqlCode,
+                LoggingClass.SaveEventToLogFile( liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL connection to read Computer names OPEN.");
+                SqlCommand computerListCommand = new SqlCommand(liveDbSqlSpController.DbSqlSpControllerData.ComputerReadSqlCode,
                     sqlDbConnection) {CommandTimeout = 0};
-                liveDbSqlSpController.DtComputerNameEpsguid.Load(computerListCommand.ExecuteReader());
-                if (liveDbSqlSpController.DtComputerNameEpsguid.Rows.Count >= 1)
+                liveDbSqlSpController.DbSqlSpControllerData.DtComputerNameEpsguid.Load(computerListCommand.ExecuteReader());
+                if (liveDbSqlSpController.DbSqlSpControllerData.DtComputerNameEpsguid.Rows.Count >= 1)
                 {
-                    foreach (DataRow row in liveDbSqlSpController.DtComputerNameEpsguid.Rows)
+                    foreach (DataRow row in liveDbSqlSpController.DbSqlSpControllerData.DtComputerNameEpsguid.Rows)
                     {
                         string combinedNameEpsguid = "";
-                        if (liveDbSqlSpController.HeatServerType == DbSqlSpController.ServerType.EMSS)
+                        if (liveDbSqlSpController.DbSqlSpControllerData.HeatServerType == DbSqlSpControllerData.ServerType.EMSS)
                         {
                             combinedNameEpsguid = row["ComputerName"].ToString() + ":" + row["EPSGUID"].ToString();
                         }
-                        if (liveDbSqlSpController.HeatServerType == DbSqlSpController.ServerType.ES)
+                        if (liveDbSqlSpController.DbSqlSpControllerData.HeatServerType == DbSqlSpControllerData.ServerType.ES)
                         {
                             combinedNameEpsguid = row["ComputerName"].ToString() + ":" + row["ComputerID"].ToString();
                         }
                         
-                        liveDbSqlSpController.ComputerList.Add(combinedNameEpsguid);
+                        liveDbSqlSpController.DbSqlSpControllerData.ComputerList.Add(combinedNameEpsguid);
                     }
                 }
-                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.LogFileLocation, " SQL reading of Computer names is finished.");
+                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL reading of Computer names is finished.");
                 computerListCommand.Dispose();
                 computerRead = true;
                 sqlDbConnection.Close();
@@ -134,8 +135,8 @@ namespace IESandDACadmt.Model.Sql
             catch (Exception ex)
             {
                 computerRead = false;
-                LoggingClass.SaveErrorToLogFile(liveDbSqlSpController.LogFileLocation, " " + ex.Message.ToString());
-                liveDbSqlSpController.OperationResult = ex.Message.ToString();
+                LoggingClass.SaveErrorToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " " + ex.Message.ToString());
+                liveDbSqlSpController.DbSqlSpControllerData.OperationResult = ex.Message.ToString();
                 sqlDbConnection.Close();
             }
         }
@@ -145,19 +146,19 @@ namespace IESandDACadmt.Model.Sql
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.LogFileLocation, " SQL connection to read User-names is OPEN.");
-                SqlCommand userListCommand = new SqlCommand(liveDbSqlSpController.UserReadSqlCode, sqlDbConnection);
+                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL connection to read User-names is OPEN.");
+                SqlCommand userListCommand = new SqlCommand(liveDbSqlSpController.DbSqlSpControllerData.UserReadSqlCode, sqlDbConnection);
                 userListCommand.CommandTimeout = 0;
-                liveDbSqlSpController.DtUserNameSid.Load(userListCommand.ExecuteReader());
-                if (liveDbSqlSpController.DtUserNameSid.Rows.Count >= 1)
+                liveDbSqlSpController.DbSqlSpControllerData.DtUserNameSid.Load(userListCommand.ExecuteReader());
+                if (liveDbSqlSpController.DbSqlSpControllerData.DtUserNameSid.Rows.Count >= 1)
                 {
-                    foreach (DataRow row in liveDbSqlSpController.DtUserNameSid.Rows)
+                    foreach (DataRow row in liveDbSqlSpController.DbSqlSpControllerData.DtUserNameSid.Rows)
                     {
                         string combinedNameUsersid = row["NTUserName"].ToString() + ":" + row["UserSID"].ToString();
-                        liveDbSqlSpController.UserList.Add(combinedNameUsersid);
+                        liveDbSqlSpController.DbSqlSpControllerData.UserList.Add(combinedNameUsersid);
                     }
                 }
-                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.LogFileLocation, " SQL reading of User-names is finished.");
+                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL reading of User-names is finished.");
                 userListCommand.Dispose();
                 userRead = true;
                 sqlDbConnection.Close();
@@ -165,8 +166,8 @@ namespace IESandDACadmt.Model.Sql
             catch (Exception ex)
             {
                 userRead = false;
-                LoggingClass.SaveErrorToLogFile(liveDbSqlSpController.LogFileLocation, ex.Message.ToString());
-                liveDbSqlSpController.OperationResult = " Error with SQL connection and/or reading: " + ex.Message.ToString();
+                LoggingClass.SaveErrorToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, ex.Message.ToString());
+                liveDbSqlSpController.DbSqlSpControllerData.OperationResult = " Error with SQL connection and/or reading: " + ex.Message.ToString();
                 sqlDbConnection.Close();
             }
         }

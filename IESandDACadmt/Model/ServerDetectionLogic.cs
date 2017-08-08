@@ -1,16 +1,18 @@
-﻿namespace IESandDACadmt.Model
+﻿using IESandDACadmt.ViewModel;
+
+namespace IESandDACadmt.Model
 {
     public static class ServerDetectionLogic
     {
-        public static DbSqlSpController.ServerType CheckServerType(DbSqlSpController theLiveData, IESandDACadmt.ViewModel.ServerDetectionData theServerDetectionData)
+        public static DbSqlSpControllerData.ServerType CheckServerType(DbSqlSpController theLiveData, IESandDACadmt.ViewModel.ServerDetectionData theServerDetectionData)
         {
             Model.Sql.SqlConnectionStringCheck.CheckForSqlServerString(theServerDetectionData.EmssConnectionStringRegistryLocation,
                                                                  theServerDetectionData.EmssConnectionStringRegistryWowLocation,
                                                                  theServerDetectionData.EmssConnectionStringRegistryItem, 
                                                                  theLiveData);
-            if (theLiveData.SqlConnectionStringFound)
+            if (theLiveData.DbSqlSpControllerData.SqlConnectionStringFound)
             {
-                return DbSqlSpController.ServerType.EMSS;
+                return DbSqlSpControllerData.ServerType.EMSS;
             }
             else
             {
@@ -18,12 +20,12 @@
                                                                      theServerDetectionData.EsConnectionStringRegistryWowLocation,
                                                                      theServerDetectionData.EsConnectionStringRegistryItem,
                                                                      theLiveData);
-                if (theLiveData.SqlConnectionStringFound)
+                if (theLiveData.DbSqlSpControllerData.SqlConnectionStringFound)
                 {
-                    return DbSqlSpController.ServerType.ES;
+                    return DbSqlSpControllerData.ServerType.ES;
                 }
             }
-            return DbSqlSpController.ServerType.UNKNOWN;
+            return DbSqlSpControllerData.ServerType.UNKNOWN;
         }
     }
 }

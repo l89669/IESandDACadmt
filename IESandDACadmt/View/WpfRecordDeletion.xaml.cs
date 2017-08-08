@@ -45,7 +45,7 @@ namespace IESandDACadmt.View
 
         public volatile DbSqlSpController LiveDbSpSqlController = new DbSqlSpController();
         IESandDACadmt.ViewModel.DbSqlSpControllerData LiveDbSpSqlControllerData = new DbSqlSpControllerData();
-        Thread _testDbConnectionThread = null;
+        //Thread _testDbConnectionThread = null;
         Thread _readByProcessSqlInfoThread = null;
         Thread _calculateTotalRecordsToPurgeThread = null;
         Thread _sqlPurgeWorkerThread = null;

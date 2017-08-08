@@ -14,39 +14,39 @@ namespace IESandDACadmt.Model.Sql
                 Model.Logging.ActionOutcome regWowSqlConnSearchResult = Model.RegistryReader.ReadRegistryLocalMachineString(dbConnStringRegWowLocation, dbConnStringRegItem);
                 if (regWowSqlConnSearchResult.Success == false)
                 {
-                    theLiveData.SqlConnectionStringFound = false;
-                    Model.Logging.LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation,"Problem reading SQL Server connection string from registry:" + regSqlConnSearchResult.Message + ". " + regWowSqlConnSearchResult.Message);
-                    Model.Logging.LoggingClass.SaveEventToLogFile(theLiveData.LogFileLocation, "Will trigger manual user-input request.");
+                    theLiveData.DbSqlSpControllerData.SqlConnectionStringFound = false;
+                    Model.Logging.LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation,"Problem reading SQL Server connection string from registry:" + regSqlConnSearchResult.Message + ". " + regWowSqlConnSearchResult.Message);
+                    Model.Logging.LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, "Will trigger manual user-input request.");
                 }
                 else
                 {
-                    theLiveData.SqlConnectionStringFound = true;
-                    theLiveData.SqlConnectionString = regWowSqlConnSearchResult.Message;
+                    theLiveData.DbSqlSpControllerData.SqlConnectionStringFound = true;
+                    theLiveData.DbSqlSpControllerData.SqlConnectionString = regWowSqlConnSearchResult.Message;
                     ParseSqlConnStringIntoServerAndDatabase(theLiveData);
                 }
             }
             else
             {
-                theLiveData.SqlConnectionStringFound = true;
-                theLiveData.SqlConnectionString = regSqlConnSearchResult.Message;
+                theLiveData.DbSqlSpControllerData.SqlConnectionStringFound = true;
+                theLiveData.DbSqlSpControllerData.SqlConnectionString = regSqlConnSearchResult.Message;
                 ParseSqlConnStringIntoServerAndDatabase(theLiveData);
             }
-            return theLiveData.SqlConnectionStringFound;
+            return theLiveData.DbSqlSpControllerData.SqlConnectionStringFound;
         }
 
         private static void ParseSqlConnStringIntoServerAndDatabase(DbSqlSpController theLiveData)
         {
-            if (theLiveData.SqlConnectionString.Contains("sqloledb"))
+            if (theLiveData.DbSqlSpControllerData.SqlConnectionString.Contains("sqloledb"))
             {
-                OleDbConnectionStringBuilder _oleDbConnectionString = new OleDbConnectionStringBuilder(theLiveData.SqlConnectionString);
-                theLiveData.DbServeraddress = _oleDbConnectionString.DataSource.ToString();
-                theLiveData.DataBaseName = _oleDbConnectionString["Initial Catalog"].ToString();
+                OleDbConnectionStringBuilder _oleDbConnectionString = new OleDbConnectionStringBuilder(theLiveData.DbSqlSpControllerData.SqlConnectionString);
+                theLiveData.DbSqlSpControllerData.DbServeraddress = _oleDbConnectionString.DataSource.ToString();
+                theLiveData.DbSqlSpControllerData.DataBaseName = _oleDbConnectionString["Initial Catalog"].ToString();
             }
             else
             {
-                SqlConnectionStringBuilder _sqlConnectionString = new SqlConnectionStringBuilder(theLiveData.SqlConnectionString);
-                theLiveData.DbServeraddress = _sqlConnectionString.DataSource.ToString();
-                theLiveData.DataBaseName = _sqlConnectionString.InitialCatalog.ToString();
+                SqlConnectionStringBuilder _sqlConnectionString = new SqlConnectionStringBuilder(theLiveData.DbSqlSpControllerData.SqlConnectionString);
+                theLiveData.DbSqlSpControllerData.DbServeraddress = _sqlConnectionString.DataSource.ToString();
+                theLiveData.DbSqlSpControllerData.DataBaseName = _sqlConnectionString.InitialCatalog.ToString();
             }
         }
     }

@@ -188,27 +188,27 @@ namespace IESandDACadmt.View
 
         }
 
-        private void btnTestDBConnection_Click(object sender, EventArgs e)
-        {
-            ModifyGuiOnTestButtonClick();
-            Thread.Sleep(100);
-            var inputOk = TestUserInput();
-            if (inputOk)
-            {
-                ToolBarLabel.Text = "Testing Connection...";
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Test DB Connection button was clicked.");
-                SetSqlSearchCommandsByServerType();
-                if (LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected == false)
-                {
-                    LiveDbSpSqlController.DbSqlSpControllerData.SqlConnUserName = WindowsIdentity.GetCurrent().Name;
-                }
-                TestSqlDbConnection();
-            }
-            else
-            {
-                ModifyGuiOnDbTestFail();
-            }
-        }
+        //private void btnTestDBConnection_Click(object sender, EventArgs e)
+        //{
+        //    ModifyGuiOnTestButtonClick();
+        //    Thread.Sleep(100);
+        //    var inputOk = TestUserInput();
+        //    if (inputOk)
+        //    {
+        //        ToolBarLabel.Text = "Testing Connection...";
+        //        LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Test DB Connection button was clicked.");
+        //        SetSqlSearchCommandsByServerType();
+        //        if (LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected == false)
+        //        {
+        //            LiveDbSpSqlController.DbSqlSpControllerData.SqlConnUserName = WindowsIdentity.GetCurrent().Name;
+        //        }
+        //        TestSqlDbConnection();
+        //    }
+        //    else
+        //    {
+        //        ModifyGuiOnDbTestFail();
+        //    }
+        //}
 
         private bool TestUserInput()
         {
@@ -268,19 +268,19 @@ namespace IESandDACadmt.View
             }
         }
 
-        private void btnChangeSqlServer_Click(object sender, EventArgs e)
-        {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
-            dbConnectionTestTimer.IsEnabled = false;
-            ToolBarLabel.Text = "Connection attempt stopped";
-            ModifyGuiOnFormLoad();
-            ToolBarProgressBar.Value = 0;
-            ViewModel.DbSqlSpControllerData.ServerType tempServerType = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType;
-            Dictionary<string, bool> tempo = LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete;
-            LiveDbSpSqlController = new Model.DbSqlSpController();
-            LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete = tempo;
-            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = tempServerType;
-        }
+        //private void btnChangeSqlServer_Click(object sender, EventArgs e)
+        //{
+        //    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
+        //    dbConnectionTestTimer.IsEnabled = false;
+        //    ToolBarLabel.Text = "Connection attempt stopped";
+        //    ModifyGuiOnFormLoad();
+        //    ToolBarProgressBar.Value = 0;
+        //    ViewModel.DbSqlSpControllerData.ServerType tempServerType = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType;
+        //    Dictionary<string, bool> tempo = LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete;
+        //    LiveDbSpSqlController = new Model.DbSqlSpController();
+        //    LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete = tempo;
+        //    LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = tempServerType;
+        //}
 
         private void ModifyGuiOnFormLoad()
         {
@@ -365,21 +365,21 @@ namespace IESandDACadmt.View
             //panelHealth.BackColor = SystemColors.Control;
         }
 
-        private void buttonLaunchProfiler_Click(object sender, EventArgs e)
+        private void buttonLaunchProfiler_Click(object sender, RoutedEventArgs e)
         {
             LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL AC/DC Record Profiler Tool launched.");
             _dataProfilerPage = new WpfRecordsProfiler(LiveDbSpSqlController);
             _dataProfilerPage.ShowDialog();
         }
 
-        private void buttonLaunchPurger_Click(object sender, EventArgs e)
+        private void buttonLaunchPurger_Click(object sender, RoutedEventArgs e)
         {
             LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL AC/DC Record Purge Tool launched.");
             _recordPurgePage = new WpfRecordDeletion(LiveDbSpSqlController);
             _recordPurgePage.ShowDialog();
         }
 
-        private void buttonLaunchHealthReview_Click(object sender, EventArgs e)
+        private void buttonLaunchHealthReview_Click(object sender, RoutedEventArgs e)
         {
             LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL Health Review Tool launched.");
             WpfHealthReview healthReviewForm = new WpfHealthReview(LiveDbSpSqlController);
@@ -431,44 +431,44 @@ namespace IESandDACadmt.View
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void viewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("notepad.exe", LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation);
-        }
+        //private void viewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    Process.Start("notepad.exe", LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation);
+        //}
 
-        private void requirementsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            IESandDACadmt.View.WpfHelpRequirements helpRequirements = new IESandDACadmt.View.WpfHelpRequirements();
-            helpRequirements.Show();
-        }
+        //private void requirementsToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    IESandDACadmt.View.WpfHelpRequirements helpRequirements = new IESandDACadmt.View.WpfHelpRequirements();
+        //    helpRequirements.Show();
+        //}
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            IESandDACadmt.View.WpfAbout about = new IESandDACadmt.View.WpfAbout();
-            about.Show();
-        }
+        //private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    IESandDACadmt.View.WpfAbout about = new IESandDACadmt.View.WpfAbout();
+        //    about.Show();
+        //}
 
 
-        private void buttonChangeServerType_Click(object sender, EventArgs e)
-        {
-            btnChangeSqlServer_Click(this, new EventArgs());
-            string userSelectedServerType = ListboxServerType.Items[ListboxServerType.SelectedIndex].ToString();
-            if (userSelectedServerType == "EMSS")
-            {
-                LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.EMSS;
-                LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = "UPCCommon";
-            }
-            else if (userSelectedServerType == "ES")
-            {
-                LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.ES;
-                LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = "SX";
-            }
-            else
-            {
-                LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.UNKNOWN;
-            }
-            FormLauncher_Load(this, new EventArgs());
-        }
+        //private void buttonChangeServerType_Click(object sender, EventArgs e)
+        //{
+        //    btnChangeSqlServer_Click(this, new EventArgs());
+        //    string userSelectedServerType = ListboxServerType.Items[ListboxServerType.SelectedIndex].ToString();
+        //    if (userSelectedServerType == "EMSS")
+        //    {
+        //        LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.EMSS;
+        //        LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = "UPCCommon";
+        //    }
+        //    else if (userSelectedServerType == "ES")
+        //    {
+        //        LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.ES;
+        //        LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = "SX";
+        //    }
+        //    else
+        //    {
+        //        LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.UNKNOWN;
+        //    }
+        //    FormLauncher_Load(this, new EventArgs());
+        //}
 
         private void comboBoxSqlAuthType_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -492,6 +492,80 @@ namespace IESandDACadmt.View
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected = false;
             }
+        }
+
+        private void menuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            IESandDACadmt.View.WpfAbout about = new IESandDACadmt.View.WpfAbout();
+            about.Show();
+        }
+
+        private void menuViewLogFile_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("notepad.exe", LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation);
+        }
+
+        private void menuRequirements_Click(object sender, RoutedEventArgs e)
+        {
+            IESandDACadmt.View.WpfHelpRequirements helpRequirements = new IESandDACadmt.View.WpfHelpRequirements();
+            helpRequirements.Show();
+        }
+
+        private void ButtonChangeType_Click(object sender, RoutedEventArgs e)
+        {
+            btnChangeSqlServer_Click(this, new RoutedEventArgs());
+            string userSelectedServerType = ListboxServerType.Items[ListboxServerType.SelectedIndex].ToString();
+            if (userSelectedServerType == "EMSS")
+            {
+                LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.EMSS;
+                LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = "UPCCommon";
+            }
+            else if (userSelectedServerType == "ES")
+            {
+                LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.ES;
+                LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName = "SX";
+            }
+            else
+            {
+                LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.UNKNOWN;
+            }
+            FormLauncher_Load(this, new EventArgs());
+        }
+
+        private void btnTestDBConnection_Click_1(object sender, RoutedEventArgs e)
+        {
+            ModifyGuiOnTestButtonClick();
+            Thread.Sleep(100);
+            var inputOk = TestUserInput();
+            if (inputOk)
+            {
+                ToolBarLabel.Text = "Testing Connection...";
+                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Test DB Connection button was clicked.");
+                SetSqlSearchCommandsByServerType();
+                if (LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected == false)
+                {
+                    LiveDbSpSqlController.DbSqlSpControllerData.SqlConnUserName = WindowsIdentity.GetCurrent().Name;
+                }
+                TestSqlDbConnection();
+            }
+            else
+            {
+                ModifyGuiOnDbTestFail();
+            }
+        }
+
+        private void btnChangeSqlServer_Click(object sender, RoutedEventArgs e)
+        {
+            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
+            dbConnectionTestTimer.IsEnabled = false;
+            ToolBarLabel.Text = "Connection attempt stopped";
+            ModifyGuiOnFormLoad();
+            ToolBarProgressBar.Value = 0;
+            ViewModel.DbSqlSpControllerData.ServerType tempServerType = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType;
+            Dictionary<string, bool> tempo = LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete;
+            LiveDbSpSqlController = new Model.DbSqlSpController();
+            LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete = tempo;
+            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = tempServerType;
         }
     }
 }

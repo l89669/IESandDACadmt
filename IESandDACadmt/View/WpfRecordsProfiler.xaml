@@ -46,7 +46,7 @@
 
                             </MSChart:Chart>
                         </WindowsFormsHost>
-                        <ListBox Name="EventTypesList"/>
+                        <ComboBox Name="EventTypesList" Height="25" Width="200"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByDateRawTab" Header="By Date: Raw">

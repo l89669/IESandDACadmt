@@ -14,15 +14,15 @@
                 <MenuItem Header="E_xit" Click="buttonCloseProfiler_Click"/>
             </MenuItem>
             <MenuItem Header="_Tasks">
-                <MenuItem Header="_Rerun Analysis" Click="buttonRerunAnalysis_Click"/>
-                <MenuItem Header="Start _Index Changes" />
-                <MenuItem Header="Stop I_ndex Changes" />
-                <MenuItem Header="Start _Table Stats Updates" />
-                <MenuItem Header="Stop T_able Stats Updates" />
-                <MenuItem Header="Export Data to _File" />
+                <MenuItem Name="menuRerunanalysis" Header="_Rerun Analysis" Click="menuRerunanalysis_Click"/>
+                <MenuItem Name="menuStartIndexChanges" Header="Start _Index Changes" Click="menuStartIndexChanges_Click"/>
+                <MenuItem Name="menuStopIndexChanges"  Header="Stop I_ndex Changes" Click="menuStopIndexChanges_Click" />
+                <MenuItem Name="menuStartTableStatsUpdates" Header="Start _Table Stats Updates" Click="menuStartTableStatsUpdates_Click"/>
+                <MenuItem Name="menuStopTableStatsUpdates" Header="Stop T_able Stats Updates" Click="menuStopTableStatsUpdates_Click"/>
+                <MenuItem Name="menuExportDataToFile" Header="Export Data to _File" Click="menuExportDataToFile_Click"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_View Log File" Click="buttonOpenLogFile_Click"/>
+                <MenuItem Name="menuOpenLogFile" Header="_View Log File" Click="menuOpenLogFile_Click"/>
             </MenuItem>
         </Menu>
         <StatusBar Name="ToolBarStatusBar" DockPanel.Dock="Bottom" Height="30">
