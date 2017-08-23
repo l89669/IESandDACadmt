@@ -16,20 +16,6 @@ namespace IESandDACadmt.View
     /// </summary>
     public partial class WpfLauncher : Window
     {
-        public WpfLauncher()
-        {
-            InitializeComponent();
-            dbConnectionTestTimer = new System.Windows.Threading.DispatcherTimer();
-            dbConnectionTestTimer.Tick += dbConnectionTestTimer_Tick;
-            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = Model.ServerDetectionLogic.CheckServerType(LiveDbSpSqlController, _serverDetectionData);
-            ListboxServerType.Items.Add("EMSS");
-            ListboxServerType.Items.Add("ES");
-            ListboxServerType.SelectedItem = "EMSS";
-            ListBoxSqlAuthType.Items.Add("Windows Authentication");
-            ListBoxSqlAuthType.Items.Add("SQL Authentication");
-            ListBoxSqlAuthType.SelectedItem = "Windows Authentication";
-        }
-
         public volatile Model.DbSqlSpController LiveDbSpSqlController = new Model.DbSqlSpController();
         Model.Sql.SqlTestDbConnection _workerTestSql = null;
         Thread _testDbConnectionThread = null;
@@ -38,22 +24,21 @@ namespace IESandDACadmt.View
         ViewModel.ServerDetectionData _serverDetectionData = new ViewModel.ServerDetectionData();
         System.Windows.Threading.DispatcherTimer dbConnectionTestTimer = null;
 
-
-        private void SetLauncherGui(Model.DbSqlSpController theLiveData)
+        public WpfLauncher()
         {
-            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
-            {
-                this.Title = "EMSS Advanced Database Maintenance Tool";
-            }
-            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
-            {
-                this.Title = "ES Advanced Database Maintenance Tool";
-            }
-            tbDbServerName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress;
-            tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
+            InitializeComponent();
+            dbConnectionTestTimer = new System.Windows.Threading.DispatcherTimer();
+            dbConnectionTestTimer.Tick += dbConnectionTestTimer_Tick;
+            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = Model.ServerDetectionLogic.CheckServerType(LiveDbSpSqlController, _serverDetectionData);
+            ComboboxServerType.Items.Add("EMSS");
+            ComboboxServerType.Items.Add("ES");
+            ComboboxServerType.SelectedItem = "EMSS";
+            ComboboxSqlAuthType.Items.Add("Windows Authentication");
+            ComboboxSqlAuthType.Items.Add("SQL Authentication");
+            ComboboxSqlAuthType.SelectedItem = "Windows Authentication";
         }
 
-        private void FormLauncher_Load(object sender, EventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.UNKNOWN)
             {
@@ -62,7 +47,7 @@ namespace IESandDACadmt.View
             }
             else
             {
-                ListboxServerType.SelectedItem = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType.ToString();
+                ComboboxServerType.SelectedItem = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType.ToString();
                 ModifyGuiOnKnownServerType();
                 if (LiveDbSpSqlController.DbSqlSpControllerData.SqlConnectionStringFound)
                 {
@@ -90,6 +75,21 @@ namespace IESandDACadmt.View
                 }
             }
         }
+        
+
+        private void SetLauncherGui(Model.DbSqlSpController theLiveData)
+        {
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.EMSS)
+            {
+                this.Title = "EMSS Advanced Database Maintenance Tool";
+            }
+            if (theLiveData.DbSqlSpControllerData.HeatServerType == ViewModel.DbSqlSpControllerData.ServerType.ES)
+            {
+                this.Title = "ES Advanced Database Maintenance Tool";
+            }
+            tbDbServerName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress;
+            tbDatabaseName.Text = LiveDbSpSqlController.DbSqlSpControllerData.DataBaseName;
+        }
 
         private void PromptForSqlDetails()
         {
@@ -104,52 +104,37 @@ namespace IESandDACadmt.View
             SetSqlConnectionTestRowTo(false);
             SetToolsRowTo(false);
             ToolBarLabel.Text = "Unknown Server Type";
-            
-
-            //panelServerType.BackColor = SystemColors.ControlLightLight;
-            //panelDbConnection.BackColor = SystemColors.Control;
-            //panelProfiler.BackColor = SystemColors.Control;
-            //panelPurge.BackColor = SystemColors.Control;
-            //panelHealth.BackColor = SystemColors.Control;
         }
 
-        private void SetToolsRowTo(bool v)
+        private void SetServerTypeRowTo(bool v)
         {
             ServerTypeGrid.IsEnabled = v;
-            SetGridRowColoutToActive(v);
-
-            //ButtonChangeType.IsEnabled = v;
-            //ListboxServerType.IsEnabled = v;
-        }
-
-        private void SetGridRowColoutToActive(bool v)
-        {
-            if (v)
-            {
-                ServerTypeGrid.Background = new SolidColorBrush(Color.FromArgb(1, 240, 240, 240)); // Light grey
-            }
-            else
-            {
-                ServerTypeGrid.Background = new SolidColorBrush(Color.FromArgb(1, 210, 210, 210)); // Dark grey
-            }
+            SetGridRowColourToActive(v, ServerTypeGrid);
+            
         }
 
         private void SetSqlConnectionTestRowTo(bool v)
         {
             SqlConnectionTestGrid.IsEnabled = v;
-            //ListBoxSqlAuthType.IsEnabled = v;
-            //tbDatabaseName.IsEnabled = v;
-            //btnTestDBConnection.IsEnabled = v;
-            //tbDbServerName.IsEnabled = v;
-            //btnChangeSqlServer.IsEnabled = v;
+            SetGridRowColourToActive(v, SqlConnectionTestGrid);
         }
 
-        private void SetServerTypeRowTo(bool v)
+        private void SetToolsRowTo(bool v)
         {
             LaunchButtonsGrid.IsEnabled = v;
-            //btnLaunchDeletion.IsEnabled = v;
-            //btnLaunchHealth.IsEnabled = v;
-            //btnLaunchProfiler.IsEnabled = v;
+            SetGridRowColourToActive(v, LaunchButtonsGrid);
+        }
+
+        private void SetGridRowColourToActive(bool v, System.Windows.Controls.Grid theGrid)
+        {
+            if (v)
+            {
+                theGrid.Background = new SolidColorBrush(Color.FromArgb(1, 240, 240, 240)); // Light grey
+            }
+            else
+            {
+                theGrid.Background = new SolidColorBrush(Color.FromArgb(1, 210, 210, 210)); // Dark grey
+            }
         }
 
         private void ModifyGuiOnKnownServerType()
@@ -452,7 +437,7 @@ namespace IESandDACadmt.View
         //private void buttonChangeServerType_Click(object sender, EventArgs e)
         //{
         //    btnChangeSqlServer_Click(this, new EventArgs());
-        //    string userSelectedServerType = ListboxServerType.Items[ListboxServerType.SelectedIndex].ToString();
+        //    string userSelectedServerType = ComboboxServerType.Items[ComboboxServerType.SelectedIndex].ToString();
         //    if (userSelectedServerType == "EMSS")
         //    {
         //        LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.EMSS;
@@ -472,7 +457,7 @@ namespace IESandDACadmt.View
 
         private void comboBoxSqlAuthType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ListBoxSqlAuthType.SelectedItem.ToString() == "SQL Authentication")
+            if (ComboboxSqlAuthType.SelectedItem.ToString() == "SQL Authentication")
             {
                 View.WpfAlternateCredentials altCredsForm = new WpfAlternateCredentials(LiveDbSpSqlController);
                 bool credsResult = Convert.ToBoolean(altCredsForm.ShowDialog());
@@ -485,7 +470,7 @@ namespace IESandDACadmt.View
                 else
                 {
                     LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected = false;
-                    ListBoxSqlAuthType.SelectedItem = "Windows Authentication";
+                    ComboboxSqlAuthType.SelectedItem = "Windows Authentication";
                 }
             }
             else
@@ -514,7 +499,7 @@ namespace IESandDACadmt.View
         private void ButtonChangeType_Click(object sender, RoutedEventArgs e)
         {
             btnChangeSqlServer_Click(this, new RoutedEventArgs());
-            string userSelectedServerType = ListboxServerType.Items[ListboxServerType.SelectedIndex].ToString();
+            string userSelectedServerType = ComboboxServerType.Items[ComboboxServerType.SelectedIndex].ToString();
             if (userSelectedServerType == "EMSS")
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.EMSS;
@@ -529,7 +514,7 @@ namespace IESandDACadmt.View
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = DbSqlSpControllerData.ServerType.UNKNOWN;
             }
-            FormLauncher_Load(this, new EventArgs());
+            Window_Loaded(this, new RoutedEventArgs());
         }
 
         private void btnTestDBConnection_Click_1(object sender, RoutedEventArgs e)
@@ -567,5 +552,7 @@ namespace IESandDACadmt.View
             LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete = tempo;
             LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = tempServerType;
         }
+
+        
     }
 }
