@@ -2,12 +2,14 @@
 The Core WinForms ADMT classes were added. 
 DbSpController class was moved to Model and had the data split out into a new ViewModel class to adhere to structure and refactorign fo this done. 
 Refactoring of namespace changes was done. 
+The WPF classes created to replace all WinForms. 
 
 
 To Do:
-The WPF classes will be needed to replace all WinForms. 
-Static data can be used in static pages, but Binding to data classes will be needed for V to VM mapping. 
-Then UI Update mechanism will need to be refactored for full MVVM compliance.
-Add Trace Logging switch to make logging granular.
+Get basic functionaliy working for WPF formats.
+Code refactoring to make it fully MVVM using best practices:
+	Rejig classes into correct MVVM layouts.
+	Use INotifyPropertyChanged, ICommand, IDataErrorInfo, IValueConverter, ObservableCollection's to remove code from the Code-behind and into decoupled classes.
+Add Best-practice Logging methodology: e.g. Trace Logging switch to make logging granular, using Singleton or other pattern.
 Convert the Classes to Interface-drived for Dependancy Injection.
 Add Unit Tests for classes.
