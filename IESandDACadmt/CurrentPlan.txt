@@ -6,6 +6,7 @@ The WPF classes created to replace all WinForms.
 
 
 To Do:
+Add Best-practice Logging methodology: e.g. Trace Logging switch to make logging granular, using Singleton or other pattern. Make it thread-safe.
 Get basic functionaliy working for WPF formats.
 Code refactoring to make it fully MVVM using best practices:
 	Rejig classes into correct MVVM layouts.

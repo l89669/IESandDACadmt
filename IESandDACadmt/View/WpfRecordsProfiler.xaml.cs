@@ -195,13 +195,14 @@ namespace IESandDACadmt.View
 
         private void SetNewByDateDataResults(DataTable queryResults)
         {
-            //if (this.ByDateChart.InvokeRequired)
-            //{
-            //    SetByDateQueryDataCallBack del = new SetByDateQueryDataCallBack(SetNewByDateDataResults);
-            //    this.Invoke(del, new object[] { queryResults });
-            //}
-            //else
-            //{
+            if (ByDateRawStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetByDateQueryDataCallBack del = new SetByDateQueryDataCallBack(SetNewByDateDataResults);
+                //    this.Invoke(del, new object[] { queryResults });
+                ByDateRawStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
                 _currentQueryData.ByDateDataRecords = queryResults;
                 ByDateRawStackPanel.IsEnabled = true;
 
@@ -209,7 +210,7 @@ namespace IESandDACadmt.View
                 //labelDateRawDataProcessing.Visible = false;
                 UpdateByDateCharts(_currentQueryData.ByDateDataRecords);
                 _numQueriesStillRunning -= 1;
-            //}
+            }
         }
 
         private void UpdateByDateCharts(DataTable queryResults)
