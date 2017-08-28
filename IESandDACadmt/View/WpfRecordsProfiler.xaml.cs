@@ -29,7 +29,7 @@ namespace IESandDACadmt.View
     /// </summary>
     public partial class WpfRecordsProfiler : Window
     {
-        public WpfRecordsProfiler(Model.DbSqlSpController liveDbSqlController)
+        public WpfRecordsProfiler(Model.DbSqlSpController liveDbSqlController, Model.Logging.ILogging theLogger)
         {
             theDbSqlController = liveDbSqlController;
 
@@ -37,11 +37,12 @@ namespace IESandDACadmt.View
 
             Loaded += WpfRecordsProfilerUi_Load;
 
-
+            _theLogger = theLogger;
 
             SetGuiForServerType();
         }
 
+        private Model.Logging.ILogging _theLogger;
         private DbSqlSpController theDbSqlController;
         private volatile ViewModel.RecordsProfilingData _currentQueryData = new ViewModel.RecordsProfilingData();
         private double _maxValue = 1;
@@ -147,13 +148,13 @@ namespace IESandDACadmt.View
                 {
                     // Open Connection
                     theSqlConnection.Open();
-                    LoggingClass.SaveEventToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, " SQL connection to profile " + queryType.ToString() + " is OPEN.");
+                    _theLogger.SaveEventToLogFile(" SQL connection to profile " + queryType.ToString() + " is OPEN.");
                     theSqlCommand.CommandTimeout = 10800;
                     // Run query and fill in data table
                     queryResults.Load(theSqlCommand.ExecuteReader());
                     if (queryResults.Rows.Count >= 0)
                     {
-                        LoggingClass.SaveEventToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, " SQL Query Type " + queryType.ToString() + " succeeded.");
+                        _theLogger.SaveEventToLogFile(  " SQL Query Type " + queryType.ToString() + " succeeded.");
                         querySuccess = true;
                     }
                     theSqlCommand.Dispose();
@@ -181,7 +182,7 @@ namespace IESandDACadmt.View
                                 SetNewByDeviceDataResults(queryResults);
                                 break;
                             default:
-                                LoggingClass.SaveErrorToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, " No Data Query Type Specified. Cannot same results.");
+                                _theLogger.SaveErrorToLogFile(  " No Data Query Type Specified. Cannot same results.");
                                 break;
                         }
                     }
@@ -189,7 +190,7 @@ namespace IESandDACadmt.View
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, " Error with " + queryType.ToString() + ":: " + ex.Message);
+                _theLogger.SaveErrorToLogFile(  " Error with " + queryType.ToString() + ":: " + ex.Message);
             }
         }
 
@@ -215,7 +216,7 @@ namespace IESandDACadmt.View
 
         private void UpdateByDateCharts(DataTable queryResults)
         {
-            LoggingClass.SaveEventToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, " " + queryResults.Rows.Count + " records to add to graph.");
+            _theLogger.SaveEventToLogFile(  " " + queryResults.Rows.Count + " records to add to graph.");
             ByDateDataGrid.DataContext = queryResults.DefaultView;
             FillEventSelectionList(queryResults);
             BuildFilteredChartData("All");
@@ -486,7 +487,7 @@ namespace IESandDACadmt.View
                 rollingAverage = rollingAverageQueue.Sum() / rollingAverageQueue.Count;
                 ByDateChart.Series["SeriesRollingAverage"].Points.AddXY(entry.Key.ToString(), rollingAverage);
             }
-            Model.Logging.LoggingClass.SaveEventToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, " Rolling Average calculated for events.");
+            _theLogger.SaveEventToLogFile(  " Rolling Average calculated for events.");
         }
 
         private void BuildFilteredChartData(string selectedEventFilter)
@@ -573,7 +574,7 @@ namespace IESandDACadmt.View
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show("Error when saving data to excel file. Please see Log File for more details.", "Error saving file", MessageBoxButton.OK, MessageBoxImage.Error);
-                LoggingClass.SaveErrorToLogFile(theDbSqlController.DbSqlSpControllerData.LogFileLocation, ex.Message);
+                _theLogger.SaveErrorToLogFile(  ex.Message);
             }
         }
 

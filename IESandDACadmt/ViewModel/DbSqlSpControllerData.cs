@@ -12,7 +12,7 @@ namespace IESandDACadmt.ViewModel
         public DataTable DtComputerNameEpsguid = new DataTable();
         public DataTable DtUserNameSid = new DataTable();
 
-        private string _applicationName = "Heat Support Adv DB Maintenance Tool";
+        private string _applicationName = "Ivanti IES and IDAC Adv DB Maintenance Tool";
         private string _dbServerAddress = @"server\instance";
         private string _selectedUser = "everyone";
         private string _selectedComputer = "all";
@@ -23,12 +23,11 @@ namespace IESandDACadmt.ViewModel
         private List<string> _userList = new List<string>();
         private List<string> _computerList = new List<string>();
 
-        private string _logFileLocation = System.IO.Directory.GetCurrentDirectory() + @"\Heat_EMSS_ES_DB_Maintenance_Tool.log";
+        private string _logFileLocation = "";
 
         public string LogFileLocation
         {
             get { return _logFileLocation; }
-            set { _logFileLocation = value; }
         }
 
 

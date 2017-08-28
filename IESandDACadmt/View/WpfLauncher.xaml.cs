@@ -16,7 +16,7 @@ namespace IESandDACadmt.View
     /// </summary>
     public partial class WpfLauncher : Window
     {
-        public volatile Model.DbSqlSpController LiveDbSpSqlController = new Model.DbSqlSpController();
+        public volatile Model.DbSqlSpController LiveDbSpSqlController;
         Model.Sql.SqlTestDbConnection _workerTestSql = null;
         Thread _testDbConnectionThread = null;
         WpfRecordsProfiler _dataProfilerPage = null;
@@ -24,12 +24,16 @@ namespace IESandDACadmt.View
         ViewModel.ServerDetectionData _serverDetectionData = new ViewModel.ServerDetectionData();
         System.Windows.Threading.DispatcherTimer dbConnectionTestTimer = null;
 
+        Model.Logging.ILogging theLogger;
+
         public WpfLauncher()
         {
+            theLogger = new Model.Logging.Logger(System.IO.Directory.GetCurrentDirectory() + @"\IES_IDAV_DB_Maintenance_Tool.log");
+            LiveDbSpSqlController = new Model.DbSqlSpController(theLogger);
             InitializeComponent();
             dbConnectionTestTimer = new System.Windows.Threading.DispatcherTimer();
             dbConnectionTestTimer.Tick += dbConnectionTestTimer_Tick;
-            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = Model.ServerDetectionLogic.CheckServerType(LiveDbSpSqlController, _serverDetectionData);
+            LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = Model.ServerDetectionLogic.CheckServerType(LiveDbSpSqlController, _serverDetectionData, theLogger);
             ComboboxServerType.Items.Add("EMSS");
             ComboboxServerType.Items.Add("ES");
             ComboboxServerType.SelectedItem = "EMSS";
@@ -181,7 +185,7 @@ namespace IESandDACadmt.View
         //    if (inputOk)
         //    {
         //        ToolBarLabel.Text = "Testing Connection...";
-        //        LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Test DB Connection button was clicked.");
+        //        LoggingClass.SaveEventToLogFile(  " Test DB Connection button was clicked.");
         //        SetSqlSearchCommandsByServerType();
         //        if (LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected == false)
         //        {
@@ -201,7 +205,7 @@ namespace IESandDACadmt.View
             if ((string.IsNullOrEmpty(tbDbServerName.Text)) || (string.IsNullOrEmpty(tbDatabaseName.Text)))
             {
                 MessageBox.Show("SQL Server name and/or Database name is invalid. Please enter them again.", "Invalid Server Details", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, "SQL Server name and/or Database name is invalid.");
+                theLogger.SaveErrorToLogFile("SQL Server name and/or Database name is invalid.");
                 return false;
 
             }
@@ -243,19 +247,19 @@ namespace IESandDACadmt.View
             LiveDbSpSqlController.BuildSqlConnectionString();
             try
             {
-                _workerTestSql = new SqlTestDbConnection(LiveDbSpSqlController);
+                _workerTestSql = new SqlTestDbConnection(LiveDbSpSqlController, theLogger);
                 _testDbConnectionThread = new Thread(_workerTestSql.TestDbConnection) { IsBackground = true };
                 _testDbConnectionThread.Start();
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " " + ex.Message.ToString());
+                theLogger.SaveErrorToLogFile(" " + ex.Message.ToString());
             }
         }
 
         //private void btnChangeSqlServer_Click(object sender, EventArgs e)
         //{
-        //    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
+        //    LoggingClass.SaveEventToLogFile(  " CHANGE SQL SERVER button was clicked.");
         //    dbConnectionTestTimer.IsEnabled = false;
         //    ToolBarLabel.Text = "Connection attempt stopped";
         //    ModifyGuiOnFormLoad();
@@ -352,22 +356,22 @@ namespace IESandDACadmt.View
 
         private void buttonLaunchProfiler_Click(object sender, RoutedEventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL AC/DC Record Profiler Tool launched.");
-            _dataProfilerPage = new WpfRecordsProfiler(LiveDbSpSqlController);
+            theLogger.SaveEventToLogFile(" SQL AC/DC Record Profiler Tool launched.");
+            _dataProfilerPage = new WpfRecordsProfiler(LiveDbSpSqlController, theLogger);
             _dataProfilerPage.ShowDialog();
         }
 
         private void buttonLaunchPurger_Click(object sender, RoutedEventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL AC/DC Record Purge Tool launched.");
-            _recordPurgePage = new WpfRecordDeletion(LiveDbSpSqlController);
+            theLogger.SaveEventToLogFile(  " SQL AC/DC Record Purge Tool launched.");
+            _recordPurgePage = new WpfRecordDeletion(LiveDbSpSqlController, theLogger);
             _recordPurgePage.ShowDialog();
         }
 
         private void buttonLaunchHealthReview_Click(object sender, RoutedEventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL Health Review Tool launched.");
-            WpfHealthReview healthReviewForm = new WpfHealthReview(LiveDbSpSqlController);
+            theLogger.SaveEventToLogFile(  " SQL Health Review Tool launched.");
+            WpfHealthReview healthReviewForm = new WpfHealthReview(LiveDbSpSqlController, theLogger);
             healthReviewForm.ShowDialog();
         }
 
@@ -391,7 +395,7 @@ namespace IESandDACadmt.View
                 dbConnectionTestTimer.IsEnabled = false;
                 if (LiveDbSpSqlController.DbSqlSpControllerData.OperationResult != "success")
                 {
-                    LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, LiveDbSpSqlController.DbSqlSpControllerData.OperationResult.ToString());
+                    theLogger.SaveErrorToLogFile(  LiveDbSpSqlController.DbSqlSpControllerData.OperationResult.ToString());
                     MessageBox.Show("Error connecting to " + tbDbServerName.Text + ". Please check the Log File for further details.", "Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     ToolBarLabel.Text = "Connection Failed";
                     ModifyGuiOnFormLoad();
@@ -399,7 +403,7 @@ namespace IESandDACadmt.View
                 }
                 else
                 {
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " The Database test succeeded.");
+                    theLogger.SaveEventToLogFile(  " The Database test succeeded.");
                     ToolBarLabel.Text = "Connected to:" + LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress + " User:" + LiveDbSpSqlController.DbSqlSpControllerData.SqlConnUserName;
                     ModifyGuiOnDbTestSuccess();
                     ToolBarProgressBar.Value = 100;
@@ -525,7 +529,7 @@ namespace IESandDACadmt.View
             if (inputOk)
             {
                 ToolBarLabel.Text = "Testing Connection...";
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Test DB Connection button was clicked.");
+                theLogger.SaveEventToLogFile(  " Test DB Connection button was clicked.");
                 SetSqlSearchCommandsByServerType();
                 if (LiveDbSpSqlController.DbSqlSpControllerData.AltCredentialsSelected == false)
                 {
@@ -541,14 +545,14 @@ namespace IESandDACadmt.View
 
         private void btnChangeSqlServer_Click(object sender, RoutedEventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " CHANGE SQL SERVER button was clicked.");
+            theLogger.SaveEventToLogFile(  " CHANGE SQL SERVER button was clicked.");
             dbConnectionTestTimer.IsEnabled = false;
             ToolBarLabel.Text = "Connection attempt stopped";
             ModifyGuiOnFormLoad();
             ToolBarProgressBar.Value = 0;
             ViewModel.DbSqlSpControllerData.ServerType tempServerType = LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType;
             Dictionary<string, bool> tempo = LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete;
-            LiveDbSpSqlController = new Model.DbSqlSpController();
+            LiveDbSpSqlController = new Model.DbSqlSpController(theLogger);
             LiveDbSpSqlController.DbSqlSpControllerData.EventTypesToDelete = tempo;
             LiveDbSpSqlController.DbSqlSpControllerData.HeatServerType = tempServerType;
         }

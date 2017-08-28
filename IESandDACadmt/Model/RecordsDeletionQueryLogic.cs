@@ -9,46 +9,46 @@ namespace IESandDACadmt.Model
     public static class RecordsDeletionQueryLogic
     {
 
-        public static string CreateRequiredStoredProcedures(DbSqlSpController theLiveData)
+        public static string CreateRequiredStoredProcedures(DbSqlSpController theLiveData, Model.Logging.ILogging theLogger)
         {
             string result = "failure";
-            BuildEventsToExclude(theLiveData);
-            result = DeleteExistingMaintenanceStoredProcedures(theLiveData);
+            BuildEventsToExclude(theLiveData, theLogger);
+            result = DeleteExistingMaintenanceStoredProcedures(theLiveData, theLogger);
             if (result == "success")
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Existing SQL Stored Procedures deleted.");
+                theLogger.SaveEventToLogFile(  " Existing SQL Stored Procedures deleted.");
                 string recordDeletionSpSqlCode = BuildRecordDeletionSqlSpString(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData);
-                result = CreateStoredProcedure(theLiveData.DbSqlSpControllerData.LogFileLocation, recordDeletionSpSqlCode, "Record Deletion", theLiveData.DbSqlSpControllerData.SqlConnectionString);
+                result = CreateStoredProcedure(  recordDeletionSpSqlCode, "Record Deletion", theLiveData.DbSqlSpControllerData.SqlConnectionString, theLogger);
                 if (result == "success")
                 {
-                    LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL Stored Procedure for Record-Deletion created.");
+                    theLogger.SaveEventToLogFile(  " SQL Stored Procedure for Record-Deletion created.");
                     string totalRecordsCalcSpSqlCode = BuildTotalRecordCalcSqlString(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData);
-                    result = CreateStoredProcedure(theLiveData.DbSqlSpControllerData.LogFileLocation, totalRecordsCalcSpSqlCode, "Total Record Calculation", theLiveData.DbSqlSpControllerData.SqlConnectionString);
+                    result = CreateStoredProcedure(  totalRecordsCalcSpSqlCode, "Total Record Calculation", theLiveData.DbSqlSpControllerData.SqlConnectionString, theLogger);
                     if (result == "success")
                     {
-                        LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL Stored Procedure for Total-Record-Calculation created.");
+                        theLogger.SaveEventToLogFile(  " SQL Stored Procedure for Total-Record-Calculation created.");
                     }
                     else
                     {
-                        LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error creating Total-Record-Calculation Stored Procedure:" + result);
+                        theLogger.SaveErrorToLogFile(  " Error creating Total-Record-Calculation Stored Procedure:" + result);
                         result = "failure";
                     }
                 }
                 else
                 {
-                    LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error creating Record-Deletion Stored Procedure:" + result);
+                    theLogger.SaveErrorToLogFile(  " Error creating Record-Deletion Stored Procedure:" + result);
                     result = "failure";
                 }
             }
             else
             {
-                LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error deleting existing Stored Procedures:" + result);
+                theLogger.SaveErrorToLogFile(  " Error deleting existing Stored Procedures:" + result);
                 result = "failure";
             }
             return result;
         }
 
-        private static bool BuildEventsToExclude(DbSqlSpController theLiveData)
+        private static bool BuildEventsToExclude(DbSqlSpController theLiveData, Model.Logging.ILogging theLogger)
         {
             List<string> eventsToExcludeList = new List<string>();
             foreach (KeyValuePair<string, bool> kvp in theLiveData.DbSqlSpControllerData.EventTypesToDelete)
@@ -66,30 +66,30 @@ namespace IESandDACadmt.Model
             {
                 theLiveData.DbSqlSpControllerData.EventsToExclude = String.Join(",", eventsToExcludeList) + "12";
             }
-            LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, "The Events list to exclude from deleting:" + theLiveData.DbSqlSpControllerData.EventsToExclude + ":");
+            theLogger.SaveEventToLogFile(  "The Events list to exclude from deleting:" + theLiveData.DbSqlSpControllerData.EventsToExclude + ":");
             return true;
         }
 
-        private static string CreateStoredProcedure(string LogFileLocation, string spSqlCode, string spAction, string theSqlConnectionString)
+        private static string CreateStoredProcedure(string spSqlCode, string spAction, string theSqlConnectionString, Model.Logging.ILogging theLogger)
         {
             string result = "failure";
-            LoggingClass.SaveEventToLogFile(LogFileLocation, " The required SQL Stored Procedure for " + spAction + " does not yet exist.");
-            LoggingClass.SaveEventToLogFile(LogFileLocation, " " + spAction + " SQL Stored Procedure assembled:");
-            LoggingClass.SaveEventToLogFile(LogFileLocation, spSqlCode);
+            theLogger.SaveEventToLogFile( " The required SQL Stored Procedure for " + spAction + " does not yet exist.");
+            theLogger.SaveEventToLogFile( " " + spAction + " SQL Stored Procedure assembled:");
+            theLogger.SaveEventToLogFile( spSqlCode);
             SqlConnection sqlDbConnection = new SqlConnection(theSqlConnectionString);
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(LogFileLocation, " SQL connection for " + spAction + " Stored Procedure creation OPEN.");
+                theLogger.SaveEventToLogFile( " SQL connection for " + spAction + " Stored Procedure creation OPEN.");
                 SqlCommand spCreateCommand = new SqlCommand(spSqlCode, sqlDbConnection);
                 spCreateCommand.ExecuteNonQuery();
-                LoggingClass.SaveEventToLogFile(LogFileLocation, " SQL command to create " + spAction + " Stored Procedure completed.");
+                theLogger.SaveEventToLogFile( " SQL command to create " + spAction + " Stored Procedure completed.");
                 sqlDbConnection.Close();
                 result = "success";
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(LogFileLocation, ex.Message);
+                theLogger.SaveErrorToLogFile( ex.Message);
                 result = " Error creation " + spAction + " Stored Procedure:" + ex.Message;
             }
             return result;
@@ -446,25 +446,25 @@ namespace IESandDACadmt.Model
             
         }
 
-        private static string DeleteExistingMaintenanceStoredProcedures(DbSqlSpController theLiveData)
+        private static string DeleteExistingMaintenanceStoredProcedures(DbSqlSpController theLiveData, Model.Logging.ILogging theLogger)
         {
             string result = "failure";
-            result = DropTheStoredProcedure(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData);
+            result = DropTheStoredProcedure(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData, theLogger);
             if (result == "success")
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName + " Stored Procedure dropped.");
-                result = CheckForStoredProcedure(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData);
+                theLogger.SaveEventToLogFile(  " " + theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName + " Stored Procedure dropped.");
+                result = CheckForStoredProcedure(theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName, theLiveData, theLogger);
                 if (result == "success")
                 {
-                    LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName + " Stored Procedure confirmed deleted.");
-                    result = DropTheStoredProcedure(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData);
+                    theLogger.SaveEventToLogFile(  " " + theLiveData.DbSqlSpControllerData.RecordDeletionStoredProcedureName + " Stored Procedure confirmed deleted.");
+                    result = DropTheStoredProcedure(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData, theLogger);
                     if (result == "success")
                     {
-                        LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName + " Stored Procedure dropped.");
-                        result = CheckForStoredProcedure(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData);
+                        theLogger.SaveEventToLogFile(  " " + theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName + " Stored Procedure dropped.");
+                        result = CheckForStoredProcedure(theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName, theLiveData, theLogger);
                         if (result == "success")
                         {
-                            LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " " + theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName + " Stored Procedure confirmed deleted.");
+                            theLogger.SaveEventToLogFile(  " " + theLiveData.DbSqlSpControllerData.TotalRecordsCalcStoredProcedureName + " Stored Procedure confirmed deleted.");
                         }
                     }
                 }
@@ -472,7 +472,7 @@ namespace IESandDACadmt.Model
             return result;
         }
 
-        private static string CheckForStoredProcedure(string storedProcedureName, DbSqlSpController theLiveData)
+        private static string CheckForStoredProcedure(string storedProcedureName, DbSqlSpController theLiveData, Model.Logging.ILogging theLogger)
         {
             string result = "failure";
             string checkForSpCode = @"  IF NOT EXISTS(SELECT 1 FROM sys.procedures 
@@ -485,31 +485,31 @@ namespace IESandDACadmt.Model
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL connection for " + storedProcedureName + "Stored Procedure Check OPEN.");
+                theLogger.SaveEventToLogFile(  " SQL connection for " + storedProcedureName + "Stored Procedure Check OPEN.");
                 SqlCommand spCreateCommand = new SqlCommand(checkForSpCode, sqlDbConnection);
                 spCreateCommand.ExecuteNonQuery();
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL command for " + storedProcedureName + " Stored Procedure Check finished.");
+                theLogger.SaveEventToLogFile(  " SQL command for " + storedProcedureName + " Stored Procedure Check finished.");
                 sqlDbConnection.Close();
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, ex.Message.ToString());
+                theLogger.SaveErrorToLogFile(  ex.Message.ToString());
                 result = " Error checking for Stored Procedure:" + ex.Message.ToString();
             }
             if (theLiveData.DbSqlSpControllerData.SpCheckReturnString.Contains("none found"))
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL check for Stored Procedure returned:" + theLiveData.DbSqlSpControllerData.SpCheckReturnString.ToString());
+                theLogger.SaveEventToLogFile(  " SQL check for Stored Procedure returned:" + theLiveData.DbSqlSpControllerData.SpCheckReturnString.ToString());
                 result = "success";
             }
             else
             {
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " Error: " + storedProcedureName + " Stored Procedure still exists after Dropping.");
+                theLogger.SaveEventToLogFile(  " Error: " + storedProcedureName + " Stored Procedure still exists after Dropping.");
                 result = theLiveData.DbSqlSpControllerData.SpCheckReturnString.ToString();
             }
             return result;
         }
 
-        private static string DropTheStoredProcedure(string storedProcedureName, DbSqlSpController theLiveData)
+        private static string DropTheStoredProcedure(string storedProcedureName, DbSqlSpController theLiveData, Model.Logging.ILogging theLogger)
         {
             string result = "failure";
             string dropSpCode = @"  IF EXISTS(SELECT 1 FROM sys.procedures 
@@ -521,16 +521,16 @@ namespace IESandDACadmt.Model
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL connection for " + storedProcedureName + " Stored Procedure Dropping OPEN.");
+                theLogger.SaveEventToLogFile(  " SQL connection for " + storedProcedureName + " Stored Procedure Dropping OPEN.");
                 SqlCommand spCreateCommand = new SqlCommand(dropSpCode, sqlDbConnection);
                 spCreateCommand.ExecuteNonQuery();
-                LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, " SQL command for " + storedProcedureName + " Stored Procedure Drop completed.");
+                theLogger.SaveEventToLogFile(  " SQL command for " + storedProcedureName + " Stored Procedure Drop completed.");
                 sqlDbConnection.Close();
                 result = "success";
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, ex.Message.ToString());
+                theLogger.SaveErrorToLogFile(  ex.Message.ToString());
                 result = " Error with dropping the " + storedProcedureName + " Stored Procedure:" + ex.Message.ToString();
             }
             return result;

@@ -70,7 +70,8 @@
     <Compile Include="Model\Logging\ActionOutcome.cs" />
     <Compile Include="Model\Logging\CreateExcelFile.cs" />
     <Compile Include="Model\Logging\ExportToFile.cs" />
-    <Compile Include="Model\Logging\LoggingClass.cs" />
+    <Compile Include="Model\Logging\ILogging.cs" />
+    <Compile Include="Model\Logging\Logger.cs" />
     <Compile Include="Model\DbSqlSpController.cs" />
     <Compile Include="Model\Sql\QuerySqlServer.cs" />
     <Compile Include="Model\Sql\SqlAccessChecks.cs" />

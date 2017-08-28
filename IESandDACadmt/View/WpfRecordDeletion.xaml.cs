@@ -28,10 +28,11 @@ namespace IESandDACadmt.View
     /// </summary>
     public partial class WpfRecordDeletion : Window
     {
-        public WpfRecordDeletion(Model.DbSqlSpController theDbSqlSpController)
+        public WpfRecordDeletion(Model.DbSqlSpController theDbSqlSpController, Model.Logging.ILogging theLogger)
         {
             LiveDbSpSqlController = theDbSqlSpController;
             LiveDbSpSqlControllerData = LiveDbSpSqlController.DbSqlSpControllerData;
+            _theLogger = theLogger;
             this.DataContext = LiveDbSpSqlControllerData;
             LiveDbSpSqlController.BuildEventTypesDictionary();
             InitializeComponent();
@@ -43,7 +44,8 @@ namespace IESandDACadmt.View
             readByProcessInfoTimer.Interval = new TimeSpan(0, 0, 1);
         }
 
-        public volatile DbSqlSpController LiveDbSpSqlController = new DbSqlSpController();
+        private Model.Logging.ILogging _theLogger;
+        public volatile DbSqlSpController LiveDbSpSqlController;
         IESandDACadmt.ViewModel.DbSqlSpControllerData LiveDbSpSqlControllerData = new DbSqlSpControllerData();
         //Thread _testDbConnectionThread = null;
         Thread _readByProcessSqlInfoThread = null;
@@ -254,7 +256,7 @@ namespace IESandDACadmt.View
         {
             LoadUsersComputersIntoGui();
             ModifyGuiAfterFormLoad();
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " The known Users and Computers read from SQL and loaded into GUI.");
+            _theLogger.SaveEventToLogFile(  " The known Users and Computers read from SQL and loaded into GUI.");
             //cbSpecificComputer.DropDown += new System.EventHandler(this.cbSpecificComputer_DropDown);
             //cbSpecificUser.DropDown += new System.EventHandler(cbSpecificUser_DropDown);
             toolStripStatusLabel1.Text = "Connected to:" + LiveDbSpSqlController.DbSqlSpControllerData.DbServeraddress + " User:" + LiveDbSpSqlController.DbSqlSpControllerData.SqlConnUserName;
@@ -335,7 +337,7 @@ namespace IESandDACadmt.View
 
         private void btnStartCleanup_Click(object sender, EventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " START CLEANUP button was clicked.");
+            _theLogger.SaveEventToLogFile(  " START CLEANUP button was clicked.");
             ModifyGuiAfterStartButtonClick();
             ActionOutcome theResult = LoadGuiValuesIntoDbSqlSpController();
             if (theResult.Success)
@@ -366,7 +368,7 @@ namespace IESandDACadmt.View
             var parameterValidationResult = LiveDbSpSqlController.ValidateParameters();
             if (parameterValidationResult == "success")
             {
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " GUI Parameters validation and SQL Stored Procedure creation successful.");
+                _theLogger.SaveEventToLogFile(  " GUI Parameters validation and SQL Stored Procedure creation successful.");
                 _calculateTotalRecordsToPurgeThread = new Thread(LiveDbSpSqlController.CalculateTotalRecordsToPurge);
                 _calculateTotalRecordsToPurgeThread.IsBackground = true;
                 _calculateTotalRecordsToPurgeThread.Start();
@@ -376,9 +378,9 @@ namespace IESandDACadmt.View
             }
             else
             {
-                LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, parameterValidationResult.ToString());
+                _theLogger.SaveErrorToLogFile(  parameterValidationResult.ToString());
                 MessageBox.Show("Error validating the GUI parameters or Creating SQL Stored Procedures. See the Log File for further details.", "Error Processing Criteria", MessageBoxButton.OK, MessageBoxImage.Error);
-                LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, parameterValidationResult);
+                _theLogger.SaveErrorToLogFile(  parameterValidationResult);
                 ModifyGuiAfterStopButtonClick();
             }
         }
@@ -440,7 +442,7 @@ namespace IESandDACadmt.View
             if (rbEveryone.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.SelectedUser = "everyone";
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected User: EVERYONE.");
+                _theLogger.SaveEventToLogFile(  " Selected User: EVERYONE.");
                 userFound = true;
             }
             if (rbSelectUser.IsChecked == true)
@@ -451,13 +453,13 @@ namespace IESandDACadmt.View
                     LiveDbSpSqlController.DbSqlSpControllerData.UserSid = selectedUserEntry.Substring((selectedUserEntry.IndexOf(":", StringComparison.Ordinal) + 1),
                                                                                         (selectedUserEntry.Length - selectedUserEntry.IndexOf(":", StringComparison.Ordinal) - 1));
                     LiveDbSpSqlController.DbSqlSpControllerData.SelectedUser = selectedUserEntry.Substring(0, selectedUserEntry.IndexOf(":", StringComparison.Ordinal));
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected UserSID: " + LiveDbSpSqlController.DbSqlSpControllerData.UserSid.ToString() +
+                    _theLogger.SaveEventToLogFile(  " Selected UserSID: " + LiveDbSpSqlController.DbSqlSpControllerData.UserSid.ToString() +
                                                            " . Selected User Name: " + LiveDbSpSqlController.DbSqlSpControllerData.SelectedUser.ToString() + ".");
                     userFound = true;
                 }
                 else
                 {
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Invalid User target criteria selected. Please review the selection.");
+                    _theLogger.SaveEventToLogFile(  " Invalid User target criteria selected. Please review the selection.");
                     userFound = false;
                     errorMessage = " Invalid User target criteria selected. Please review the selection.";
                 }
@@ -465,7 +467,7 @@ namespace IESandDACadmt.View
             if (rbAllComputers.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.SelectedComputer = "all";
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected Computer: ALL.");
+                _theLogger.SaveEventToLogFile(  " Selected Computer: ALL.");
                 computerFound = true;
             }
             if (rbSelectComputer.IsChecked == true)
@@ -476,13 +478,13 @@ namespace IESandDACadmt.View
                     LiveDbSpSqlController.DbSqlSpControllerData.EpsGuid = selectedComputerEntry.Substring((selectedComputerEntry.IndexOf(":", StringComparison.Ordinal) + 1),
                                                                                             (selectedComputerEntry.Length - selectedComputerEntry.IndexOf(":", StringComparison.Ordinal) - 1));
                     LiveDbSpSqlController.DbSqlSpControllerData.SelectedComputer = selectedComputerEntry.Substring(0, selectedComputerEntry.IndexOf(":", StringComparison.Ordinal));
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected EPSGUID: " + LiveDbSpSqlController.DbSqlSpControllerData.EpsGuid.ToString() +
+                    _theLogger.SaveEventToLogFile(  " Selected EPSGUID: " + LiveDbSpSqlController.DbSqlSpControllerData.EpsGuid.ToString() +
                                                            " . Selected Endpoint Name: " + LiveDbSpSqlController.DbSqlSpControllerData.SelectedComputer.ToString() + ".");
                     computerFound = true;
                 }
                 else
                 {
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Invalid Computer target criteria selected. Please review the selection.");
+                    _theLogger.SaveEventToLogFile(  " Invalid Computer target criteria selected. Please review the selection.");
                     computerFound = false;
                     errorMessage += " .Invalid Computer target criteria selected. Please review the selection.";
                 }
@@ -491,7 +493,7 @@ namespace IESandDACadmt.View
             if (rbAllProcesses.IsChecked == true)
             {
                 LiveDbSpSqlController.DbSqlSpControllerData.SelectedProcess = "all";
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Selected Process: ALL.");
+                _theLogger.SaveEventToLogFile(  " Selected Process: ALL.");
                 processFound = true;
             }
             if (rbSpecificProcess.IsChecked == true)
@@ -503,7 +505,7 @@ namespace IESandDACadmt.View
                 }
                 else
                 {
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Invalid Process target criteria selected. Please review the selection.");
+                    _theLogger.SaveEventToLogFile(  " Invalid Process target criteria selected. Please review the selection.");
                     processFound = false;
                     errorMessage += " .Invalid Process target criteria selected. Please review the selection.";
                 }
@@ -548,7 +550,7 @@ namespace IESandDACadmt.View
 
         private void btnStopCleanup_Click(object sender, EventArgs e)
         {
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " STOP CLEANUP button was clicked.");
+            _theLogger.SaveEventToLogFile(  " STOP CLEANUP button was clicked.");
             StopPurgeThreadAndWaitForThreadStop();
             btnStartCleanup.IsEnabled = false;
             btnStopCleanup.IsEnabled = false;
@@ -674,9 +676,9 @@ namespace IESandDACadmt.View
                     //RecordsPurgedTextBox.Text = LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar.ToString();
                     toolStripProgressBar1.Value = 100;
                     toolStripStatusLabel1.Text = "Processing complete";
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " The Worker Thread has completed cleaning.");
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " --SUMMARY:-- ");
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".");
+                    _theLogger.SaveEventToLogFile(  " The Worker Thread has completed cleaning.");
+                    _theLogger.SaveEventToLogFile(  " --SUMMARY:-- ");
+                    _theLogger.SaveEventToLogFile(  " Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".");
                     MessageBox.Show("Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar,
                                                                       "Record Processing Complete",
                                                                       MessageBoxButton.OK, MessageBoxImage.Information);
@@ -686,9 +688,9 @@ namespace IESandDACadmt.View
                 else
                 {
                     toolStripStatusLabel1.Text = "Processing stopped unexpectedly";
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " The Worker Thread is Dead. Enabling GUI.");
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " --SUMMARY:-- ");
-                    LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".");
+                    _theLogger.SaveEventToLogFile(  " The Worker Thread is Dead. Enabling GUI.");
+                    _theLogger.SaveEventToLogFile(  " --SUMMARY:-- ");
+                    _theLogger.SaveEventToLogFile(  " Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".");
                     MessageBox.Show("Record processing stopped unexpectedly. Total Records Deleted: " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar + ".",
                                                                       "Record Processing Warning",
                                                                       MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -755,7 +757,7 @@ namespace IESandDACadmt.View
         {
             if (dtpCutOffDate.SelectedDate.Value.Date < DateTime.Today.Date) return;
             MessageBox.Show("You cannot select today or a future date as the cut-off date. Please select an older date.", "Invalid date selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " User tried to select " + dtpCutOffDate.SelectedDate.Value.Date.ToString() + " as the cut-off date.");
+            _theLogger.SaveEventToLogFile(  " User tried to select " + dtpCutOffDate.SelectedDate.Value.Date.ToString() + " as the cut-off date.");
             dtpCutOffDate.DisplayDate = DateTime.Today.AddDays(-1);
         }
 
@@ -766,7 +768,7 @@ namespace IESandDACadmt.View
 
         private void eventTypesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IESandDACadmt.View.WpfEventTypeSelection eventTypeForm = new WpfEventTypeSelection(LiveDbSpSqlController);
+            IESandDACadmt.View.WpfEventTypeSelection eventTypeForm = new WpfEventTypeSelection(LiveDbSpSqlController, _theLogger);
             //eventTypeForm.StartPosition = FormStartPosition.CenterParent;
             eventTypeForm.Show();
         }
@@ -821,7 +823,7 @@ namespace IESandDACadmt.View
                         }
                         catch (Exception ex)
                         {
-                            LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " " + ex.Message.ToString());
+                            _theLogger.SaveErrorToLogFile(  " " + ex.Message.ToString());
                         }
                     }
                     else
@@ -912,18 +914,18 @@ namespace IESandDACadmt.View
             LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar = 0;
             try
             {
-                SqlDbCleanupThread worker = new SqlDbCleanupThread(LiveDbSpSqlController);
+                SqlDbCleanupThread worker = new SqlDbCleanupThread(LiveDbSpSqlController, _theLogger);
                 worker.BatchProcessed += UpdateAfterBatchProcessed;
                 _sqlPurgeWorkerThread = new Thread(worker.StartProcessing);
                 _sqlPurgeWorkerThread.IsBackground = true;
                 _sqlPurgeWorkerThread.Start();
                 Thread.Sleep(100);
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " SQL Worker Thread Started.");
+                _theLogger.SaveEventToLogFile(  " SQL Worker Thread Started.");
                 wasTheThreadStarted = true;
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " " + ex.Message.ToString());
+                _theLogger.SaveErrorToLogFile(  " " + ex.Message.ToString());
             }
             return wasTheThreadStarted;
         }
@@ -933,13 +935,13 @@ namespace IESandDACadmt.View
             // Update the values that get saved to LiveSpSql....
             if (e.RecordsDeletedThisBatch == LiveDbSpSqlController.DbSqlSpControllerData.RecordsForBatchSize)
             {
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Batch of " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsForBatchSize.ToString() + " processed.");
+                _theLogger.SaveEventToLogFile(  " Batch of " + LiveDbSpSqlController.DbSqlSpControllerData.RecordsForBatchSize.ToString() + " processed.");
                 LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge -= e.RecordsDeletedThisBatch;
                 LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar += e.RecordsDeletedThisBatch;
             }
             else
             {
-                LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Last Batch of " + e.RecordsDeletedThisBatch.ToString() + " processed.");
+                _theLogger.SaveEventToLogFile(  " Last Batch of " + e.RecordsDeletedThisBatch.ToString() + " processed.");
                 LiveDbSpSqlController.DbSqlSpControllerData.RemainingRowsToPurge = 0;
                 LiveDbSpSqlController.DbSqlSpControllerData.RecordsProcessedSoFar += e.RecordsDeletedThisBatch;
             }
@@ -987,7 +989,7 @@ namespace IESandDACadmt.View
                     toolStripProgressBar1.Value = 100;
                     if (LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge > 0)
                     {
-                        LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " Calculation of total Records to Purge: " + LiveDbSpSqlController.DbSqlSpControllerData.Result.Message.ToString() + " : " + LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge.ToString() + ".");
+                        _theLogger.SaveEventToLogFile(  " Calculation of total Records to Purge: " + LiveDbSpSqlController.DbSqlSpControllerData.Result.Message.ToString() + " : " + LiveDbSpSqlController.DbSqlSpControllerData.ReturnedTotalRowsToPurge.ToString() + ".");
                         string whoSpWillCleanfor = BuildWarningMessage();
                         MessageBoxResult goNoGoResponse = MessageBox.Show(whoSpWillCleanfor,
                                                                       "Record Deletion Warning",
@@ -1007,7 +1009,7 @@ namespace IESandDACadmt.View
                         {
                             ModifyGuiAfterStopButtonClick();
                             ModifyGuiAfterGoPromptCanceled();
-                            LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " START DELETION confirmation-message canceled by user.");
+                            _theLogger.SaveEventToLogFile(  " START DELETION confirmation-message canceled by user.");
                         }
                     }
                     else
@@ -1017,7 +1019,7 @@ namespace IESandDACadmt.View
                         SetGuiStatsToZeros();
                         ModifyGuiAfterStopButtonClick();
                         ModifyGuiAfterNoTargetRecordsFound();
-                        LoggingClass.SaveEventToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " No events match these selected characteristics.");
+                        _theLogger.SaveEventToLogFile(  " No events match these selected characteristics.");
                     }
                 }
                 else
@@ -1025,7 +1027,7 @@ namespace IESandDACadmt.View
                     SetGuiStatsToZeros();
                     ModifyGuiAfterStopButtonClick();
                     ModifyGuiAfterGoPromptCanceled();
-                    LoggingClass.SaveErrorToLogFile(LiveDbSpSqlController.DbSqlSpControllerData.LogFileLocation, " " + LiveDbSpSqlController.DbSqlSpControllerData.Result.Message);
+                    _theLogger.SaveErrorToLogFile(  " " + LiveDbSpSqlController.DbSqlSpControllerData.Result.Message);
                     toolStripStatusLabel1.Text = "Failed to calculate records to purge. See Log File";
 
                 }

@@ -21,11 +21,13 @@ namespace IESandDACadmt.View
     {
         Model.DbSqlSpController _currentDbSqlSpController = null;
         Dictionary<string, bool> tempoEventSelection = new Dictionary<string, bool>();
+        private Model.Logging.ILogging _theLogger;
 
-        public WpfEventTypeSelection(Model.DbSqlSpController liveDbSqlSpController)
+        public WpfEventTypeSelection(Model.DbSqlSpController liveDbSqlSpController, Model.Logging.ILogging theLogger)
         {
             _currentDbSqlSpController = liveDbSqlSpController;
             InitializeComponent();
+            _theLogger = theLogger;
             tempoEventSelection = AddEventTypesToCheckedListView(_currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete, tempoEventSelection);
             //tempoEventSelection = _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete;
         }
@@ -60,16 +62,16 @@ namespace IESandDACadmt.View
                     if (goNoGoResponse == MessageBoxResult.Yes)
                     {
                         _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete = tempoEventSelection;
-                        Model.Logging.LoggingClass.SaveEventToLogFile(_currentDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " Events to Delete selections altered:");
+                        _theLogger.SaveEventToLogFile(  " Events to Delete selections altered:");
                         foreach (KeyValuePair<string, bool> kvp in _currentDbSqlSpController.DbSqlSpControllerData.EventTypesToDelete)
                         {
-                            Model.Logging.LoggingClass.SaveEventToLogFile(_currentDbSqlSpController.DbSqlSpControllerData.LogFileLocation, kvp.Key.ToString() + " = " + kvp.Value.ToString());
+                            _theLogger.SaveEventToLogFile(  kvp.Key.ToString() + " = " + kvp.Value.ToString());
                         }
                         this.Close();
                     }
                     else
                     {
-                        Model.Logging.LoggingClass.SaveEventToLogFile(_currentDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " Event Type Selection changes cancelled.");
+                        _theLogger.SaveEventToLogFile(  " Event Type Selection changes cancelled.");
                         this.Close();
                     }
                 }
@@ -81,7 +83,7 @@ namespace IESandDACadmt.View
             else
             {
                 MessageBox.Show("You need to select at least one Event Type to delete.");
-                Model.Logging.LoggingClass.SaveEventToLogFile(_currentDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " User selected no Event Types. Raising warning message.");
+                _theLogger.SaveEventToLogFile(  " User selected no Event Types. Raising warning message.");
             }
 
         }

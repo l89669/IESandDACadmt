@@ -8,11 +8,13 @@ namespace IESandDACadmt.Model.Sql
 {
     class SqlTestDbConnection
     {
-        private DbSqlSpController _liveDbSqlSpController = new DbSqlSpController();
+        private DbSqlSpController _liveDbSqlSpController;
+        private Model.Logging.ILogging _theLogger;
 
-        public SqlTestDbConnection(DbSqlSpController theDbSqlSpController)
+        public SqlTestDbConnection(DbSqlSpController theDbSqlSpController, Model.Logging.ILogging theLogger)
         {
             _liveDbSqlSpController = theDbSqlSpController;
+            _theLogger = theLogger;
         }
 
         public void TestDbConnection()
@@ -106,7 +108,7 @@ namespace IESandDACadmt.Model.Sql
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile( liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL connection to read Computer names OPEN.");
+                _theLogger.SaveEventToLogFile(" SQL connection to read Computer names OPEN.");
                 SqlCommand computerListCommand = new SqlCommand(liveDbSqlSpController.DbSqlSpControllerData.ComputerReadSqlCode,
                     sqlDbConnection) {CommandTimeout = 0};
                 liveDbSqlSpController.DbSqlSpControllerData.DtComputerNameEpsguid.Load(computerListCommand.ExecuteReader());
@@ -127,7 +129,7 @@ namespace IESandDACadmt.Model.Sql
                         liveDbSqlSpController.DbSqlSpControllerData.ComputerList.Add(combinedNameEpsguid);
                     }
                 }
-                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL reading of Computer names is finished.");
+                _theLogger.SaveEventToLogFile(" SQL reading of Computer names is finished.");
                 computerListCommand.Dispose();
                 computerRead = true;
                 sqlDbConnection.Close();
@@ -135,7 +137,7 @@ namespace IESandDACadmt.Model.Sql
             catch (Exception ex)
             {
                 computerRead = false;
-                LoggingClass.SaveErrorToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " " + ex.Message.ToString());
+                _theLogger.SaveErrorToLogFile(" " + ex.Message.ToString());
                 liveDbSqlSpController.DbSqlSpControllerData.OperationResult = ex.Message.ToString();
                 sqlDbConnection.Close();
             }
@@ -146,7 +148,7 @@ namespace IESandDACadmt.Model.Sql
             try
             {
                 sqlDbConnection.Open();
-                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL connection to read User-names is OPEN.");
+                _theLogger.SaveEventToLogFile(" SQL connection to read User-names is OPEN.");
                 SqlCommand userListCommand = new SqlCommand(liveDbSqlSpController.DbSqlSpControllerData.UserReadSqlCode, sqlDbConnection);
                 userListCommand.CommandTimeout = 0;
                 liveDbSqlSpController.DbSqlSpControllerData.DtUserNameSid.Load(userListCommand.ExecuteReader());
@@ -158,7 +160,7 @@ namespace IESandDACadmt.Model.Sql
                         liveDbSqlSpController.DbSqlSpControllerData.UserList.Add(combinedNameUsersid);
                     }
                 }
-                LoggingClass.SaveEventToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, " SQL reading of User-names is finished.");
+                _theLogger.SaveEventToLogFile(" SQL reading of User-names is finished.");
                 userListCommand.Dispose();
                 userRead = true;
                 sqlDbConnection.Close();
@@ -166,7 +168,7 @@ namespace IESandDACadmt.Model.Sql
             catch (Exception ex)
             {
                 userRead = false;
-                LoggingClass.SaveErrorToLogFile(liveDbSqlSpController.DbSqlSpControllerData.LogFileLocation, ex.Message.ToString());
+                _theLogger.SaveErrorToLogFile(ex.Message.ToString());
                 liveDbSqlSpController.DbSqlSpControllerData.OperationResult = " Error with SQL connection and/or reading: " + ex.Message.ToString();
                 sqlDbConnection.Close();
             }

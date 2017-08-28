@@ -12,14 +12,16 @@ namespace IESandDACadmt.Model.Sql
     {
         private DbSqlSpController _dbSqlSpController;
         private int _returnedProcessedRows = 0;
+        private Model.Logging.ILogging _theLogger;
 
         public event BatchProcessedEventHandler BatchProcessed;
 
         public delegate void BatchProcessedEventHandler(object sender, SqlDeletionEventargs e);
 
-        public SqlDbCleanupThread(DbSqlSpController theDbSqlSpController)
+        public SqlDbCleanupThread(DbSqlSpController theDbSqlSpController, Model.Logging.ILogging theLogger)
         {
             _dbSqlSpController = theDbSqlSpController;
+            _theLogger = theLogger;
         }
 
         public void StartProcessing()
@@ -100,7 +102,7 @@ namespace IESandDACadmt.Model.Sql
             }
             catch (Exception ex)
             {
-                LoggingClass.SaveErrorToLogFile(_dbSqlSpController.DbSqlSpControllerData.LogFileLocation," Error in thread for Processing Records:" + ex.Message.ToString());
+                _theLogger.SaveErrorToLogFile(" Error in thread for Processing Records:" + ex.Message.ToString());
             }
             finally
             {

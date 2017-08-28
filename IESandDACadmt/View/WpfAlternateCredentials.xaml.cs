@@ -14,7 +14,7 @@ namespace IESandDACadmt.View
             _theSqlData = theSqlData;
         }
 
-        private Model.DbSqlSpController _theSqlData = new Model.DbSqlSpController();
+        private Model.DbSqlSpController _theSqlData;
 
         
 

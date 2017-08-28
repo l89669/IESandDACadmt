@@ -6,7 +6,8 @@ namespace IESandDACadmt.Model.Sql
     public static class SqlConnectionStringCheck
     {
         
-        public static bool CheckForSqlServerString(string dbConnStringRegLocation, string dbConnStringRegWowLocation, string dbConnStringRegItem, DbSqlSpController theLiveData)
+        public static bool CheckForSqlServerString(string dbConnStringRegLocation, string dbConnStringRegWowLocation, string dbConnStringRegItem, DbSqlSpController theLiveData,
+                                                    Model.Logging.ILogging theLogger)
         {
             Model.Logging.ActionOutcome regSqlConnSearchResult = Model.RegistryReader.ReadRegistryLocalMachineString(dbConnStringRegLocation, dbConnStringRegItem);
             if (regSqlConnSearchResult.Success == false)
@@ -15,8 +16,8 @@ namespace IESandDACadmt.Model.Sql
                 if (regWowSqlConnSearchResult.Success == false)
                 {
                     theLiveData.DbSqlSpControllerData.SqlConnectionStringFound = false;
-                    Model.Logging.LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation,"Problem reading SQL Server connection string from registry:" + regSqlConnSearchResult.Message + ". " + regWowSqlConnSearchResult.Message);
-                    Model.Logging.LoggingClass.SaveEventToLogFile(theLiveData.DbSqlSpControllerData.LogFileLocation, "Will trigger manual user-input request.");
+                    theLogger.SaveEventToLogFile("Problem reading SQL Server connection string from registry:" + regSqlConnSearchResult.Message + ". " + regWowSqlConnSearchResult.Message);
+                    theLogger.SaveEventToLogFile("Will trigger manual user-input request.");
                 }
                 else
                 {

@@ -16,16 +16,18 @@ namespace IESandDACadmt.Model
             //set { _dbSqlSDpControllerData = value; }
         }
 
-
-        public DbSqlSpController(ViewModel.DbSqlSpControllerData theDbSqlSDpControllerData)
+        private Model.Logging.ILogging _theLogger;
+        public DbSqlSpController(ViewModel.DbSqlSpControllerData theDbSqlSDpControllerData, Model.Logging.ILogging theLogger)
 		{
             _dbSqlSpControllerData = theDbSqlSDpControllerData;
             _dbSqlSpControllerData.ByProcessQueryAlreadyRan = false;
+            _theLogger = theLogger;
 		}
 
-        public DbSqlSpController()
+        public DbSqlSpController(Model.Logging.ILogging theLogger)
         {
             _dbSqlSpControllerData.ByProcessQueryAlreadyRan = false;
+            _theLogger = theLogger;
         }
 
 
@@ -138,32 +140,32 @@ namespace IESandDACadmt.Model
                 builder.InitialCatalog = _dbSqlSpControllerData.DatabaseName;
                 _dbSqlSpControllerData.SqlConnectionString = builder.ConnectionString;
             }
-            Logging.LoggingClass.SaveEventToLogFile(_dbSqlSpControllerData.LogFileLocation, " SQL Server Connection String: " + _dbSqlSpControllerData.SqlConnectionString);
+            _theLogger.SaveEventToLogFile(  " SQL Server Connection String: " + _dbSqlSpControllerData.SqlConnectionString);
         }
 
 		public string ValidateParameters()
 		{
 			string result = "failure";
-            Logging.LoggingClass.SaveEventToLogFile(_dbSqlSpControllerData.LogFileLocation, " Records Cut Off Date:" + _dbSqlSpControllerData.CutOffDate.ToString());
+            _theLogger.SaveEventToLogFile(  " Records Cut Off Date:" + _dbSqlSpControllerData.CutOffDate.ToString());
 			result = CalculateBatchSize();
-            Logging.LoggingClass.SaveEventToLogFile(_dbSqlSpControllerData.LogFileLocation, " Batch Size:" + _dbSqlSpControllerData.BatchSize);
+            _theLogger.SaveEventToLogFile(  " Batch Size:" + _dbSqlSpControllerData.BatchSize);
 			if (result == "success")
 			{
 				result = CalculateProcessingEndtime();
-                Logging.LoggingClass.SaveEventToLogFile(_dbSqlSpControllerData.LogFileLocation, " Calculated Processing End Time:" + _dbSqlSpControllerData.ProcessingEndTime.ToString(CultureInfo.InvariantCulture));
+                _theLogger.SaveEventToLogFile(  " Calculated Processing End Time:" + _dbSqlSpControllerData.ProcessingEndTime.ToString(CultureInfo.InvariantCulture));
 				if (result == "success")
 				{
-					result = Model.RecordsDeletionQueryLogic.CreateRequiredStoredProcedures(this);
-                    Logging.LoggingClass.SaveEventToLogFile(_dbSqlSpControllerData.LogFileLocation, " SQL Stored Procedures check/creation:" + result);
+					result = Model.RecordsDeletionQueryLogic.CreateRequiredStoredProcedures(this, _theLogger);
+                    _theLogger.SaveEventToLogFile(  " SQL Stored Procedures check/creation:" + result);
 				}
 				else
 				{
-                    Logging.LoggingClass.SaveErrorToLogFile(_dbSqlSpControllerData.LogFileLocation, "Calculation of Processing-Endtime failed:" + result);
+                    _theLogger.SaveErrorToLogFile(  "Calculation of Processing-Endtime failed:" + result);
 				}
 			}
 			else
 			{
-                Logging.LoggingClass.SaveErrorToLogFile(_dbSqlSpControllerData.LogFileLocation, "Calculation of Batch Size failed:" + result);
+                _theLogger.SaveErrorToLogFile(  "Calculation of Batch Size failed:" + result);
 			}
 			
 			return result;
@@ -244,7 +246,7 @@ namespace IESandDACadmt.Model
 
 		public void RequestStop()
 		{
-			Logging.LoggingClass.SaveEventToLogFile(_dbSqlSpControllerData.LogFileLocation, " SQL Worker Thread stop requested.");
+			_theLogger.SaveEventToLogFile(  " SQL Worker Thread stop requested.");
             _dbSqlSpControllerData.StopController = true;
 		}
 

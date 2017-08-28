@@ -26,9 +26,10 @@ namespace IESandDACadmt.View
     /// </summary>
     public partial class WpfHealthReview : Window
     {
-        public WpfHealthReview(Model.DbSqlSpController theLiveDbSqlSpModel)
+        public WpfHealthReview(Model.DbSqlSpController theLiveDbSqlSpModel, Model.Logging.ILogging theLogger)
         {
             _theLiveDbSqlSpData = theLiveDbSqlSpModel;
+            _theLogger = theLogger;
             _theHealthQueries = new Model.SqlHealthQueries(_theLiveDbSqlSpData);
 #if DEBUG
             WriteSqlQueriesToLogFile(_theHealthQueries.SqlHealthConfigQueryList);
@@ -59,6 +60,7 @@ namespace IESandDACadmt.View
             token = cancelSource.Token;
         }
 
+        private Model.Logging.ILogging _theLogger;
         private readonly ViewModel.SqlHealthReviewData _sqlHealthData = new ViewModel.SqlHealthReviewData();
         //private Model.SqlHealthReviewLogic _theHealthQueries = null;
         private Model.SqlHealthQueries _theHealthQueries = null;
@@ -87,8 +89,8 @@ namespace IESandDACadmt.View
         {
             foreach (Model.singleSqlHealthQuery singleQuery in theQueryList)
             {
-                Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, singleQuery.QueryName);
-                Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, singleQuery.QueryCode);
+                _theLogger.SaveEventToLogFile(  singleQuery.QueryName);
+                _theLogger.SaveEventToLogFile(  singleQuery.QueryCode);
             }
         }
 
@@ -166,7 +168,7 @@ namespace IESandDACadmt.View
                             SetNewLogTableStatisiticsHealthInfoDataCallBack(queryResults);
                             break;
                         default:
-                            Model.Logging.LoggingClass.SaveErrorToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " No Data Query Type Specified.");
+                            _theLogger.SaveErrorToLogFile(  " No Data Query Type Specified.");
                             break;
                     }
                 }
@@ -211,13 +213,13 @@ namespace IESandDACadmt.View
                         {
                             // Open Connection
                             theSqlConnection.Open();
-                            Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " SQL connection for " + singleQuery.QueryName + " is OPEN.");
+                            _theLogger.SaveEventToLogFile(  " SQL connection for " + singleQuery.QueryName + " is OPEN.");
                             theSqlCommand.CommandTimeout = 10800;
                             // Run query and fill in data table
                             string singleResult = theSqlCommand.ExecuteScalar().ToString();
                             if (!string.IsNullOrEmpty(singleResult))
                             {
-                                Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " SQL Query for " + singleQuery.QueryName + " succeeded.");
+                                _theLogger.SaveEventToLogFile(  " SQL Query for " + singleQuery.QueryName + " succeeded.");
                                 DataRow singleRow = theResults.NewRow();
                                 singleRow["Item"] = singleQuery.QueryName;
                                 singleRow["Value"] = singleResult;
@@ -225,7 +227,7 @@ namespace IESandDACadmt.View
                             }
                             else
                             {
-                                Model.Logging.LoggingClass.SaveErrorToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " Error with Query Type " + singleQuery.QueryName + ":: Could not read value");
+                                _theLogger.SaveErrorToLogFile(  " Error with Query Type " + singleQuery.QueryName + ":: Could not read value");
                                 DataRow singleRow = theResults.NewRow();
                                 singleRow["Item"] = singleQuery.QueryName;
                                 singleRow["Value"] = "*** Could not read value for Query Type " + singleQuery.QueryName + ". Please check log file for more information";
@@ -237,7 +239,7 @@ namespace IESandDACadmt.View
                     }
                     catch (SqlException ex)
                     {
-                        Model.Logging.LoggingClass.SaveErrorToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " Error with Query Type " + singleQuery.QueryName + ":: " + ex.Message);
+                        _theLogger.SaveErrorToLogFile(  " Error with Query Type " + singleQuery.QueryName + ":: " + ex.Message);
                         DataRow singleRow = theResults.NewRow();
                         singleRow["Item"] = singleQuery.QueryName;
                         singleRow["Value"] = "*** Could not read value for Query Type " + singleQuery.QueryName + ". Please check log file for more information";
@@ -264,13 +266,13 @@ namespace IESandDACadmt.View
                         {
                             // Open Connection
                             theSqlConnection.Open();
-                            Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " SQL connection for " + theQueryType.ToString() + " is OPEN.");
+                            _theLogger.SaveEventToLogFile(  " SQL connection for " + theQueryType.ToString() + " is OPEN.");
                             theSqlCommand.CommandTimeout = 10800;
                             // Run query and fill in data table
                             theResults.Load(theSqlCommand.ExecuteReader());
                             if (theResults.Rows.Count >= 1)
                             {
-                                Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " SQL Query Type " + theQueryType.ToString() + " succeeded.");
+                                _theLogger.SaveEventToLogFile(  " SQL Query Type " + theQueryType.ToString() + " succeeded.");
                             }
                             theSqlCommand.Dispose();
                             theSqlConnection.Close();
@@ -278,7 +280,7 @@ namespace IESandDACadmt.View
                     }
                     catch (SqlException ex)
                     {
-                        Model.Logging.LoggingClass.SaveErrorToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, " Error with Query Type " + theQueryType.ToString() + ":: " + ex.Message);
+                        _theLogger.SaveErrorToLogFile(  " Error with Query Type " + theQueryType.ToString() + ":: " + ex.Message);
                     }
                 }
                 else
@@ -557,7 +559,7 @@ namespace IESandDACadmt.View
             catch (Exception ex)
             {
                 MessageBox.Show("Error when saving data to excel file. Please see Log File for more details.", "Error Saving File", MessageBoxButton.OK, MessageBoxImage.Error);
-                Model.Logging.LoggingClass.SaveErrorToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, ex.Message);
+                _theLogger.SaveErrorToLogFile(  ex.Message);
             }
 
         }
@@ -700,11 +702,11 @@ namespace IESandDACadmt.View
                     Model.Logging.ActionOutcome result = Model.Sql.QuerySqlServer.RunSqlQuery(_sqlConnectionString, 0, indexCommand);
                     if (result.Success)
                     {
-                        Model.Logging.LoggingClass.SaveEventToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, "Successfully Ran '" + indexCommand + "'::" + result.Message);
+                        _theLogger.SaveEventToLogFile(  "Successfully Ran '" + indexCommand + "'::" + result.Message);
                     }
                     else
                     {
-                        Model.Logging.LoggingClass.SaveErrorToLogFile(_theLiveDbSqlSpData.DbSqlSpControllerData.LogFileLocation, "Error running '" + indexCommand + "'::" + result.Message);
+                        _theLogger.SaveErrorToLogFile(  "Error running '" + indexCommand + "'::" + result.Message);
                     }
 
                 }
