@@ -34,7 +34,7 @@
             <TabControl Name="MasterTabControl">
                 <TabItem Name="ServerConfigTab" Header="Server Configuration">
                     <StackPanel Name="ServerConfigStackPanel">
-                        <DataGrid Name="ServerConfigDataGrid" ItemsSource="{Binding ServerConfigResults}"/>
+                        <DataGrid Name="ServerConfigDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="WaitStatsTab" Header="Wait Stats Info">

@@ -51,32 +51,32 @@
                 </TabItem>
                 <TabItem Name="ByDateRawTab" Header="By Date: Raw">
                     <StackPanel Name="ByDateRawStackPanel">
-                        <DataGrid Name="ByDateDataGrid" ItemsSource="{Binding ByDateDataRecords}"/>
+                        <DataGrid Name="ByDateDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByUserTab" Header="By User">
                     <StackPanel Name="ByUserStackPanel">
-                        <DataGrid Name="ByUserDataGrid" ItemsSource="{Binding ByUserDataRecords}"/>
+                        <DataGrid Name="ByUserDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByComputerTab" Header="By Computer">
                     <StackPanel Name="ByComputerStackPanel">
-                        <DataGrid Name="ByComputerDataGrid" ItemsSource="{Binding ByComputerDataRecords}"/>
+                        <DataGrid Name="ByComputerDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByEventTypeTab" Header="By Event Type">
                     <StackPanel Name="ByEventTypeStackPanel">
-                        <DataGrid Name="ByEventTypeDataGrid" ItemsSource="{Binding ByEventTypeDataRecords}"/>
+                        <DataGrid Name="ByEventTypeDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByProcessTab" Header="By Process">
                     <StackPanel Name="ByProcessStackPanel">
-                        <DataGrid Name="ByProcessDataGrid" ItemsSource="{Binding ByProcessDataRecords}"/>
+                        <DataGrid Name="ByProcessDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="ByDeviceTab" Header="By Device">
                     <StackPanel Name="ByDeviceStackPanel">
-                        <DataGrid Name="ByDeviceDataGrid" ItemsSource="{Binding ByDeviceDataRecords}"/>
+                        <DataGrid Name="ByDeviceDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="True"/>
                     </StackPanel>
                 </TabItem>
             </TabControl>

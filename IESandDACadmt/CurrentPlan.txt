@@ -6,7 +6,12 @@ The WPF classes created to replace all WinForms.
 
 
 To Do:
-Get basic functionaliy working for WPF formats.
+Get basic functionaliy working for WPF formats:
+	Find out why:
+		1. Status bar in Profiler doesnt' show progress or finished.
+		2. Why Health tabs show no data.
+	Fix the layout of the chart and the selection box to ensure it is usable.
+	Tackle the Deletion Tool.
 Code refactoring to make it fully MVVM using best practices:
 	Rejig classes into correct MVVM layouts.
 	Use INotifyPropertyChanged, ICommand, IDataErrorInfo, IValueConverter, ObservableCollection's to remove code from the Code-behind and into decoupled classes.

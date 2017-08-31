@@ -203,16 +203,13 @@ namespace IESandDACadmt.View
             if (ByDateRawStackPanel.Dispatcher.CheckAccess() == false)
             {
                 SetByDateQueryDataCallBack del = new SetByDateQueryDataCallBack(SetNewByDateDataResults);
-                //    this.Invoke(del, new object[] { queryResults });
                 ByDateRawStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
             }
             else
             {
                 _currentQueryData.ByDateDataRecords = queryResults;
+                ByDateDataGrid.DataContext = _currentQueryData.ByDateDataRecords.DefaultView;
                 ByDateRawStackPanel.IsEnabled = true;
-
-                //ByDateDataGridView.Visible = true;
-                //labelDateRawDataProcessing.Visible = false;
                 UpdateByDateCharts(_currentQueryData.ByDateDataRecords);
                 _numQueriesStillRunning -= 1;
             }
@@ -243,72 +240,91 @@ namespace IESandDACadmt.View
 
         private void SetNewByUserDataResults(DataTable queryResults)
         {
-            //if (this.byUserDataGridView.InvokeRequired)
-            //{
-            //    SetByUserQueryDataCallBack del = new SetByUserQueryDataCallBack(SetNewByUserDataResults);
-            //    this.Invoke(del, new object[] { queryResults });
-            //}
-            //else
-            //{
+            if (ByUserStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetByUserQueryDataCallBack del = new SetByUserQueryDataCallBack(SetNewByUserDataResults);
+                ByUserStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
                 _currentQueryData.ByUserDataRecords = queryResults;
                 ByUserDataGrid.DataContext = _currentQueryData.ByUserDataRecords.DefaultView;
                 ByUserStackPanel.IsEnabled = true;
-                //ByUserDataGridView.AutoResizeColumns();
-                //byUserDataGridView.Visible = true;
-                //labelUserDataProcessing.Visible = false;
                 _numQueriesStillRunning -= 1;
-            //}
+            }
         }
 
         private void SetNewByComputerDataResults(DataTable queryResults)
         {
-            //if (this.byComputerDataGridView.InvokeRequired)
-            //{
-            //    SetByComputerQueryDataCallBack del = new SetByComputerQueryDataCallBack(SetNewByComputerDataResults);
-            //    this.Invoke(del, new object[] { queryResults });
-            //}
-            //else
-            //{
+            if (ByComputerStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetByComputerQueryDataCallBack del = new SetByComputerQueryDataCallBack(SetNewByComputerDataResults);
+                ByComputerStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
                 _currentQueryData.ByComputerDataRecords = queryResults;
                 ByComputerDataGrid.DataContext = _currentQueryData.ByComputerDataRecords.DefaultView;
                 ByComputerStackPanel.IsEnabled = true;
+                _numQueriesStillRunning -= 1;
+            }
+            //if (this.byComputerDataGridView.InvokeRequired)
+             //{
+             //    SetByComputerQueryDataCallBack del = new SetByComputerQueryDataCallBack(SetNewByComputerDataResults);
+             //    this.Invoke(del, new object[] { queryResults });
+             //}
+             //else
+             //{
+                //_currentQueryData.ByComputerDataRecords = queryResults;
+                //ByComputerDataGrid.DataContext = _currentQueryData.ByComputerDataRecords.DefaultView;
+                //ByComputerStackPanel.IsEnabled = true;
                 //byComputerDataGridView.AutoResizeColumns();
                 //byComputerDataGridView.Visible = true;
                 //labelComputerDataProcessing.Visible = false;
-                _numQueriesStillRunning -= 1;
+                //_numQueriesStillRunning -= 1;
             //}
         }
 
         private void SetNewByTypeDataResults(DataTable queryResults)
         {
-            //if (this.byTypeDataGridView.InvokeRequired)
-            //{
-            //    SetByTypeQueryDataCallBack del = new SetByTypeQueryDataCallBack(SetNewByTypeDataResults);
-            //    this.Invoke(del, new object[] { queryResults });
-            //}
-            //else
-            //{
+            if (ByEventTypeStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetByTypeQueryDataCallBack del = new SetByTypeQueryDataCallBack(SetNewByTypeDataResults);
+                ByEventTypeStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
                 _currentQueryData.ByEventTypeDataRecords = queryResults;
                 ByEventTypeDataGrid.DataContext = _currentQueryData.ByEventTypeDataRecords.DefaultView;
                 ByEventTypeStackPanel.IsEnabled = true;
+                _numQueriesStillRunning -= 1;
+            }
+            //if (this.byTypeDataGridView.InvokeRequired)
+             //{
+             //    SetByTypeQueryDataCallBack del = new SetByTypeQueryDataCallBack(SetNewByTypeDataResults);
+             //    this.Invoke(del, new object[] { queryResults });
+             //}
+             //else
+             //{
+                //_currentQueryData.ByEventTypeDataRecords = queryResults;
+                //ByEventTypeDataGrid.DataContext = _currentQueryData.ByEventTypeDataRecords.DefaultView;
+                //ByEventTypeStackPanel.IsEnabled = true;
                 //byTypeDataGridView.AutoResizeColumns();
                 //byTypeDataGridView.Visible = true;
                 //labelTypeDataProcessing.Visible = false;
-                _numQueriesStillRunning -= 1;
+                //_numQueriesStillRunning -= 1;
             //}
         }
 
         private void SetNewByProcessDataResults(DataTable queryResults)
         {
-            //if (this.byProcessDataGridView.InvokeRequired)
-            //{
-            //    SetByProcessQueryDataCallBack del = new SetByProcessQueryDataCallBack(SetNewByProcessDataResults);
-            //    this.Invoke(del, new object[] { queryResults });
-            //}
-            //else
-            //{
-                // This can be an expensive set of results to get, so best to reuse them where possible,
-                // so we set them into the DbSqlController data set.
+            if (ByProcessStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetByProcessQueryDataCallBack del = new SetByProcessQueryDataCallBack(SetNewByProcessDataResults);
+                ByProcessStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
                 if (queryResults.Rows.Count >= 0)
                 {
                     theDbSqlController.DbSqlSpControllerData.ByProcessResults.Clear();
@@ -321,15 +337,50 @@ namespace IESandDACadmt.View
                 _currentQueryData.ByProcessDataRecords = queryResults;
                 ByProcessDataGrid.DataContext = _currentQueryData.ByProcessDataRecords.DefaultView;
                 ByProcessStackPanel.IsEnabled = true;
+                _numQueriesStillRunning -= 1;
+            }
+            //if (this.byProcessDataGridView.InvokeRequired)
+            //{
+            //    SetByProcessQueryDataCallBack del = new SetByProcessQueryDataCallBack(SetNewByProcessDataResults);
+            //    this.Invoke(del, new object[] { queryResults });
+            //}
+            //else
+            //{
+            // This can be an expensive set of results to get, so best to reuse them where possible,
+            // so we set them into the DbSqlController data set.
+            //if (queryResults.Rows.Count >= 0)
+            //    {
+            //        theDbSqlController.DbSqlSpControllerData.ByProcessResults.Clear();
+            //        foreach (DataRow row in queryResults.Rows)
+            //        {
+            //            theDbSqlController.DbSqlSpControllerData.ByProcessResults.Add(row["ProcessName"].ToString());
+            //        }
+            //        theDbSqlController.DbSqlSpControllerData.ByProcessQueryAlreadyRan = true;
+            //    }
+            //    _currentQueryData.ByProcessDataRecords = queryResults;
+            //    ByProcessDataGrid.DataContext = _currentQueryData.ByProcessDataRecords.DefaultView;
+            //    ByProcessStackPanel.IsEnabled = true;
                 //byProcessDataGridView.AutoResizeColumns();
                 //byProcessDataGridView.Visible = true;
                 //labelProcessDataProcessing.Visible = false;
-                _numQueriesStillRunning -= 1;
+                //_numQueriesStillRunning -= 1;
             //}
         }
 
         private void SetNewByDeviceDataResults(DataTable queryResults)
         {
+            if (ByDeviceStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetByDeviceQueryDataCallBack del = new SetByDeviceQueryDataCallBack(SetNewByDeviceDataResults);
+                ByDeviceStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
+                _currentQueryData.ByDeviceDataRecords = queryResults;
+                ByDeviceDataGrid.DataContext = _currentQueryData.ByDeviceDataRecords.DefaultView;
+                ByDeviceStackPanel.IsEnabled = true;
+                _numQueriesStillRunning -= 1;
+            }
             //if (this.byDeviceDataGridView.InvokeRequired)
             //{
             //    SetByDeviceQueryDataCallBack del = new SetByDeviceQueryDataCallBack(SetNewByDeviceDataResults);
@@ -337,13 +388,13 @@ namespace IESandDACadmt.View
             //}
             //else
             //{
-                _currentQueryData.ByDeviceDataRecords = queryResults;
-                ByDeviceDataGrid.DataContext = _currentQueryData.ByDeviceDataRecords.DefaultView;
-                ByDeviceStackPanel.IsEnabled = true;
-                //byDeviceDataGridView.AutoResizeColumns();
-                //byDeviceDataGridView.Visible = true;
-                //labelDeviceDataProcessing.Visible = false;
-                _numQueriesStillRunning -= 1;
+            //_currentQueryData.ByDeviceDataRecords = queryResults;
+            //    ByDeviceDataGrid.DataContext = _currentQueryData.ByDeviceDataRecords.DefaultView;
+            //    ByDeviceStackPanel.IsEnabled = true;
+            //    //byDeviceDataGridView.AutoResizeColumns();
+            //    //byDeviceDataGridView.Visible = true;
+            //    //labelDeviceDataProcessing.Visible = false;
+            //    _numQueriesStillRunning -= 1;
             //}
         }
 

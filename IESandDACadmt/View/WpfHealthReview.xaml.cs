@@ -292,6 +292,18 @@ namespace IESandDACadmt.View
 
         private void SetNewServerConfigInfoDataCallBack(DataTable queryResults)
         {
+            if (ServerConfigStackPanel.Dispatcher.CheckAccess() == false)
+            {
+                SetServerConfigInfoDataCallBack del = new SetServerConfigInfoDataCallBack(SetNewServerConfigInfoDataCallBack);
+                ServerConfigStackPanel.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, del, queryResults);
+            }
+            else
+            {
+                _sqlHealthData.ServerConfigResults = queryResults;
+                ServerConfigDataGrid.DataContext = _sqlHealthData.ServerConfigResults.DefaultView;
+                ServerConfigStackPanel.IsEnabled = true;
+                _processingOngoing -= 1;
+            }
             //if (this.dataGridViewServerConfig.InvokeRequired)
             //{
             //    SetServerConfigInfoDataCallBack del = new SetServerConfigInfoDataCallBack(SetNewServerConfigInfoDataCallBack);
@@ -304,7 +316,7 @@ namespace IESandDACadmt.View
             //    {
             //        dataGridViewServerConfig.DataSource = _sqlHealthData.ServerConfigResults;
             //    }
-                _processingOngoing = _processingOngoing - 1;
+            //_processingOngoing = _processingOngoing - 1;
             //}
 
         }
