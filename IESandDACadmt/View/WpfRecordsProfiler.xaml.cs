@@ -39,6 +39,10 @@ namespace IESandDACadmt.View
 
             _theLogger = theLogger;
 
+            ByDateChart.Series.Add("Series1");
+            ByDateChart.Series.Add("SeriesRollingAverage");
+            ByDateChart.ChartAreas.Add("ChartArea1");
+
             SetGuiForServerType();
         }
 

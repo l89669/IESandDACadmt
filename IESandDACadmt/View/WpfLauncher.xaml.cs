@@ -273,23 +273,15 @@ namespace IESandDACadmt.View
 
         private void ModifyGuiOnFormLoad()
         {
+            btnChangeSqlServer.IsEnabled = false;
+            btnTestDBConnection.IsEnabled = true;
+            ComboboxSqlAuthType.IsEnabled = true;
+            tbDbServerName.IsEnabled = true;
+            tbDatabaseName.IsEnabled = true;
+
             SetServerTypeRowTo(true);
             SetSqlConnectionTestRowTo(true);
             SetToolsRowTo(false);
-
-            //btnChangeSqlServer.IsEnabled = false;
-            //btnTestDBConnection.IsEnabled = true;
-            //tbDbServerName.IsEnabled = true;
-            //tbDatabaseName.IsEnabled = true;
-
-            //panelHealth.Enabled = false;
-            //panelProfiler.Enabled = false;
-            //panelPurge.Enabled = false;
-
-            //panelDbConnection.BackColor = SystemColors.ControlLightLight;
-            //panelProfiler.BackColor = SystemColors.Control;
-            //panelPurge.BackColor = SystemColors.Control;
-            //panelHealth.BackColor = SystemColors.Control;
         }
 
         private void ModifyGuiOnTestButtonClick()
@@ -297,61 +289,38 @@ namespace IESandDACadmt.View
             
             btnChangeSqlServer.IsEnabled = true;
             btnTestDBConnection.IsEnabled = false;
+            ComboboxSqlAuthType.IsEnabled = false;
             tbDbServerName.IsEnabled = false;
             tbDatabaseName.IsEnabled = false;
 
             SetServerTypeRowTo(false);
             SetToolsRowTo(false);
-            //panelHealth.Enabled = false;
-            //panelProfiler.Enabled = false;
-            //panelPurge.Enabled = false;
-
-            //panelDbConnection.BackColor = SystemColors.Control;
-            //panelProfiler.BackColor = SystemColors.Control;
-            //panelPurge.BackColor = SystemColors.Control;
-            //panelHealth.BackColor = SystemColors.Control;
         }
 
         private void ModifyGuiOnDbTestSuccess()
         {
             btnChangeSqlServer.IsEnabled = true;
             btnTestDBConnection.IsEnabled = false;
+            ComboboxSqlAuthType.IsEnabled = false;
             tbDbServerName.IsEnabled = false;
             tbDatabaseName.IsEnabled = false;
 
             SetServerTypeRowTo(false);
             SetSqlConnectionTestRowTo(true);
             SetToolsRowTo(true);
-            
-            //panelHealth.Enabled = true;
-            //panelProfiler.Enabled = true;
-            //panelPurge.Enabled = true;
-
-            //panelDbConnection.BackColor = SystemColors.Control;
-            //panelProfiler.BackColor = SystemColors.ControlLightLight;
-            //panelPurge.BackColor = SystemColors.ControlLightLight;
-            //panelHealth.BackColor = SystemColors.ControlLightLight;
         }
 
         private void ModifyGuiOnDbTestFail()
         {
             btnChangeSqlServer.IsEnabled = false;
             btnTestDBConnection.IsEnabled = true;
+            ComboboxSqlAuthType.IsEnabled = true;
             tbDbServerName.IsEnabled = true;
             tbDatabaseName.IsEnabled = true;
 
             SetServerTypeRowTo(false);
             SetSqlConnectionTestRowTo(true);
             SetToolsRowTo(false);
-
-            //panelHealth.Enabled = false;
-            //panelProfiler.Enabled = false;
-            //panelPurge.Enabled = false;
-
-            //panelDbConnection.BackColor = SystemColors.ControlLightLight;
-            //panelProfiler.BackColor = SystemColors.Control;
-            //panelPurge.BackColor = SystemColors.Control;
-            //panelHealth.BackColor = SystemColors.Control;
         }
 
         private void buttonLaunchProfiler_Click(object sender, RoutedEventArgs e)
